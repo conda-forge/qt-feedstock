@@ -9,6 +9,8 @@ Feedstock license: BSD 3-Clause
 
 Summary: Qt is a cross-platform application and UI framework
 
+Qt helps you create connected devices, UIs & applications that run
+anywhere on any device, on any operating system at any time.
 
 
 Installing qt

@@ -31,7 +31,7 @@ if [ `uname` == Linux ]; then
     # Build on RPM based distros fails without setting LD_LIBRARY_PATH
     # to the build lib dir
     # See https://bugreports.qt.io/browse/QTBUG-5385
-    LD_LIBRARY_PATH=$SRC_DIR/lib make
+    LD_LIBRARY_PATH=$SRC_DIR/lib make >> output.txt 2>&1
     make install
 fi
 
@@ -67,7 +67,7 @@ if [ `uname` == Darwin ]; then
                 -arch `uname -m`
                 #-platform macx-g++
 
-    make
+    make >> output.txt 2>&1
     make install
 fi
 

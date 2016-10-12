@@ -6,3 +6,4 @@ libXrender-devel
 gtk2-devel
 dbus-devel
 libSM
+libICE

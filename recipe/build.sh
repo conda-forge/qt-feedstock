@@ -26,7 +26,8 @@ if [ `uname` == Linux ]; then
                 -system-libtiff \
                 -system-libjpeg \
                 -gtkstyle \
-                -dbus
+                -dbus \
+                -sm
 
     # Build on RPM based distros fails without setting LD_LIBRARY_PATH
     # to the build lib dir

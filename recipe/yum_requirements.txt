@@ -5,5 +5,5 @@ chrpath
 libXrender-devel
 gtk2-devel
 dbus-devel
-libSM
-libICE
+libSM-devel
+libICE-devel

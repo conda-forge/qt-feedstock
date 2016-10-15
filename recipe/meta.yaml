@@ -30,7 +30,7 @@ source:
     - vs2015_int_fix.patch  # [win and py >= 35]
 
 build:
-  number: 2
+  number: 3
   skip: true  # [win or osx]
   features:
     - vc9  # [win and py27]
@@ -53,7 +53,7 @@ requirements:
     # This is here because conda is not pulling libxml2 from conda-forge
     - libxml2 >=2.9.3
     # This is here because some conda-forge libraries link against conda-forge's libuuid
-    - libuuid
+    #- libuuid
   run:
     - freetype 2.6.*  # [unix]
     - fontconfig 2.11.*  # [linux]
@@ -66,7 +66,7 @@ requirements:
     # This is here because conda is not pulling libxml2 from conda-forge
     - libxml2 >=2.9.3
     # This is here because some conda-forge libraries link against conda-forge's libuuid
-    - libuuid
+    #- libuuid
 
 test:
   files:

@@ -30,7 +30,7 @@ source:
     - vs2015_int_fix.patch  # [win and py >= 35]
 
 build:
-  number: 4
+  number: 5
   skip: true  # [win or osx]
   features:
     - vc9  # [win and py27]
@@ -51,7 +51,7 @@ requirements:
     - libpng >=1.6.23,<1.7
     - jom  # [win]
     # This is here because conda is not pulling libxml2 from conda-forge
-    - libxml2 2.9.3
+    - libxml2 2.9.*
     # This is here because some conda-forge libraries link against conda-forge's libuuid
     #- libuuid
   run:
@@ -64,7 +64,7 @@ requirements:
     - libtiff 4.0.*
     - zlib 1.2.*
     # This is here because conda is not pulling libxml2 from conda-forge
-    - libxml2 2.9.3
+    - libxml2 2.9.*
     # This is here because some conda-forge libraries link against conda-forge's libuuid
     #- libuuid
 

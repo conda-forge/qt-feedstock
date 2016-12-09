@@ -7,11 +7,23 @@ Package license: LGPL
 
 Feedstock license: BSD 3-Clause
 
-Summary: Qt is a cross-platform application and UI framework
+Summary: Qt is a cross-platform application and UI framework.
 
 Qt helps you create connected devices, UIs & applications that run
 anywhere on any device, on any operating system at any time.
 
+
+Current build status
+====================
+
+Linux: [![Circle CI](https://circleci.com/gh/conda-forge/qt-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/qt-feedstock)
+OSX: [![TravisCI](https://travis-ci.org/conda-forge/qt-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/qt-feedstock)
+Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/conda-forge/qt-feedstock?svg=True)](https://ci.appveyor.com/project/conda-forge/qt-feedstock/branch/master)
+
+Current release info
+====================
+Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/qt/badges/version.svg)](https://anaconda.org/conda-forge/qt)
+Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/qt/badges/downloads.svg)](https://anaconda.org/conda-forge/qt)
 
 Installing qt
 =============
@@ -33,7 +45,6 @@ It is possible to list all of the versions of `qt` available on your platform wi
 ```
 conda search qt --channel conda-forge
 ```
-
 
 
 About conda-forge
@@ -69,18 +80,6 @@ Terminology
 
 **conda-forge** - the place where the feedstock and smithy live and work to
                   produce the finished article (built conda distributions)
-
-Current build status
-====================
-
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/qt-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/qt-feedstock)
-OSX: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
-Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
-
-Current release info
-====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/qt/badges/version.svg)](https://anaconda.org/conda-forge/qt)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/qt/badges/downloads.svg)](https://anaconda.org/conda-forge/qt)
 
 
 Updating qt-feedstock

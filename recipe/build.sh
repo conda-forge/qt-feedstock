@@ -1,14 +1,5 @@
 #!/bin/bash
 
-if [ $(uname) == Darwin ]; then
-    export CC=clang
-    export CXX=clang++
-    export MACOSX_DEPLOYMENT_TARGET="10.9"
-    export CXXFLAGS="-stdlib=libc++ $CXXFLAGS"
-    export CXXFLAGS="$CXXFLAGS -stdlib=libc++"
-fi
-
-
 # Compile
 # -------
 chmod +x configure
@@ -75,7 +66,7 @@ if [ `uname` == Darwin ]; then
                 -system-libjpeg \
                 -no-framework \
                 -arch `uname -m`
-                #-platform macx-g++
+                -platform macx-clang-libc++
 
     make
     make install

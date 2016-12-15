@@ -65,7 +65,7 @@ if [ `uname` == Darwin ]; then
                 -system-libtiff \
                 -system-libjpeg \
                 -no-framework \
-                -arch `uname -m`
+                -arch `uname -m`\
                 -platform macx-clang-libc++
 
     make

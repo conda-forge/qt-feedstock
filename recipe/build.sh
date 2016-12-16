@@ -66,7 +66,7 @@ if [ `uname` == Darwin ]; then
                 -system-libjpeg \
                 -no-framework \
                 -arch `uname -m`\
-                -platform macx-clang-libc++
+                -platform unsupported/macx-clang-libc++
 
     make
     make install

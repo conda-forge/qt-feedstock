@@ -1,11 +1,14 @@
---- mkspecs/unsupported/macx-clang-libc++/qmake.conf.orig	2016-12-15 17:35:03.484934790 +1000
-+++ mkspecs/unsupported/macx-clang-libc++/qmake.conf	2016-12-15 17:36:39.420938178 +1000
-@@ -13,7 +13,7 @@
+--- mkspecs/unsupported/macx-clang-libc++/qmake.conf.orig	2016-12-16 17:03:27.000000000 +1000
++++ mkspecs/unsupported/macx-clang-libc++/qmake.conf	2016-12-16 17:04:09.000000000 +1000
+@@ -13,7 +13,10 @@
  include(../../common/gcc-base-macx.conf)
  include(../../common/clang.conf)
  
 -QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7 # Libc++ is available from 10.7 onwards
 +QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9  # conda-forge minimum
++# set rpath ability - is unset otherwise for this platform and means
++# we can't set the rpath for the test
++QMAKE_LFLAGS_RPATH = "-Xlinker -rpath "
  
  QMAKE_CFLAGS += -mmacosx-version-min=$$QMAKE_MACOSX_DEPLOYMENT_TARGET
  QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=$$QMAKE_MACOSX_DEPLOYMENT_TARGET

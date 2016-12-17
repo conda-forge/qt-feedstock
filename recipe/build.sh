@@ -44,6 +44,10 @@ if [ `uname` == Darwin ]; then
         unset $x
     done
 
+    # for some reason this dir isn't created and breaks
+    # the build if it isn't there
+    mkdir src/3rdparty/webkit/Source/lib
+
     chmod +x configure
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
@@ -69,7 +73,7 @@ if [ `uname` == Darwin ]; then
                 -platform unsupported/macx-clang-libc++ \
                 -silent
 
-    make
+    make -j $CPU_COUNT
     make install
 fi
 

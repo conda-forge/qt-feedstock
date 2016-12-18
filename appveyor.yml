@@ -79,10 +79,6 @@ install:
     - cmd: conda install -n root --quiet --yes conda-forge-build-setup
     - cmd: run_conda_forge_build_setup
 
-    - cmd: # install conda-build 2.x to build with a long prefix
-    - cmd: conda install --yes --quiet conda-build=2
-    - cmd: conda info
-
 # Skip .NET project specific build phase.
 build: off
 

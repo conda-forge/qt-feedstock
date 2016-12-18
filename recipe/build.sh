@@ -1,14 +1,5 @@
 #!/bin/bash
 
-if [ $(uname) == Darwin ]; then
-    export CC=clang
-    export CXX=clang++
-    export MACOSX_DEPLOYMENT_TARGET="10.9"
-    export CXXFLAGS="-stdlib=libc++ $CXXFLAGS"
-    export CXXFLAGS="$CXXFLAGS -stdlib=libc++"
-fi
-
-
 # Compile
 # -------
 chmod +x configure
@@ -53,6 +44,10 @@ if [ `uname` == Darwin ]; then
         unset $x
     done
 
+    # for some reason this dir isn't created and breaks
+    # the build if it isn't there
+    mkdir src/3rdparty/webkit/Source/lib
+
     chmod +x configure
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
@@ -74,10 +69,11 @@ if [ `uname` == Darwin ]; then
                 -system-libtiff \
                 -system-libjpeg \
                 -no-framework \
-                -arch `uname -m`
-                #-platform macx-g++
+                -arch `uname -m`\
+                -platform unsupported/macx-clang-libc++ \
+                -silent
 
-    make
+    make -j $CPU_COUNT
     make install
 fi
 

@@ -12,12 +12,19 @@ source:
     # Make Qt accept its open source license without user interaction
     - acceptance.patch
 
+    # Make the paths in config.cpp longer so they work with conda-build 2.x
+    - config.cpp.longpath.patch  # [unix]
+
     # Compile qmake with the system architecture. Taken from the MacPorts project:
     # https://trac.macports.org/browser/trunk/dports/aqua/qt4-mac/files/patch-configure.diff
     - qmake-arch.patch  # [osx]
 
     # Set the minimum deployment target to 10.9
     - osx_deployment_target_10.9_qmake.conf.patch  # [osx]
+
+    # Enabling our test to set the rpath by making Qt aware
+    # of how to do this on OSX
+    - osx_rpath.qmake.conf.patch  # [osx]
 
     # fix use of deprecated OSX API. Taken from Homebrew:
     # https://github.com/Homebrew/legacy-homebrew/issues/40585

@@ -4,7 +4,7 @@
 # -------
 chmod +x configure
 
-if [ `uname` == Linux ]; then
+if [ $(uname) == Linux ]; then
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \
@@ -36,7 +36,7 @@ if [ `uname` == Linux ]; then
     make install
 fi
 
-if [ `uname` == Darwin ]; then
+if [ $(uname) == Darwin ]; then
     # Leave Qt set its own flags and vars, else compilation errors
     # will occur
     for x in OSX_ARCH CFLAGS CXXFLAGS LDFLAGS
@@ -69,7 +69,7 @@ if [ `uname` == Darwin ]; then
                 -system-libtiff \
                 -system-libjpeg \
                 -no-framework \
-                -arch `uname -m`\
+                -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \
                 -silent
 

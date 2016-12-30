@@ -45,6 +45,7 @@ source:
 
 build:
   number: 5
+  skip: True  [osx]
   features:
     - vc9  # [win and py27]
     - vc10  # [win and py34]

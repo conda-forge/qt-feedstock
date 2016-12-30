@@ -47,11 +47,12 @@ source:
     - vs2015_int_fix.patch  # [win and py >= 35]
 
 build:
-  number: 4
+  number: 6
+  skip: True  [osx]
   features:
     - vc9  # [win and py27]
     - vc10  # [win and py34]
-    - vc14  # [win and py>35]
+    - vc14  # [win and py>=35]
 
 requirements:
   build:
@@ -69,7 +70,7 @@ requirements:
     - libxml2 2.9.3
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
-    - vc 14  # [win and py>35]
+    - vc 14  # [win and py>=35]
   run:
     - freetype 2.6.*  # [unix]
     - fontconfig 2.11.*  # [linux]
@@ -83,7 +84,7 @@ requirements:
     - libxml2 2.9.3
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
-    - vc 14  # [win and py>35]
+    - vc 14  # [win and py>=35]
 
 test:
   files:

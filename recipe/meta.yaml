@@ -33,6 +33,9 @@ source:
     # Make Qt work with Ubuntu modifications to scrollbars for Gtk
     - ubuntu_disable_scrollbars.patch  # [linux]
 
+    # Build QtWebkit with gcc-6, on platform linux-g++
+    - qtwebkit-gcc-6.patch # [linux]
+
     # Disable warning about Windows 10 not being a supported platform by Qt
     - disable_win10_warning.patch  # [win]
 
@@ -44,7 +47,7 @@ source:
     - vs2015_int_fix.patch  # [win and py >= 35]
 
 build:
-  number: 5
+  number: 6
   skip: True  [osx]
   features:
     - vc9  # [win and py27]

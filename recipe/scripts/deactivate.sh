@@ -1,3 +1,4 @@
+#!/bin/bash
 
 unset QMAKESPEC
 if [[ -n "$_CONDA_SET_QMAKESPEC" ]]; then

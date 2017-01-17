@@ -15,5 +15,5 @@ echo Binaries = %FORWARD_SLASHED_PREFIX%/Library/bin >> "%CD%\Library\bin\qt.con
 echo Libraries = %FORWARD_SLASHED_PREFIX%/Library/lib >> "%CD%\Library\bin\qt.conf"
 echo Headers = %FORWARD_SLASHED_PREFIX%/Library/include/qt >> "%CD%\Library\bin\qt.conf"
 :: Some things go looking in the prefix root (pyqt, for example)
-COPY "%CD%\Library\bin\qt.conf" "%CD%\qt.conf"
+copy "%CD%\Library\bin\qt.conf" "%CD%\qt.conf"
 @echo on

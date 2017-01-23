@@ -1,4 +1,4 @@
-{% set version = "4.8.7" %}
+{% set version = "5.6.2" %}
 
 package:
   name: qt
@@ -6,49 +6,18 @@ package:
 
 source:
   fn: qt-everywhere-opensource-src-{{ version }}.tar.gz
-  url: http://download.qt-project.org/official_releases/qt/4.8/{{ version }}/qt-everywhere-opensource-src-{{ version }}.tar.gz
-  md5: d990ee66bf7ab0c785589776f35ba6ad
+  url: http://download.qt.io/official_releases/qt/5.6/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.gz
+  sha256: 7551f5af1312082c3c8ab52f5e102e3f83aae2dd96dc4a3a9a197f3e58b3214c
   patches:
-    # Make Qt accept its open source license without user interaction
-    - acceptance.patch
-
-    # Make the paths in config.cpp longer so they work with conda-build 2.x
-    - config.cpp.longpath.patch  # [unix]
-
-    # Compile qmake with the system architecture. Taken from the MacPorts project:
-    # https://trac.macports.org/browser/trunk/dports/aqua/qt4-mac/files/patch-configure.diff
-    - qmake-arch.patch  # [osx]
-
-    # Set the minimum deployment target to 10.9
-    - osx_deployment_target_10.9_qmake.conf.patch  # [osx]
-
-    # Enabling our test to set the rpath by making Qt aware
-    # of how to do this on OSX
-    - osx_rpath.qmake.conf.patch  # [osx]
-
-    # fix use of deprecated OSX API. Taken from Homebrew:
-    # https://github.com/Homebrew/legacy-homebrew/issues/40585
-    - qpaintengine_mac.patch  # [osx]
-
-    # Make Qt work with Ubuntu modifications to scrollbars for Gtk
-    - ubuntu_disable_scrollbars.patch  # [linux]
-
-    # Build QtWebkit with gcc-6, on platform linux-g++
-    - qtwebkit-gcc-6.patch  # [linux]
-
-    # Disable warning about Windows 10 not being a supported platform by Qt
-    - disable_win10_warning.patch  # [win]
-
-    # On Windows, for VS 2015 (Python 3.5+), rather drastic modifications are
-    # necessary because Microsoft finally got around to defining some standard
-    # functions. There's the vs_2015_int.patch file that does this. The changes in this patch were
-    # found in forums, and originated at (Author appears to be Peter Zhigalov):
-    # https://fami.codefreak.ru/gitlab/peter/qt4/commit/45e8f4eef3923e03c6939d0c17170980685857ef.diff
-    - vs2015_int_fix.patch  # [win and py >= 35]
+    - 0005-Remove-unused-include-sys-signalfd.h.patch
+    - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
+    - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
+    - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
 
 build:
-  number: 6
-  skip: True  # [osx]
+  number: 0
+  skip: True  # [osx or win]
+  detect_binary_files_with_prefix: true
   features:
     - vc9  # [win and py27]
     - vc10  # [win and py34]
@@ -57,45 +26,46 @@ build:
 requirements:
   build:
     - python  # [win]
-    - freetype 2.6.*  # [unix]
-    - fontconfig 2.11.*  # [linux]
-    - freeglut  # [linux]
+    - perl
+    - freetype 2.7|2.7.*
+    - fontconfig 2.12.*
     - openssl 1.0.*
     - jpeg 9*
-    - libtiff 4.0.*
     - zlib 1.2.*
-    - libpng >=1.6.23,<1.7
-    - jom  # [win]
-    # This is here because conda is not pulling libxml2 from conda-forge
-    - libxml2 2.9.3
+    - libpng >=1.6.28,<1.7
+    - gst-plugins-base
+    - icu 56.*
+    - libxcb
+    - dbus
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
   run:
-    - freetype 2.6.*  # [unix]
-    - fontconfig 2.11.*  # [linux]
-    - pango  # [linux]
+    - freetype 2.7|2.7.*
+    - fontconfig 2.12.*
     - openssl 1.0.*
-    - libpng >=1.6.23,<1.7
     - jpeg 9*
-    - libtiff 4.0.*
     - zlib 1.2.*
-    # This is here because conda is not pulling libxml2 from conda-forge
-    - libxml2 2.9.3
+    - libpng >=1.6.28,<1.7
+    - gst-plugins-base
+    - icu 56.*
+    - libxcb
+    - dbus
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
 
 test:
   files:
-    - test
-  #commands:
-    #- conda inspect linkages -p $PREFIX qt  # [not win]
-    #- conda inspect objects -p $PREFIX qt  # [osx]
+    - test/hello.pro
+    - test/main.cpp
+  commands:
+    - conda inspect linkages -p $PREFIX qt  # [not win]
+    - conda inspect objects -p $PREFIX qt  # [osx]
 
 about:
   home: http://qt-project.org
-  license: LGPL
+  license: LGPL-3.0
   summary: 'Qt is a cross-platform application and UI framework.'
   description: |
     Qt helps you create connected devices, UIs & applications that run
@@ -109,3 +79,4 @@ extra:
     - mingwandroid
     - gillins
     - msarahan
+    - ocefpaf

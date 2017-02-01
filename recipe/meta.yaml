@@ -47,7 +47,7 @@ source:
     - vs2015_int_fix.patch  # [win and py >= 35]
 
 build:
-  number: 6
+  number: 7
   skip: True  # [osx]
   features:
     - vc9  # [win and py27]
@@ -57,26 +57,27 @@ build:
 requirements:
   build:
     - python  # [win]
-    - freetype 2.6.*  # [unix]
-    - fontconfig 2.11.*  # [linux]
+    - freetype 2.7|2.7.* # [unix]
+    - fontconfig 2.12.*  # [linux]
     - freeglut  # [linux]
     - openssl 1.0.*
     - jpeg 9*
     - libtiff 4.0.*
     - zlib 1.2.*
-    - libpng >=1.6.23,<1.7
+    - libpng >=1.6.28,<1.7
     - jom  # [win]
     # This is here because conda is not pulling libxml2 from conda-forge
     - libxml2 2.9.3
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
+    - icu 58.*
   run:
-    - freetype 2.6.*  # [unix]
-    - fontconfig 2.11.*  # [linux]
+    - freetype 2.7|2.7.*  # [unix]
+    - fontconfig 2.12.*  # [linux]
     - pango  # [linux]
     - openssl 1.0.*
-    - libpng >=1.6.23,<1.7
+    - libpng >=1.6.28,<1.7
     - jpeg 9*
     - libtiff 4.0.*
     - zlib 1.2.*
@@ -85,13 +86,14 @@ requirements:
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
+    - icu 58.*
 
 test:
   files:
     - test
-  #commands:
-    #- conda inspect linkages -p $PREFIX qt  # [not win]
-    #- conda inspect objects -p $PREFIX qt  # [osx]
+  commands:
+    - conda inspect linkages -p $PREFIX qt  # [not win]
+    - conda inspect objects -p $PREFIX qt  # [osx]
 
 about:
   home: http://qt-project.org

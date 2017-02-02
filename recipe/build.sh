@@ -75,6 +75,16 @@ if [ $(uname) == Darwin ]; then
 
     make -j $CPU_COUNT
     make install
+
+    # copy activation scripts for OSX - set $QMAKESPEC
+    # to unsupported/macx-clang-libc++ otherwise there are problems with qmake
+    ACTIVATE_DIR=$PREFIX/etc/conda/activate.d
+    DEACTIVATE_DIR=$PREFIX/etc/conda/deactivate.d
+    mkdir -p $ACTIVATE_DIR
+    mkdir -p $DEACTIVATE_DIR
+
+    cp $RECIPE_DIR/scripts/activate.sh $ACTIVATE_DIR/qt-activate.sh
+    cp $RECIPE_DIR/scripts/deactivate.sh $DEACTIVATE_DIR/qt-deactivate.sh
 fi
 
 

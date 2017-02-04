@@ -11,34 +11,25 @@ source:
   patches:
     # Make Qt accept its open source license without user interaction
     - acceptance.patch
-
     # Make the paths in config.cpp longer so they work with conda-build 2.x
     - config.cpp.longpath.patch  # [unix]
-
     # Compile qmake with the system architecture. Taken from the MacPorts project:
     # https://trac.macports.org/browser/trunk/dports/aqua/qt4-mac/files/patch-configure.diff
     - qmake-arch.patch  # [osx]
-
     # Set the minimum deployment target to 10.9
     - osx_deployment_target_10.9_qmake.conf.patch  # [osx]
-
     # Enabling our test to set the rpath by making Qt aware
     # of how to do this on OSX
     - osx_rpath.qmake.conf.patch  # [osx]
-
     # fix use of deprecated OSX API. Taken from Homebrew:
     # https://github.com/Homebrew/legacy-homebrew/issues/40585
     - qpaintengine_mac.patch  # [osx]
-
     # Make Qt work with Ubuntu modifications to scrollbars for Gtk
     - ubuntu_disable_scrollbars.patch  # [linux]
-
     # Build QtWebkit with gcc-6, on platform linux-g++
     - qtwebkit-gcc-6.patch  # [linux]
-
     # Disable warning about Windows 10 not being a supported platform by Qt
     - disable_win10_warning.patch  # [win]
-
     # On Windows, for VS 2015 (Python 3.5+), rather drastic modifications are
     # necessary because Microsoft finally got around to defining some standard
     # functions. There's the vs_2015_int.patch file that does this. The changes in this patch were

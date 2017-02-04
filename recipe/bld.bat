@@ -1,8 +1,6 @@
 set INCLUDE=%LIBRARY_INC%;%INCLUDE%
 set LIB=%LIBRARY_LIB%;%LIB%
 
-cd qt-everywhere-opensource-src-%PKG_VERSION%
-
 echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -libdir %LIBRARY_LIB% ^
                        -bindir %LIBRARY_BIN% ^

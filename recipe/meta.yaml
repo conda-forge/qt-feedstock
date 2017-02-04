@@ -57,8 +57,6 @@ requirements:
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
     - jom  # [win]
-    # This is here because conda is not pulling libxml2 from conda-forge
-    - libxml2 2.9.3
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
@@ -72,8 +70,6 @@ requirements:
     - jpeg 9*
     - libtiff 4.0.*
     - zlib 1.2.*
-    # This is here because conda is not pulling libxml2 from conda-forge
-    - libxml2 2.9.3
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]

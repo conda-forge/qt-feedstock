@@ -16,7 +16,7 @@ source:
 
 build:
   number: 0
-  skip: True  # [osx or win]
+  skip: True  # [osx or (win and py27) or (win and py36)]
   detect_binary_files_with_prefix: true
   features:
     - vc9  # [win and py27]
@@ -27,30 +27,31 @@ requirements:
   build:
     - python  # [win]
     - perl
-    - freetype 2.7|2.7.*
-    - fontconfig 2.12.*
+    - freetype 2.7|2.7.*  # [unix]
+    - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
-    - gst-plugins-base
-    - icu 56.*
-    - libxcb
-    - dbus
+    - gst-plugins-base  # [linux]
+    - icu 58.*
+    - libxcb  # [linux]
+    - dbus  # [unix]
+    - jom  # [win]
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
   run:
-    - freetype 2.7|2.7.*
-    - fontconfig 2.12.*
+    - freetype 2.7|2.7.*  # [unix]
+    - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
-    - gst-plugins-base
-    - icu 56.*
-    - libxcb
-    - dbus
+    - gst-plugins-base  # [linux]
+    - icu 58.*
+    - libxcb  # [linux]
+    - dbus  # [unix]
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]

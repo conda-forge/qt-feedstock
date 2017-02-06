@@ -24,26 +24,6 @@ environment:
       CONDA_PY: 35
       CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
 
-    - TARGET_ARCH: x86
-      CONDA_PERL: 5.22.0.1
-      CONDA_PY: 35
-      CONDA_INSTALL_LOCN: C:\\Miniconda35
-
-    - TARGET_ARCH: x64
-      CONDA_PERL: 5.22.0.1
-      CONDA_PY: 35
-      CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
-
-    - TARGET_ARCH: x86
-      CONDA_PERL: 5.22.2.1
-      CONDA_PY: 35
-      CONDA_INSTALL_LOCN: C:\\Miniconda35
-
-    - TARGET_ARCH: x64
-      CONDA_PERL: 5.22.2.1
-      CONDA_PY: 35
-      CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
-
 
 # We always use a 64-bit machine, but can build x86 distributions
 # with the TARGET_ARCH variable.

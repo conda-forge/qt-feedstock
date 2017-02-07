@@ -32,6 +32,9 @@ call configure ^
      -system-libpng ^
      -system-zlib
 
+:: re-enable echoing which is disabled by configure
+echo on
+     
 :: Note - webengine only built when you ask - so we can skip it easily.
      
 jom -U Release -j%CPU_COUNT%

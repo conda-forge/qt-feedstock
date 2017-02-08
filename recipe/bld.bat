@@ -30,7 +30,9 @@ call configure ^
      -qt-freetype ^
      -system-libjpeg ^
      -system-libpng ^
-     -system-zlib
+     -system-zlib ^
+     -skip activeqt
+if errorlevel 1 exit /b 1
 
 :: re-enable echoing which is disabled by configure
 echo on

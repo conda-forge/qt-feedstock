@@ -37,7 +37,6 @@ requirements:
     - icu 58.*
     - libxcb  # [linux]
     - dbus  # [unix]
-    - jom  # [win]
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]

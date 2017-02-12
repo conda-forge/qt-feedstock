@@ -37,14 +37,12 @@ if errorlevel 1 exit /b 1
 :: re-enable echoing which is disabled by configure
 echo on
      
-:: Note - webengine only built when you ask - so we can skip it easily.
+:: Note - webengine only built when you ask (nmake module-webengine) - so we can skip it easily.
      
-::jom -U Release -j%CPU_COUNT%
-nmake -U Release
+nmake Release
 if errorlevel 1 exit /b 1
 
-::jom -U install -j%CPU_COUNT%
-nmake -U install
+nmake install
 if errorlevel 1 exit /b 1
      
 :: To rewrite qt.conf contents per conda environment

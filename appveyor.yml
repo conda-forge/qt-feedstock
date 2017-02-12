@@ -16,6 +16,16 @@ environment:
   matrix:
     - TARGET_ARCH: x86
       CONDA_PERL: 5.20.3.1
+      CONDA_PY: 27
+      CONDA_INSTALL_LOCN: C:\\Miniconda
+
+    - TARGET_ARCH: x64
+      CONDA_PERL: 5.20.3.1
+      CONDA_PY: 27
+      CONDA_INSTALL_LOCN: C:\\Miniconda-x64
+
+    - TARGET_ARCH: x86
+      CONDA_PERL: 5.20.3.1
       CONDA_PY: 35
       CONDA_INSTALL_LOCN: C:\\Miniconda35
 

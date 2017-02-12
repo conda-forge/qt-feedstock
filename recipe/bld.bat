@@ -31,7 +31,7 @@ call configure ^
      -system-libjpeg ^
      -system-libpng ^
      -system-zlib ^
-     -skip activeqt
+     -mp
 if errorlevel 1 exit /b 1
 
 :: re-enable echoing which is disabled by configure
@@ -39,10 +39,12 @@ echo on
      
 :: Note - webengine only built when you ask - so we can skip it easily.
      
-jom -U Release -j%CPU_COUNT%
+::jom -U Release -j%CPU_COUNT%
+nmake -U Release
 if errorlevel 1 exit /b 1
 
-jom -U install -j%CPU_COUNT%
+::jom -U install -j%CPU_COUNT%
+nmake -U install
 if errorlevel 1 exit /b 1
      
 :: To rewrite qt.conf contents per conda environment

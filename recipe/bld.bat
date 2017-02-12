@@ -1,4 +1,10 @@
 
+:: Check we have Ruby (should be installed on AppVeyor)
+where ruby
+
+:: Add the gnuwin32 tools to PATH
+set PATH=%cd%\gnuwin32\bin;%PATH%
+
 :: TODO: OpenGL
 set "INCLUDE=%LIBRARY_INC%;%INCLUDE%"
 set "LIB=%LIBRARY_LIB%;%LIB%"

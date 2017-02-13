@@ -13,7 +13,12 @@ source:
     - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
     - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
     - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
+    # qtbase
     - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
+    # qt3d
+    - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch  # [win]
+    # qtwinextras
+    - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
   number: 0

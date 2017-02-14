@@ -1,13 +1,25 @@
 
-:: Check we have Ruby (should be installed on AppVeyor)
-where ruby
-
-:: Add the gnuwin32 tools to PATH
+:: Add the gnuwin32 tools to PATH - needed for webkit
+:: Ruby is also needed but this is supplied by AppVeyor
 set PATH=%cd%\gnuwin32\bin;%PATH%
 
-:: TODO: OpenGL
+:: Webkit is not part of the distributed Qt5 tarballs anymore in 5.6 or after. 
+:: You need to download it separately and move it to the build directory by yourself. 
+set SHORT_VERSION=%PKG_VERSION:~0,-2%
+if "%DIRTY%" == "" (
+    :: TODO: checksum
+    curl -LO "http://download.qt.io/community_releases/%SHORT_VERSION%/%PKG_VERSION%/qtwebkit-opensource-src-%PKG_VERSION%.tar.xz"
+    if errorlevel 1 exit 1
+    7za x -so qtwebkit-opensource-src-%PKG_VERSION%.tar.xz | 7za x -si -aoa -ttar > NUL 2>&1
+    if errorlevel 1 exit 1
+    move qtwebkit-opensource-src-%PKG_VERSION% qtwebkit
+    if errorlevel 1 exit 1
+)
+
 set "INCLUDE=%LIBRARY_INC%;%INCLUDE%"
 set "LIB=%LIBRARY_LIB%;%LIB%"
+
+:: We use '-opengl desktop'. Other options need DirectX SDK or Angle (C++11 only)
 
 :: this needs to be CALLed due to an exit statement at the end of configure:
 call configure ^

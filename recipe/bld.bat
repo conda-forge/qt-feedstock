@@ -1,8 +1,6 @@
 set INCLUDE=%LIBRARY_INC%;%INCLUDE%
 set LIB=%LIBRARY_LIB%;%LIB%
 
-dir
-
 echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -libdir %LIBRARY_LIB% ^
                        -bindir %LIBRARY_BIN% ^

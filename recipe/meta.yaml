@@ -15,7 +15,7 @@ source:
     - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
 
 build:
-  number: 0
+  number: 1
   skip: True  # [osx or win]
   detect_binary_files_with_prefix: true
   features:
@@ -26,7 +26,7 @@ build:
 requirements:
   build:
     - python  # [win]
-    - perl
+    - perl 5.22.2.1
     - freetype 2.7|2.7.*
     - fontconfig 2.12.*
     - openssl 1.0.*
@@ -34,7 +34,7 @@ requirements:
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
     - gst-plugins-base
-    - icu 56.*
+    - icu 58.*
     - libxcb
     - dbus
     - vc 9  # [win and py27]
@@ -48,7 +48,7 @@ requirements:
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
     - gst-plugins-base
-    - icu 56.*
+    - icu 58.*
     - libxcb
     - dbus
     - vc 9  # [win and py27]

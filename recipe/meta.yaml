@@ -38,7 +38,7 @@ source:
     - vs2015_int_fix.patch  # [win and py >= 35]
 
 build:
-  number: 7
+  number: 8
   skip: True  # [osx or (win and py>35)]
   features:
     - vc9  # [win and py27]

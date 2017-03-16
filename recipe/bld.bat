@@ -1,6 +1,12 @@
 set INCLUDE=%LIBRARY_INC%;%INCLUDE%
 set LIB=%LIBRARY_LIB%;%LIB%
 
+:: For some reason configure.exe is deleted on AppVeyor. Virus check?
+:: Anyway, it has been added to the recipe so copy it if it doesn't exist
+if not exist configure.exe (
+    copy %RECIPE_DIR%\configure.exe .
+)
+
 echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -libdir %LIBRARY_LIB% ^
                        -bindir %LIBRARY_BIN% ^

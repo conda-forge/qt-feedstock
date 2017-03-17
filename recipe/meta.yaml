@@ -71,6 +71,7 @@ test:
   commands:
     - conda inspect linkages -p $PREFIX qt  # [not win]
     - conda inspect objects -p $PREFIX qt  # [osx]
+    - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1  # [win]
 
 about:
   home: http://qt-project.org

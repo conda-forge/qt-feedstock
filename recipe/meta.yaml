@@ -33,7 +33,7 @@ requirements:
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
-    - gst-plugins-base
+    - gst-plugins-base  # [linux]
     - icu 58.*
     - libxcb
     - dbus
@@ -47,7 +47,7 @@ requirements:
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
-    - gst-plugins-base
+    - gst-plugins-base  # [linux]
     - icu 58.*
     - libxcb
     - dbus

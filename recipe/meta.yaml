@@ -22,7 +22,7 @@ source:
 
 build:
   number: 1
-  skip: True  # [osx or win]
+  skip: True  # [osx]
   detect_binary_files_with_prefix: true
   features:
     - vc9  # [win and py27]
@@ -36,8 +36,8 @@ requirements:
     - curl  # [win]
     - msinttypes  # [win and py27]
     - perl 5.22.2.1
-    - freetype 2.7|2.7.*
-    - fontconfig 2.12.*
+    - freetype 2.7|2.7.*  # [unix]
+    - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*
     - jpeg 9*
     - zlib 1.2.*

@@ -13,6 +13,12 @@ source:
     - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
     - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
     - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
+    # qtbase
+    - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
+    # qt3d
+    - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch  # [win]
+    # qtwinextras
+    - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
   number: 1
@@ -26,31 +32,34 @@ build:
 requirements:
   build:
     - python  # [win]
+    - 7za  # [win]
+    - curl  # [win]
+    - msinttypes  # [win and py27]
     - perl 5.22.2.1
-    - freetype 2.7|2.7.*
-    - fontconfig 2.12.*
+    - freetype 2.7|2.7.*  # [unix]
+    - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
-    - gst-plugins-base
+    - gst-plugins-base  # [linux]
     - icu 58.*
-    - libxcb
-    - dbus
+    - libxcb  # [linux]
+    - dbus  # [unix]
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
   run:
-    - freetype 2.7|2.7.*
-    - fontconfig 2.12.*
+    - freetype 2.7|2.7.*  # [unix]
+    - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
-    - gst-plugins-base
+    - gst-plugins-base  # [linux]
     - icu 58.*
-    - libxcb
-    - dbus
+    - libxcb  # [linux]
+    - dbus  # [unix]
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
@@ -62,6 +71,7 @@ test:
   commands:
     - conda inspect linkages -p $PREFIX qt  # [not win]
     - conda inspect objects -p $PREFIX qt  # [osx]
+    - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1  # [win]
 
 about:
   home: http://qt-project.org

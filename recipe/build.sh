@@ -86,8 +86,7 @@ if [ $(uname) == Darwin ]; then
         unset $x
     done
 
-    export MACOSX_DEPLOYMENT_TARGET=10.7
-    MAKE_JOBS=$(sysctl -n hw.ncpu)
+    export MACOSX_DEPLOYMENT_TARGET=10.9
 
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
@@ -97,6 +96,7 @@ if [ $(uname) == Darwin ]; then
                 -datadir $PREFIX \
                 -L $PREFIX/lib \
                 -I $PREFIX/include \
+                -R $PREFIX/lib \
                 -release \
                 -opensource \
                 -confirm-license \
@@ -129,7 +129,7 @@ if [ $(uname) == Darwin ]; then
                 -no-egl \
                 -no-openssl
 
-    DYLD_FALLBACK_LIBRARY_PATH=$PREFIX/lib make -j $MAKE_JOBS || exit 1
+    make -j $CPU_COUNT || exit 1
     make install
 fi
 

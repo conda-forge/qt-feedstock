@@ -15,6 +15,8 @@ source:
     - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
     # qtbase
     - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
+    - 0009-osx-force-10.9-deployment-target.patch  # [osx]
+    - 0010-osx-xctest-check.patch  # [osx]
     # qt3d
     - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch  # [win]
     # qtwinextras
@@ -90,3 +92,4 @@ extra:
     - gillins
     - msarahan
     - ocefpaf
+    - stuarteberg

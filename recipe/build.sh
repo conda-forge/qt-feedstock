@@ -127,7 +127,9 @@ if [ $(uname) == Darwin ]; then
                 -no-xcb-xlib \
                 -no-libudev \
                 -no-egl \
-                -no-openssl
+                -no-openssl \
+                -sdk macosx10.9 \
+    ####
 
     make -j $CPU_COUNT || exit 1
     make install

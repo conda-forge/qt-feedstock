@@ -87,7 +87,6 @@ if [ $(uname) == Darwin ]; then
     done
 
     export MACOSX_DEPLOYMENT_TARGET=10.9
-    export DYLD_FALLBACK_LIBRARY_PATH=$PREFIX/lib 
 
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
@@ -97,6 +96,7 @@ if [ $(uname) == Darwin ]; then
                 -datadir $PREFIX \
                 -L $PREFIX/lib \
                 -I $PREFIX/include \
+                -R $PREFIX/lib \
                 -release \
                 -opensource \
                 -confirm-license \

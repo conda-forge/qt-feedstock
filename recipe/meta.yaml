@@ -41,7 +41,8 @@ source:
     - phonon_osx_exports.patch  # [osx]
 
 build:
-  number: 7
+  number: 7  # [linux or win]
+  number: 8  # [osx]
   skip: True  # [osx or (win and py>35)]
   features:
     - vc9  # [win and py27]

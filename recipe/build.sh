@@ -44,6 +44,8 @@ if [ $(uname) == Darwin ]; then
         unset $x
     done
 
+    export MACOSX_DEPLOYMENT_TARGET="10.9"
+
     # for some reason this dir isn't created and breaks
     # the build if it isn't there
     mkdir src/3rdparty/webkit/Source/lib
@@ -71,7 +73,9 @@ if [ $(uname) == Darwin ]; then
                 -no-framework \
                 -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \
-                -silent
+                -silent \
+                -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk \
+    ####
 
     make -j $CPU_COUNT
     make install

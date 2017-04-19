@@ -23,7 +23,7 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 1
+  number: 2
   skip: True  # [osx or win]
   detect_binary_files_with_prefix: true
   features:
@@ -75,6 +75,7 @@ test:
     - conda inspect linkages -p $PREFIX qt  # [not win]
     - conda inspect objects -p $PREFIX qt  # [osx]
     - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1  # [win]
+    - test -f $PREFIX/lib/libQt5WebKit.so  # [linux]
 
 about:
   home: http://qt-project.org

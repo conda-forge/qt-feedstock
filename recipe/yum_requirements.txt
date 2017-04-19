@@ -8,3 +8,4 @@ dbus-devel
 libSM-devel
 libICE-devel
 xorg-x11-server-Xvfb
+ruby

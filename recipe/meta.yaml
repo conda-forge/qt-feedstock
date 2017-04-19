@@ -35,7 +35,7 @@ build:
 requirements:
   build:
     - python  # [win]
-    - python 2.7*  # [osx]
+    - python 2.7*  # [unix]
     - 7za  # [win]
     - bison  # [linux]
     - flex  # [linux]

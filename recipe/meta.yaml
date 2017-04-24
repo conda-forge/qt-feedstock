@@ -23,8 +23,8 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 1  # [osx or win]
-  number: 2  # [linux]
+  number: 1  # [win]
+  number: 2  # [unix]
   skip: True  # [osx or win or linux]
   detect_binary_files_with_prefix: true
   features:
@@ -45,28 +45,28 @@ requirements:
     - perl 5.22.2.1
     - freetype 2.7|2.7.*  # [unix]
     - fontconfig 2.12.*  # [linux]
-    - openssl 1.0.*
+    - openssl 1.0.*  # [not osx]
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
     - gst-plugins-base  # [linux]
     - icu 58.*
     - libxcb  # [linux]
-    - dbus  # [unix]
+    - dbus  # [linux]
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
   run:
     - freetype 2.7|2.7.*  # [unix]
     - fontconfig 2.12.*  # [linux]
-    - openssl 1.0.*
+    - openssl 1.0.*  # [not osx]
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
     - gst-plugins-base  # [linux]
     - icu 58.*
     - libxcb  # [linux]
-    - dbus  # [unix]
+    - dbus  # [linux]
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]

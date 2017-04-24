@@ -113,11 +113,11 @@ if [ $(uname) == Darwin ]; then
                 -skip wayland \
                 -skip canvas3d \
                 -skip 3d \
+                -system-freetype \
+                -system-libjpeg \
+                -system-libpng \
                 -system-zlib \
                 -qt-pcre \
-                -qt-freetype \
-                -qt-libjpeg \
-                -qt-libpng \
                 -c++11 \
                 -no-framework \
                 -no-dbus \

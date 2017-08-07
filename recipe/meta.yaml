@@ -44,7 +44,7 @@ requirements:
     - curl  # [win]
     - msinttypes  # [win and py27]
     - perl 5.22.2.1
-    - freetype 2.7|2.7.*  # [unix]
+    - freetype 2.7|2.7.*  # [linux]
     - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*  # [not osx]
     - jpeg 9*
@@ -58,7 +58,7 @@ requirements:
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
   run:
-    - freetype 2.7|2.7.*  # [unix]
+    - freetype 2.7|2.7.*  # [linux]
     - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*  # [not osx]
     - jpeg 9*

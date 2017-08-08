@@ -113,11 +113,11 @@ if [ $(uname) == Darwin ]; then
                 -skip wayland \
                 -skip canvas3d \
                 -skip 3d \
-                -system-freetype \
                 -system-libjpeg \
                 -system-libpng \
                 -system-zlib \
                 -qt-pcre \
+                -qt-freetype \
                 -c++11 \
                 -no-framework \
                 -no-dbus \
@@ -154,6 +154,11 @@ then
     do
         mv ${BIN}/${name}.app ${BIN}/${name}app
     done
+
+    # We built Qt itself with SDK 10.9, but we shouldn't
+    # force users to also build their Qt apps with SDK 10.9
+    # https://bugreports.qt.io/browse/QTBUG-41238
+    sed -i '' s/macosx10\../macosx/g ${PREFIX}/mkspecs/qdevice.pri
 
     POST_LINK=$BIN/.qt-post-link.sh
     PRE_UNLINK=$BIN/.qt-pre-unlink.sh

@@ -24,7 +24,8 @@ source:
 
 build:
   number: 1  # [win]
-  number: 3  # [unix]
+  number: 3  # [linux]
+  number: 4  # [osx]
   skip: True  # [osx or win or linux]
   detect_binary_files_with_prefix: true
   features:
@@ -43,7 +44,7 @@ requirements:
     - curl  # [win]
     - msinttypes  # [win and py27]
     - perl 5.22.2.1
-    - freetype 2.7|2.7.*  # [unix]
+    - freetype 2.7|2.7.*  # [linux]
     - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*  # [not osx]
     - jpeg 9*
@@ -57,7 +58,7 @@ requirements:
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
   run:
-    - freetype 2.7|2.7.*  # [unix]
+    - freetype 2.7|2.7.*  # [linux]
     - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*  # [not osx]
     - jpeg 9*

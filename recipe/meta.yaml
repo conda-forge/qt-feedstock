@@ -23,9 +23,9 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 1  # [win]
-  number: 3  # [linux]
-  number: 4  # [osx]
+  number: 2  # [win]
+  number: 4  # [linux]
+  number: 5  # [osx]
   skip: True  # [osx or win or linux]
   detect_binary_files_with_prefix: true
   features:
@@ -52,6 +52,7 @@ requirements:
     - libpng >=1.6.28,<1.7
     - gst-plugins-base  # [linux]
     - icu 58.*
+    - sqlite 3.13.*
     - libxcb  # [linux]
     - dbus  # [linux]
     - vc 9  # [win and py27]
@@ -66,6 +67,7 @@ requirements:
     - libpng >=1.6.28,<1.7
     - gst-plugins-base  # [linux]
     - icu 58.*
+    - sqlite 3.13.*
     - libxcb  # [linux]
     - dbus  # [linux]
     - vc 9  # [win and py27]
@@ -81,6 +83,9 @@ test:
     - conda inspect objects -p $PREFIX qt  # [osx]
     - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1  # [win]
     - test -f $PREFIX/lib/libQt5WebKit.so  # [linux]
+    # sql plugin
+    - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}  # [unix]
+    - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]
 
 about:
   home: http://qt-project.org

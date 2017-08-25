@@ -83,12 +83,11 @@ requirements:
     - freetype 2.7|2.7.*  # [linux]
     - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*  # [not osx]
-    - jpeg 9*
-    - zlib 1.2.*
-    - libpng >=1.6.28,<1.7
+    - zlib
+    - libpng
+    - icu
+    - sqlite
     - gst-plugins-base >=1.12.2,<2.0a0 # [linux]
-    - icu 58.*
-    - sqlite 3.13.*
     - libxcb  # [linux]
     - dbus  # [linux]
     - vc 9  # [win and py27]
@@ -98,12 +97,8 @@ requirements:
     - freetype 2.7|2.7.*  # [linux]
     - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*  # [not osx]
-    - jpeg 9*
-    - zlib 1.2.*
-    - libpng >=1.6.28,<1.7
     - gst-plugins-base >=1.12.2,<2.0a0 # [linux]
     - icu 58.*
-    - sqlite 3.13.*
     - libxcb  # [linux]
     - dbus  # [linux]
     - vc 9  # [win and py27]

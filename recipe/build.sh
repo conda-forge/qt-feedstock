@@ -4,23 +4,37 @@
 # -------
 chmod +x configure
 
-if [ $(uname) == Linux ]; then
+# Let Qt set its own flags and vars
+for x in OSX_ARCH CFLAGS CXXFLAGS LDFLAGS
+do
+    unset $x
+done
 
-    # Download QtWebkit
-    curl "http://linorg.usp.br/Qt/community_releases/5.6/${PKG_VERSION}/qtwebkit-opensource-src-${PKG_VERSION}.tar.xz" > qtwebkit.tar.xz
-    unxz qtwebkit.tar.xz
-    tar xf qtwebkit.tar
-    mv qtwebkit-opensource-src* qtwebkit
-    patch -p0 < "${RECIPE_DIR}"/0001-qtwebkit-old-ld-compat.patch
-    patch -p0 < "${RECIPE_DIR}"/0002-qtwebkit-ruby-1.8.patch
-    patch -p0 < "${RECIPE_DIR}"/0003-qtwebkit-O_CLOEXEC-workaround.patch
-    patch -p0 < "${RECIPE_DIR}"/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch
-    # From https://bugs.webkit.org/show_bug.cgi?id=70610, http://trac.webkit.org/changeset/172759, https://github.com/WebKit/webkit/commit/4d7f0f
-    patch -p0 < "${RECIPE_DIR}"/0005-qtwebkit-fix-TEXTREL-on-x86-changeset_172759.patch
-    rm qtwebkit.tar
+MAKE_JOBS=$CPU_COUNT
 
-    MAKE_JOBS=$CPU_COUNT
+if [[ -d qtwebkit ]]; then
+  # From: http://www.linuxfromscratch.org/blfs/view/svn/x/qtwebkit5.html
+  # Should really be a patch:
+  sed -i.bak -e '/CONFIG/a QMAKE_CXXFLAGS += -Wno-expansion-to-defined' qtwebkit/Tools/qmake/mkspecs/features/unix/default_pre.prf
+fi
 
+if [[ ${HOST} =~ .*linux.* ]]; then
+
+    # TODO :: Fix this in pkg-config directly. It needs to check for CONDA_BUILD_SYSROOT
+    #         and prepend these values to PKG_CONFIG_PATH and default to --define-prefix
+    #         (the same issue came up in libxcb-feedstock).
+    if [[ ${HOST} =~ .*x86_64.* ]]; then
+      SRLIBDIR=lib64
+    else
+      SRLIBDIR=lib
+    fi
+    echo "#!/usr/bin/env bash"                                                                                                                            > ./pkg-config
+    echo "export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig:$(${CC} -print-sysroot)/usr/share/pkgconfig:$(${CC} -print-sysroot)/usr/${SRLIBDIR}/pkgconfig"  >> ./pkg-config
+    echo "${PREFIX}/bin/pkg-config --define-prefix \"\$@\""                                                                                              >> ./pkg-config
+    chmod +x ./pkg-config
+    export PATH=${PWD}:${PATH}
+
+    export LD=${CXX}
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \
@@ -60,8 +74,10 @@ if [ $(uname) == Linux ]; then
                 -no-libudev \
                 -no-avx \
                 -no-avx2 \
+                -Wno-expansion-to-defined \
                 -D _X_INLINE=inline \
                 -D XK_dead_currency=0xfe6f \
+                -D _FORTIFY_SOURCE=2 \
                 -D XK_ISO_Level5_Lock=0xfe13 \
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
@@ -77,18 +93,11 @@ if [ $(uname) == Linux ]; then
 # -D __le64="unsigned long long" \
 # -D __be64="__signed__ long long"
 
-    LD_LIBRARY_PATH=$PREFIX/lib make -j $MAKE_JOBS || exit 1
+    LD_LIBRARY_PATH=$PREFIX/lib make -j ${MAKE_JOBS} || exit 1
     make install
 fi
 
-if [ $(uname) == Darwin ]; then
-    # Let Qt set its own flags and vars
-    for x in OSX_ARCH CFLAGS CXXFLAGS LDFLAGS
-    do
-        unset $x
-    done
-
-    export MACOSX_DEPLOYMENT_TARGET=10.9
+if [[ ${HOST} =~ .*darwin.* ]]; then
 
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
@@ -133,7 +142,7 @@ if [ $(uname) == Darwin ]; then
                 -sdk macosx10.9 \
     ####
 
-    make -j $CPU_COUNT || exit 1
+    make -j ${MAKE_JOBS} || exit 1
     make install
 fi
 
@@ -146,16 +155,16 @@ pushd "${PREFIX}"/lib > /dev/null
 popd > /dev/null
 
 # Add qt.conf file to the package to make it fully relocatable
-cp "${RECIPE_DIR}"/qt.conf "${PREFIX}"/bin/
-
+# cp "${RECIPE_DIR}"/qt.conf "${PREFIX}"/bin/
+#
 if [ $(uname) == Darwin ]
 then
     BIN=$PREFIX/bin
 
-    for name in Assistant Designer Linguist pixeltool qml
-    do
-        mv ${BIN}/${name}.app ${BIN}/${name}app
-    done
+    # for name in Assistant Designer Linguist pixeltool qml
+    # do
+    #     mv ${BIN}/${name}.app ${BIN}/${name}app
+    # done
 
     # We built Qt itself with SDK 10.9, but we shouldn't
     # force users to also build their Qt apps with SDK 10.9

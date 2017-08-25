@@ -5,28 +5,37 @@ package:
   version: {{ version }}
 
 source:
-  fn: qt-everywhere-opensource-src-{{ version }}.tar.gz
-  url: http://download.qt.io/official_releases/qt/5.6/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.gz
-  sha256: 7551f5af1312082c3c8ab52f5e102e3f83aae2dd96dc4a3a9a197f3e58b3214c
-  patches:
-    - 0005-Remove-unused-include-sys-signalfd.h.patch
-    - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
-    - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
-    - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
-    # qtbase
-    - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
-    - 0009-osx-force-10.9-deployment-target.patch  # [osx]
-    - 0010-osx-xctest-check.patch  # [osx]
-    # qt3d
-    - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch  # [win]
-    # qtwinextras
-    - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
+  - url: http://download.qt.io/official_releases/qt/5.6/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.gz
+    sha256: 7551f5af1312082c3c8ab52f5e102e3f83aae2dd96dc4a3a9a197f3e58b3214c
+    patches:
+      - 0005-Remove-unused-include-sys-signalfd.h.patch
+      - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
+      - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
+      - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
+      # qtbase
+      - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
+      - 0009-osx-force-10.9-deployment-target.patch  # [osx]
+      - 0010-osx-xctest-check.patch  # [osx]
+      # qt3d
+      - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch  # [win]
+      # qtwinextras
+      - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
+
+  - url: http://download.qt.io/community_releases/5.6/{{ version }}/qtwebkit-opensource-src-{{ version }}.tar.xz  # [not osx]
+    folder: qtwebkit                                                                                              # [not osx]
+    patches:                                                                                                      # [not osx]
+      - 0001-qtwebkit-old-ld-compat.patch                                                                         # [not osx]
+      - 0002-qtwebkit-ruby-1.8.patch                                                                              # [not osx]
+      # Not needed since updating to CentOS6?
+      # - 0003-qtwebkit-O_CLOEXEC-workaround.patch                                                                  # [not osx]
+      - 0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [not osx]
+      # From https://bugs.webkit.org/show_bug.cgi?id=70610, http://trac.webkit.org/changeset/172759, https://github.com/WebKit/webkit/commit/4d7f0f
+      - 0005-qtwebkit-fix-TEXTREL-on-x86-changeset_172759.patch
 
 build:
-  number: 2  # [win]
-  number: 4  # [linux]
-  number: 5  # [osx]
-  skip: True  # [osx or win or linux]
+  number: 12  # [win]
+  number: 12  # [linux]
+  number: 12  # [osx]
   detect_binary_files_with_prefix: true
   features:
     - vc9  # [win and py27]
@@ -35,6 +44,9 @@ build:
 
 requirements:
   build:
+    - {{ compiler('cxx') }}
+    - pkg-config  # [linux]
+    - pthread-stubs  # [linux]
     - python  # [win]
     - python 2.7*  # [unix]
     - 7za  # [win]
@@ -43,14 +55,38 @@ requirements:
     - gperf  # [linux]
     - curl  # [win]
     - msinttypes  # [win and py27]
-    - perl 5.22.2.1
+    - perl 5.*
+    - {{ cdt('xorg-x11-proto-devel') }}
+    - {{ cdt('libx11-devel') }}
+    - {{ cdt('libxext-devel') }}
+    - {{ cdt('libxrender-devel') }}
+    - {{ cdt('mesa-libgl-devel') }}
+    - {{ cdt('mesa-libegl-devel') }}
+    - {{ cdt('mesa-dri-drivers') }}
+    - {{ cdt('libxau-devel') }}
+    - {{ cdt('alsa-lib-devel') }}
+    - {{ cdt('gtk2-devel') }}
+    - {{ cdt('gtkmm24-devel') }}
+    - {{ cdt('libdrm-devel') }}
+    - {{ cdt('libxcomposite-devel') }}
+    - {{ cdt('libxcursor-devel') }}
+    - {{ cdt('libxi-devel') }}
+    - {{ cdt('libxrandr-devel') }}
+    - {{ cdt('pciutils-devel') }}
+    - {{ cdt('libxscrnsaver-devel') }}
+    - {{ cdt('libxtst-devel') }}
+    - {{ cdt('libselinux-devel') }}
+    - {{ cdt('libxdamage') }}
+    - {{ cdt('libxfixes') }}
+    - {{ cdt('libxxf86vm') }}
+  host:
     - freetype 2.7|2.7.*  # [linux]
     - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*  # [not osx]
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
-    - gst-plugins-base  # [linux]
+    - gst-plugins-base >=1.12.2,<2.0a0 # [linux]
     - icu 58.*
     - sqlite 3.13.*
     - libxcb  # [linux]
@@ -65,7 +101,7 @@ requirements:
     - jpeg 9*
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
-    - gst-plugins-base  # [linux]
+    - gst-plugins-base >=1.12.2,<2.0a0 # [linux]
     - icu 58.*
     - sqlite 3.13.*
     - libxcb  # [linux]

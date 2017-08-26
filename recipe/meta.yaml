@@ -80,27 +80,22 @@ requirements:
     - {{ cdt('libxfixes') }}
     - {{ cdt('libxxf86vm') }}
   host:
-    - freetype 2.7|2.7.*  # [linux]
-    - fontconfig 2.12.*  # [linux]
-    - openssl 1.0.*  # [not osx]
+    - dbus  # [linux]
+    - fontconfig  # [linux]
+    - freetype  # [linux]
+    - gst-plugins-base {{ gst_plugins_base }} # [linux]
     - zlib
     - libpng
     - icu
     - sqlite
-    - gst-plugins-base >=1.12.2,<2.0a0 # [linux]
     - libxcb  # [linux]
-    - dbus  # [linux]
+    - openssl 1.0.*  # [not osx]
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
   run:
-    - freetype 2.7|2.7.*  # [linux]
-    - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*  # [not osx]
-    - gst-plugins-base >=1.12.2,<2.0a0 # [linux]
-    - icu 58.*
     - libxcb  # [linux]
-    - dbus  # [linux]
     - vc 9  # [win and py27]
     - vc 10  # [win and py34]
     - vc 14  # [win and py>=35]
@@ -131,8 +126,8 @@ about:
 extra:
   recipe-maintainers:
     - ccordoba12
-    - mingwandroid
     - gillins
+    - mingwandroid
     - msarahan
     - ocefpaf
     - stuarteberg

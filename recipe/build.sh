@@ -93,7 +93,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 # -D __le64="unsigned long long" \
 # -D __be64="__signed__ long long"
 
-    LD_LIBRARY_PATH=$PREFIX/lib make -j ${MAKE_JOBS} || exit 1
+    LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
     make install
 fi
 
@@ -142,7 +142,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -sdk macosx10.9 \
     ####
 
-    make -j ${MAKE_JOBS} || exit 1
+    make -j${MAKE_JOBS} || exit 1
     make install
 fi
 

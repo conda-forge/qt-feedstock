@@ -45,6 +45,29 @@ build:
 requirements:
   build:
     - {{ compiler('cxx') }}
+    - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
+    - {{ cdt('libx11-devel') }}          # [linux]
+    - {{ cdt('libxext-devel') }}         # [linux]
+    - {{ cdt('libxrender-devel') }}      # [linux]
+    - {{ cdt('mesa-libgl-devel') }}      # [linux]
+    - {{ cdt('mesa-libegl-devel') }}     # [linux]
+    - {{ cdt('mesa-dri-drivers') }}      # [linux]
+    - {{ cdt('libxau-devel') }}          # [linux]
+    - {{ cdt('alsa-lib-devel') }}        # [linux]
+    - {{ cdt('gtk2-devel') }}            # [linux]
+    - {{ cdt('gtkmm24-devel') }}         # [linux]
+    - {{ cdt('libdrm-devel') }}          # [linux]
+    - {{ cdt('libxcomposite-devel') }}   # [linux]
+    - {{ cdt('libxcursor-devel') }}      # [linux]
+    - {{ cdt('libxi-devel') }}           # [linux]
+    - {{ cdt('libxrandr-devel') }}       # [linux]
+    - {{ cdt('pciutils-devel') }}        # [linux]
+    - {{ cdt('libxscrnsaver-devel') }}   # [linux]
+    - {{ cdt('libxtst-devel') }}         # [linux]
+    - {{ cdt('libselinux-devel') }}      # [linux]
+    - {{ cdt('libxdamage') }}            # [linux]
+    - {{ cdt('libxfixes') }}             # [linux]
+    - {{ cdt('libxxf86vm') }}            # [linux]
     - pkg-config  # [linux]
     - pthread-stubs  # [linux]
     - python  # [win]
@@ -56,29 +79,6 @@ requirements:
     - curl  # [win]
     - msinttypes  # [win and py27]
     - perl 5.*
-    - {{ cdt('xorg-x11-proto-devel') }}
-    - {{ cdt('libx11-devel') }}
-    - {{ cdt('libxext-devel') }}
-    - {{ cdt('libxrender-devel') }}
-    - {{ cdt('mesa-libgl-devel') }}
-    - {{ cdt('mesa-libegl-devel') }}
-    - {{ cdt('mesa-dri-drivers') }}
-    - {{ cdt('libxau-devel') }}
-    - {{ cdt('alsa-lib-devel') }}
-    - {{ cdt('gtk2-devel') }}
-    - {{ cdt('gtkmm24-devel') }}
-    - {{ cdt('libdrm-devel') }}
-    - {{ cdt('libxcomposite-devel') }}
-    - {{ cdt('libxcursor-devel') }}
-    - {{ cdt('libxi-devel') }}
-    - {{ cdt('libxrandr-devel') }}
-    - {{ cdt('pciutils-devel') }}
-    - {{ cdt('libxscrnsaver-devel') }}
-    - {{ cdt('libxtst-devel') }}
-    - {{ cdt('libselinux-devel') }}
-    - {{ cdt('libxdamage') }}
-    - {{ cdt('libxfixes') }}
-    - {{ cdt('libxxf86vm') }}
   host:
     - dbus  # [linux]
     - fontconfig  # [linux]

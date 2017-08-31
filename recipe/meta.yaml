@@ -83,12 +83,13 @@ requirements:
   host:
     - dbus  # [linux]
     - fontconfig  # [linux]
-    - freetype  # [linux]
+    - freetype  # [unix]
     - gst-plugins-base {{ gst_plugins_base }} # [linux]
-    - zlib
-    - libpng
     - icu
+    - jpeg
+    - libpng
     - sqlite
+    - zlib
     - libxcb  # [linux]
     - openssl 1.0.*  # [not osx]
     - vc 9  # [win and py27]

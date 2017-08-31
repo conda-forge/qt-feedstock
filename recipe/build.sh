@@ -99,6 +99,12 @@ fi
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
 
+    # Avoid Xcode
+    cp "${RECIPE_DIR}"/xcrun .
+    # Some test runs 'clang -v', but I do not want to add it as a requirement just for that.
+    ln -s "${PREFIX}"/bin/${HOST}-clang++ ${HOST}-clang
+    PATH=${PWD}:${PATH}
+
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \

@@ -1,0 +1,54 @@
+diff -urN qtbase.orig/configure qtbase/configure
+--- qtbase.orig/configure	2017-08-31 03:18:33.000000000 -0700
++++ qtbase/configure	2017-08-31 03:19:07.000000000 -0700
+@@ -315,7 +315,7 @@
+                 # Prefix tool with toolchain path
+                 var=$(echo "$line" | cut -d '=' -f 1)
+                 val=$(echo "$line" | cut -d '=' -f 2-)
+-                sdk_val=$(/usr/bin/xcrun -sdk $sdk -find $(echo $val | cut -d ' ' -f 1))
++                sdk_val=$(xcrun -sdk $sdk -find $(echo $val | cut -d ' ' -f 1))
+                 val=$(echo $sdk_val $(echo $val | cut -s -d ' ' -f 2-))
+                 echo "$var=$val"
+             ;;
+@@ -543,7 +543,7 @@
+         exit 2
+     fi
+ 
+-    if ! /usr/bin/xcrun -find xcodebuild >/dev/null 2>&1; then
++    if ! xcrun -find xcodebuild >/dev/null 2>&1; then
+         echo >&2
+         echo "   Xcode not set up properly. You may need to confirm the license" >&2
+         echo "   agreement by running /usr/bin/xcodebuild without arguments." >&2
+@@ -2831,7 +2831,7 @@
+         # about the OS version, since we're not using the clang version that comes
+         # with the system. We use 'xcrun' to check the clang version that's part of
+         # the Xcode installation.
+-        XCRUN=`/usr/bin/xcrun -sdk macosx clang -v 2>&1`
++        XCRUN=`xcrun -sdk macosx clang -v 2>&1`
+         CLANGVERSION=`echo "$XCRUN" | sed -n 's/.*version \([0-9]\).*/\1/p'`
+         expr "$CLANGVERSION" : '[0-9]' > /dev/null || { echo "Unable to determine CLANG version from output of xcrun: $XCRUN" ; exit 2 ; }
+         if [ "$CLANGVERSION" -ge 3 ]; then
+diff -urN qtbase.orig/mkspecs/features/mac/default_pre.prf qtbase/mkspecs/features/mac/default_pre.prf
+--- qtbase.orig/mkspecs/features/mac/default_pre.prf	2017-08-31 03:18:35.000000000 -0700
++++ qtbase/mkspecs/features/mac/default_pre.prf	2017-08-31 03:19:22.000000000 -0700
+@@ -12,7 +12,7 @@
+         error("Xcode is not installed in $${QMAKE_XCODE_DEVELOPER_PATH}. Please use xcode-select to choose Xcode installation path.")
+ 
+     # Make sure Xcode is set up properly
+-    isEmpty($$list($$system("/usr/bin/xcrun -find xcodebuild 2>/dev/null"))): \
++    isEmpty($$list($$system("xcrun -find xcodebuild 2>/dev/null"))): \
+         error("Xcode not set up properly. You may need to confirm the license agreement by running /usr/bin/xcodebuild.")
+ }
+ 
+diff -urN qtbase.orig/mkspecs/features/mac/sdk.prf qtbase/mkspecs/features/mac/sdk.prf
+--- qtbase.orig/mkspecs/features/mac/sdk.prf	2017-08-31 03:18:35.000000000 -0700
++++ qtbase/mkspecs/features/mac/sdk.prf	2017-08-31 03:19:38.000000000 -0700
+@@ -52,7 +52,7 @@
+     value = $$eval($$tool)
+     isEmpty(value): next()
+ 
+-    sysrooted = $$system("/usr/bin/xcrun -sdk $$QMAKE_MAC_SDK -find $$first(value) 2>/dev/null")
++    sysrooted = $$system("xcrun -sdk $$QMAKE_MAC_SDK -find $$first(value) 2>/dev/null")
+     isEmpty(sysrooted): next()
+ 
+     $$tool = $$sysrooted $$member(value, 1, -1)

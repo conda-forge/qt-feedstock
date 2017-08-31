@@ -8,10 +8,10 @@ Change-Id: I8e5115c75f727cd02060faca259e130eb5681303
  tools/qmake/mkspecs/features/default_pre.prf | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/qmake/mkspecs/features/default_pre.prf b/tools/qmake/mkspecs/features/default_pre.prf
+diff --git qtwebengine.orig/tools/qmake/mkspecs/features/default_pre.prf qtwebengine/tools/qmake/mkspecs/features/default_pre.prf
 index 27aded01..4397dc10 100644
---- a/tools/qmake/mkspecs/features/default_pre.prf
-+++ b/tools/qmake/mkspecs/features/default_pre.prf
+--- qtwebengine.orig/tools/qmake/mkspecs/features/default_pre.prf
++++ qtwebengine/tools/qmake/mkspecs/features/default_pre.prf
 @@ -2,7 +2,7 @@
  QTWEBENGINE_ROOT = $$replace(PWD, /tools/qmake/mkspecs/features$,)
  

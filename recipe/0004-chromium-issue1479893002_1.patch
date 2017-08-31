@@ -32,3 +32,18 @@ index 8daf0dd657f232f070953f65fbe0930dd484e088..79b168c37eab7a16969d1b91384ba1f7
 +            Compare(), zone_allocator<std::pair<const K, V>>(zone)) {}
  };
  
+--- qtwebengine.orig/src/3rdparty/chromium/v8/src/compiler/js-type-feedback.h	2017-08-31 15:21:44.000000000 -0700
++++ qtwebengine/src/3rdparty/chromium/v8/src/compiler/js-type-feedback.h	2017-08-31 15:30:40.000000000 -0700
+@@ -33,9 +33,10 @@
+  private:
+   friend class JSTypeFeedbackSpecializer;
+   typedef std::map<NodeId, TypeFeedbackId, std::less<NodeId>,
+-                   zone_allocator<TypeFeedbackId> > TypeFeedbackIdMap;
++                   zone_allocator<std::pair<const NodeId, TypeFeedbackId> > >
++      TypeFeedbackIdMap;
+   typedef std::map<NodeId, FeedbackVectorICSlot, std::less<NodeId>,
+-                   zone_allocator<FeedbackVectorICSlot> >
++                   zone_allocator<std::pair<const NodeId, FeedbackVectorICSlot> > >
+       FeedbackVectorICSlotMap;
+ 
+   TypeFeedbackIdMap type_feedback_id_map_;

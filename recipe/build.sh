@@ -134,7 +134,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -system-libjpeg \
                 -system-libpng \
                 -system-zlib \
-                -system-freetype \
+                -qt-freetype \
                 -qt-pcre \
                 -c++11 \
                 -no-framework \

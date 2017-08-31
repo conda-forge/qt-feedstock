@@ -1,0 +1,12 @@
+macos-10-9:recipe vagrant$ cat 0001-qtwebengine-mac_sdk_min-to-10.9.patch 
+--- qtwebengine/src/core/config/mac_osx.pri.orig	2017-08-31 09:17:46.000000000 -0700
++++ qtwebengine/src/core/config/mac_osx.pri	2017-08-31 09:17:58.000000000 -0700
+@@ -13,7 +13,7 @@
+ 
+ GYP_CONFIG += \
+     qt_os=\"mac\" \
+-    mac_sdk_min=\"10.7\" \
++    mac_sdk_min=\"10.9\" \
+     mac_deployment_target=\"$${QMAKE_MACOSX_DEPLOYMENT_TARGET}\" \
+     make_clang_dir=\"$${QMAKE_CLANG_DIR}\" \
+     clang_use_chrome_plugins=0 \

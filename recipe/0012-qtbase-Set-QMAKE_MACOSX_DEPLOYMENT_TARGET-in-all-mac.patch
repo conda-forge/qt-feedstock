@@ -1,0 +1,108 @@
+From f4bd2af6337785b8e17a4cee1f37b773035df1f5 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Thu, 31 Aug 2017 19:20:29 +0100
+Subject: [PATCH] Set QMAKE_MACOSX_DEPLOYMENT_TARGET in all mac qmake.conf
+
+Change-Id: I09346eda6960c9dbdabe1c0a4e51334873f27a70
+---
+ mkspecs/macx-clang-32/qmake.conf | 2 +-
+ mkspecs/macx-clang/qmake.conf    | 2 +-
+ mkspecs/macx-g++-32/qmake.conf   | 2 +-
+ mkspecs/macx-g++/qmake.conf      | 2 +-
+ mkspecs/macx-g++40/qmake.conf    | 2 +-
+ mkspecs/macx-g++42/qmake.conf    | 2 +-
+ mkspecs/macx-llvm/qmake.conf     | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git qtbase.orig/mkspecs/macx-clang-32/qmake.conf qtbase/mkspecs/macx-clang-32/qmake.conf
+index 56a3bb8ec6..94248c7f30 100644
+--- qtbase.orig/mkspecs/macx-clang-32/qmake.conf
++++ qtbase/mkspecs/macx-clang-32/qmake.conf
+@@ -11,7 +11,7 @@ include(../common/gcc-base-mac.conf)
+ include(../common/clang.conf)
+ include(../common/clang-mac.conf)
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ QMAKE_CFLAGS           += -arch i386
+ QMAKE_CXXFLAGS         += -arch i386
+diff --git qtbase.orig/mkspecs/macx-clang/qmake.conf qtbase/mkspecs/macx-clang/qmake.conf
+index 936f9fe48a..0a809fce27 100644
+--- qtbase.orig/mkspecs/macx-clang/qmake.conf
++++ qtbase/mkspecs/macx-clang/qmake.conf
+@@ -11,6 +11,6 @@ include(../common/gcc-base-mac.conf)
+ include(../common/clang.conf)
+ include(../common/clang-mac.conf)
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ load(qt_config)
+diff --git qtbase.orig/mkspecs/macx-g++-32/qmake.conf qtbase/mkspecs/macx-g++-32/qmake.conf
+index 46cddda277..3cd707d537 100644
+--- qtbase.orig/mkspecs/macx-g++-32/qmake.conf
++++ qtbase/mkspecs/macx-g++-32/qmake.conf
+@@ -14,7 +14,7 @@ include(../common/macx.conf)
+ include(../common/gcc-base-mac.conf)
+ include(../common/g++-macx.conf)
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ QMAKE_CFLAGS           += -arch i386
+ QMAKE_CXXFLAGS         += -arch i386
+diff --git qtbase.orig/mkspecs/macx-g++/qmake.conf qtbase/mkspecs/macx-g++/qmake.conf
+index f992138400..5b3105c668 100644
+--- qtbase.orig/mkspecs/macx-g++/qmake.conf
++++ qtbase/mkspecs/macx-g++/qmake.conf
+@@ -14,6 +14,6 @@ include(../common/macx.conf)
+ include(../common/gcc-base-mac.conf)
+ include(../common/g++-macx.conf)
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ load(qt_config)
+diff --git qtbase.orig/mkspecs/macx-g++40/qmake.conf qtbase/mkspecs/macx-g++40/qmake.conf
+index e03de6eaa8..308cc2007c 100644
+--- qtbase.orig/mkspecs/macx-g++40/qmake.conf
++++ qtbase/mkspecs/macx-g++40/qmake.conf
+@@ -14,7 +14,7 @@ include(../common/macx.conf)
+ include(../common/gcc-base-mac.conf)
+ include(../common/g++-macx.conf)
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ QMAKE_CC                = gcc-4.0
+ QMAKE_CXX               = g++-4.0
+diff --git qtbase.orig/mkspecs/macx-g++42/qmake.conf qtbase/mkspecs/macx-g++42/qmake.conf
+index 7efad4f099..b24cb7f3f3 100644
+--- qtbase.orig/mkspecs/macx-g++42/qmake.conf
++++ qtbase/mkspecs/macx-g++42/qmake.conf
+@@ -14,7 +14,7 @@ include(../common/macx.conf)
+ include(../common/gcc-base-mac.conf)
+ include(../common/g++-macx.conf)
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ QMAKE_CC                = gcc-4.2
+ QMAKE_CXX               = g++-4.2
+diff --git qtbase.orig/mkspecs/macx-llvm/qmake.conf qtbase/mkspecs/macx-llvm/qmake.conf
+index 1267a39e71..0434d29b50 100644
+--- qtbase.orig/mkspecs/macx-llvm/qmake.conf
++++ qtbase/mkspecs/macx-llvm/qmake.conf
+@@ -14,7 +14,7 @@ include(../common/macx.conf)
+ include(../common/gcc-base-mac.conf)
+ include(../common/llvm.conf)
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ QMAKE_XCODE_GCC_VERSION = com.apple.compilers.llvmgcc42
+ 
+-- 
+2.14.1
+

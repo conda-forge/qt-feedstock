@@ -1,0 +1,23 @@
+--- qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py.orig	2017-08-31 10:36:58.000000000 -0700
++++ qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py	2017-08-31 10:45:49.000000000 -0700
+@@ -38,6 +38,13 @@
+   (options, args) = parser.parse_args()
+   min_sdk_version = args[0]
+ 
++  # Avoid this nonsense, and it really is nonsense (options.sdk_path does nothing)
++  if 'CONDA_BUILD_SYSROOT' in os.environ:
++    result = os.environ['CONDA_BUILD_SYSROOT']
++    if options.print_sdk_path:
++      print(result)
++    return result
++
+   job = subprocess.Popen(['xcode-select', '-print-path'],
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT)
+@@ -85,6 +92,4 @@
+ 
+ 
+ if __name__ == '__main__':
+-  if sys.platform != 'darwin':
+-    raise Exception("This script only runs on Mac")
+   print main()

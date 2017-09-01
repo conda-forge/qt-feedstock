@@ -161,7 +161,7 @@ pushd "${PREFIX}"/lib > /dev/null
     find . -name "*.a" -and -not -name "libQt*" -exec rm -f {} \;
 popd > /dev/null
 
-Add qt.conf file to the package to make it fully relocatable
+# Add qt.conf file to the package to make it fully relocatable
 cp "${RECIPE_DIR}"/qt.conf "${PREFIX}"/bin/
 
 if [[ ${HOST} == .*darwin.* ]];

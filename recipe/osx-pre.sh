@@ -1,6 +1,5 @@
 #!/bin/bash
 
-for name in Assistant Designer Linguist pixeltool qml
-do
-    rm -r $PREFIX/bin/${name}.app
+for _name in Assistant Designer Linguist pixeltool qml; do
+    rm -r ${PREFIX}/bin/${_name}.app
 done

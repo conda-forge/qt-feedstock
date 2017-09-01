@@ -1,5 +1,5 @@
 Index: qtwebengine/src/3rdparty/chromium/v8/src/compiler/instruction.h
-diff --git qtwebengine.orig/src/3rdparty/chromium/v8/src/compiler/instruction.h qtwebengine/src/3rdparty/chromium/v8/src/compiler/instruction.h
+diff --git qtwebengine/src/3rdparty/chromium/v8/src/compiler/instruction.h
 index 6b9ad82f341c0f1073389cb0c2ab6018a34a0afe..5c052ac3c5d5de74bf3833d349852428e9de01f2 100644
 --- qtwebengine.orig/src/3rdparty/chromium/v8/src/compiler/instruction.h
 +++ qtwebengine/src/3rdparty/chromium/v8/src/compiler/instruction.h
@@ -32,8 +32,12 @@ index 8daf0dd657f232f070953f65fbe0930dd484e088..79b168c37eab7a16969d1b91384ba1f7
 +            Compare(), zone_allocator<std::pair<const K, V>>(zone)) {}
  };
  
---- qtwebengine.orig/src/3rdparty/chromium/v8/src/compiler/js-type-feedback.h	2017-08-31 15:21:44.000000000 -0700
-+++ qtwebengine/src/3rdparty/chromium/v8/src/compiler/js-type-feedback.h	2017-08-31 15:30:40.000000000 -0700
+ 
+Index: qtwebengine/src/3rdparty/chromium/v8/src/compiler/js-type-feedback.h
+diff --git qtwebengine/src/3rdparty/chromium/v8/src/compiler/js-type-feedback.h
+index 8daf0dd657f232f070953f65fbe0930dd484e088..79b168c37eab7a16969d1b91384ba1f74e3d0423 100644
+--- qtwebengine.orig/src/3rdparty/chromium/v8/src/compiler/js-type-feedback.h
++++ qtwebengine/src/3rdparty/chromium/v8/src/compiler/js-type-feedback.h
 @@ -33,9 +33,10 @@
   private:
    friend class JSTypeFeedbackSpecializer;

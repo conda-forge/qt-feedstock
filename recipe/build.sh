@@ -20,22 +20,14 @@ fi
 
 if [[ ${HOST} =~ .*linux.* ]]; then
 
-    # TODO :: Fix this in pkg-config directly. It needs to check for CONDA_BUILD_SYSROOT
-    #         and prepend these values to PKG_CONFIG_PATH and default to --define-prefix
-    #         (the same issue came up in libxcb-feedstock).
-    if [[ ${HOST} =~ .*x86_64.* ]]; then
-      SRLIBDIR=lib64
-    else
-      SRLIBDIR=lib
+    if ! which ruby > /dev/null 2>&1; then
+        echo "You need ruby to build qtwebkit"
+        exit 1
     fi
-    echo "#!/usr/bin/env bash"                                                                                                                            > ./pkg-config
-    echo "export PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig:$(${CC} -print-sysroot)/usr/share/pkgconfig:$(${CC} -print-sysroot)/usr/${SRLIBDIR}/pkgconfig"  >> ./pkg-config
-    echo "${PREFIX}/bin/pkg-config --define-prefix \"\$@\""                                                                                              >> ./pkg-config
-    chmod +x ./pkg-config
-    export PATH=${PWD}:${PATH}
 
     ln -s ${GXX} g++
     ln -s ${GCC} gcc
+    export PATH=${PWD}:${PATH}
     export LD=${GXX}
     export CC=${GCC}
     export CXX=${GXX}

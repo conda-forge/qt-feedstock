@@ -34,7 +34,12 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     chmod +x ./pkg-config
     export PATH=${PWD}:${PATH}
 
-    export LD=${CXX}
+    ln -s ${GXX} g++
+    ln -s ${GCC} gcc
+    export LD=${GXX}
+    export CC=${GCC}
+    export CXX=${GXX}
+
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \

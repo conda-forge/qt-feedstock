@@ -19,8 +19,6 @@ if [ $(uname) == Linux ]; then
     patch -p0 < "${RECIPE_DIR}"/0005-qtwebkit-fix-TEXTREL-on-x86-changeset_172759.patch
     rm qtwebkit.tar
 
-    MAKE_JOBS=$CPU_COUNT
-
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \
@@ -75,7 +73,7 @@ if [ $(uname) == Linux ]; then
 # -D __le64="unsigned long long" \
 # -D __be64="__signed__ long long"
 
-    LD_LIBRARY_PATH=$PREFIX/lib make -j $MAKE_JOBS || exit 1
+    LD_LIBRARY_PATH=$PREFIX/lib make -j $CPU_COUNT || exit 1
     make install
 fi
 

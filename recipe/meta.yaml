@@ -81,6 +81,7 @@ requirements:
     - pthread-stubs  # [linux]
     - python  # [win]
     - python 2.7*  # [unix]
+    - ruby  # [linux]
     - 7za  # [win]
     - bison  # [linux]
     - flex  # [linux]

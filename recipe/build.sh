@@ -32,6 +32,39 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     export CC=${GCC}
     export CXX=${GXX}
 
+    # Qt has some braindamaged behaviour around handling compiler system include and lib paths. Basically, if it finds any include dir
+    # that is a system include dir then it prefixes it with -isystem. Problem is, passing -isystem <blah> causes GCC to forget all the
+    # other system include paths. The reason that Qt needs to know about these paths is probably due to moc needing to know about them
+    # so we cannot just elide them altogether. Instead, as soon as Qt sees one system path it needs to add them all as a group, in the
+    # correct order. This is probably fairly tricky so we work around needing to do that by having them all be present all the time.
+    #
+    # Futher, any system dirs that appear from the output from pkg-config (QT_XCB_CFLAGS) can cause incorrect emission ordering so we
+    # must filter those out too which we do with a pkg-config wrapper.
+    #
+    # References:
+    #
+    # https://github.com/voidlinux/void-packages/issues/5254
+    # https://github.com/qt/qtbase/commit/0b144bc76a368ecc6c5c1121a1b51e888a0621ac
+    # https://codereview.qt-project.org/#/c/157817/
+    #
+    declare -a INCDIRS
+    INCDIRS=(-I ${PREFIX}/include)
+    SYSINCDIRS=$(echo "" | ${CXX} -xc++ -E -v - 2>&1 | awk '/#include <...> search starts here:/{flag=1;next}/End of search list./{flag=0}flag')
+    for SYSINCDIR in ${SYSINCDIRS}; do
+      INCDIRS+=(-I ${SYSINCDIR})
+    done
+    echo "#!/usr/bin/env sh"                                                          > ./pkg-config
+    echo "pc_res=\$(\${PREFIX}/bin/pkg-config \"\$@\")"                              >> ./pkg-config
+    echo "res=\$?"                                                                   >> ./pkg-config
+    echo "if [[ \${res} != 0 ]]; then"                                               >> ./pkg-config
+    echo "  echo \${pc_res}"                                                         >> ./pkg-config
+    echo "  exit \${res}"                                                            >> ./pkg-config
+    echo "fi"                                                                        >> ./pkg-config
+    echo "echo \${pc_res} | sed 's/[a-zA-Z0-9_-/\.]*sysroot[a-zA-Z0-9_-/\.]*//g'"    >> ./pkg-config
+    echo "exit 0"                                                                    >> ./pkg-config
+    chmod +x ./pkg-config
+    export PATH=${PWD}:${PATH}
+
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \
@@ -39,7 +72,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -archdatadir $PREFIX \
                 -datadir $PREFIX \
                 -L $PREFIX/lib \
-                -I $PREFIX/include \
+                "${INCDIRS[@]}" \
                 -release \
                 -opensource \
                 -confirm-license \

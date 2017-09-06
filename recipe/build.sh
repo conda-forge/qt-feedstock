@@ -49,6 +49,8 @@ if [ $(uname) == Linux ]; then
                 -system-libjpeg \
                 -system-libpng \
                 -system-zlib \
+                -system-sqlite \
+                -plugin-sql-sqlite \
                 -qt-pcre \
                 -qt-xcb \
                 -qt-xkbcommon \

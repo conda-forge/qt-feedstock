@@ -160,6 +160,8 @@ call configure ^
      -system-libjpeg ^
      -system-libpng ^
      -system-zlib ^
+     -system-sqlite ^
+     -plugin-sql-sqlite ^
      -mp
 if errorlevel 1 exit /b 1
 

@@ -194,7 +194,7 @@ popd > /dev/null
 # Add qt.conf file to the package to make it fully relocatable
 cp "${RECIPE_DIR}"/qt.conf "${PREFIX}"/bin/
 
-if [[ ${HOST} == .*darwin.* ]];
+if [[ ${HOST} =~ .*darwin.* ]];
 then
     BIN=${PREFIX}/bin
 

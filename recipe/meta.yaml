@@ -14,11 +14,11 @@ source:
       - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
       # qtbase
       - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
-      - 0010-osx-xctest-check.patch  # [osx]
+      - 0010-osx-xctest-check.patch                                      # [osx]
       - 0011-osx-allow-any-xcrun-in-PATH.patch
       - 0012-qtbase-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-all-mac.patch
       # qt3d
-      - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch  # [win]
+      - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch         # [win]
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine
@@ -35,7 +35,7 @@ source:
       - 0001-qtwebkit-old-ld-compat.patch                                                                         # [not osx]
       - 0002-qtwebkit-ruby-1.8.patch                                                                              # [not osx]
       # Not needed since updating to CentOS6?
-      # - 0003-qtwebkit-O_CLOEXEC-workaround.patch                                                                  # [not osx]
+      # - 0003-qtwebkit-O_CLOEXEC-workaround.patch                                                                # [not osx]
       - 0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [not osx]
       # From https://bugs.webkit.org/show_bug.cgi?id=70610, http://trac.webkit.org/changeset/172759, https://github.com/WebKit/webkit/commit/4d7f0f
       - 0005-qtwebkit-fix-TEXTREL-on-x86-changeset_172759.patch                                                   # [not osx]
@@ -75,33 +75,33 @@ requirements:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
     # For fontconfig + freetype
-    - pkg-config  # [linux]
-    - pthread-stubs  # [linux]
-    - python  # [win]
-    - python 2.7*  # [unix]
-    - ruby  # [linux]
-    - 7za  # [win]
-    - bison  # [linux]
-    - flex  # [linux]
-    - gperf  # [linux]
-    - curl  # [win]
-    - msinttypes  # [win and py27]
+    - pkg-config                         # [linux]
+    - pthread-stubs                      # [linux]
+    - ruby                               # [linux]
+    - bison                              # [linux]
+    - flex                               # [linux]
+    - gperf                              # [linux]
+    - m2-gperf                           # [win]
+    - m2-bison                           # [win]
+    - m2-flex                            # [win]
+    - jom                                # [win]
+    - msinttypes                         # [win and vc != 14]
     - perl 5.*
   host:
-    - dbus  # [linux]
-    - fontconfig  # [linux]
-    - freetype  # [linux]
+    - dbus                               # [linux]
+    - fontconfig                         # [linux]
+    - freetype                           # [linux]
     - gst-plugins-base {{ gst_plugins_base }} # [linux]
     - icu
     - jpeg
     - libpng
     - sqlite
     - zlib
-    - libxcb  # [linux]
-    - openssl 1.0.*  # [not osx]
+    - libxcb                             # [linux]
+    - openssl 1.0.*                      # [not osx]
   run:
-    - openssl 1.0.*  # [not osx]
-    - libxcb  # [linux]
+    - openssl 1.0.*                      # [not osx]
+    - libxcb                             # [linux]
 
 test:
   requires:
@@ -110,12 +110,12 @@ test:
     - test/hello.pro
     - test/main.cpp
   commands:
-    - conda inspect linkages -p $PREFIX qt  # [not win]
-    - conda inspect objects -p $PREFIX qt  # [osx]
-    - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1  # [win]
-    - test -f $PREFIX/lib/libQt5WebKit.so  # [linux]
+    - conda inspect linkages -p $PREFIX qt                                 # [not win]
+    - conda inspect objects -p $PREFIX qt                                  # [osx]
+    - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1                     # [win]
+    - test -f $PREFIX/lib/libQt5WebKit.so                                  # [linux]
     # sql plugin
-    - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}  # [unix]
+    - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]
 
 about:

@@ -60,20 +60,16 @@ if %ERRORLEVEL% neq 0 (
 )
 
 
-:: Install a custom python 27 environment for us, to use in building webengine, but avoid feature activation
-:: At present (5th July 2016) calling `conda create -y -n python27_qt5_build python=2.7` causes the build to
-:: fail immediately after, so I'm bodging around that by not doing it if it exists.  This means you must run
-:: the builds twice. Sorry. Time is not on my side here.
+:: Install a custom python 27 environment for us, to use in building webengine, otherwise
+:: add SYS_PREFIX to PATH to find the conda root env python; QtQml works with any python:
+:: https://bugreports.qt.io/browse/QTBUG-51753
 if "%WEBBACKEND%" == "qtwebengine" (
   if not exist %SYS_PREFIX%\envs\python27_qt5_build (
     conda create -y -n python27_qt5_build python=2.7
   )
   set "PATH=%SYS_PREFIX%\envs\python27_qt5_build;%SYS_PREFIX%\envs\python27_qt5_build\Scripts;%SYS_PREFIX%\envs\python27_qt5_build\Library\bin;%PATH%"
 ) else (
-:: Add SYS_PREFIX to path since we need Python to build QtQml.
-:: Qt devs say either Python can be used:
-:: https://bugreports.qt.io/browse/QTBUG-51753
-  set PATH=%SYS_PREFIX%;%PATH%
+  set "PATH=%SYS_PREFIX%;%PATH%"
 )
 
 :: make sure we can find ICU and openssl:
@@ -219,4 +215,3 @@ if "%WEBBACKEND%" == "qtwebengine" (
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
 if errorlevel 1 exit /b 1
-

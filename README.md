@@ -16,9 +16,9 @@ anywhere on any device, on any operating system at any time.
 Current build status
 ====================
 
-Linux: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
-OSX: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
-Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
+Linux: [![Circle CI](https://circleci.com/gh/conda-forge/qt-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/qt-feedstock)
+OSX: [![TravisCI](https://travis-ci.org/conda-forge/qt-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/qt-feedstock)
+Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/conda-forge/qt-feedstock?svg=True)](https://ci.appveyor.com/project/conda-forge/qt-feedstock/branch/master)
 
 Current release info
 ====================
@@ -68,6 +68,7 @@ To manage the continuous integration and simplify feedstock maintenance
 Using the ``conda-forge.yml`` within this repository, it is possible to re-render all of
 this feedstock's supporting files (e.g. the CI configuration files) with ``conda smithy rerender``.
 
+For more information please check the [conda-forge documentation](https://conda-forge.org/docs/).
 
 Terminology
 ===========

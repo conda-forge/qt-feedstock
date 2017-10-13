@@ -176,7 +176,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-libudev \
                 -no-egl \
                 -no-openssl \
-                -sdk macosx10.9 \
+                -sdk macosx10.9
     ####
 
     make -j${MAKE_JOBS} || exit 1

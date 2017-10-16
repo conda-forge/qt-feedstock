@@ -1,12 +1,22 @@
-macos-10-9:recipe vagrant$ cat 0001-qtwebengine-mac_sdk_min-to-10.9.patch 
---- qtwebengine/src/core/config/mac_osx.pri.orig	2017-08-31 09:17:46.000000000 -0700
-+++ qtwebengine/src/core/config/mac_osx.pri	2017-08-31 09:17:58.000000000 -0700
-@@ -13,7 +13,7 @@
+--- qtwebengine/src/core/config/mac_osx.pri.orig	2017-10-16 12:21:30.000000000 +0100
++++ qtwebengine/src/core/config/mac_osx.pri	2017-10-16 12:21:53.000000000 +0100
+@@ -5,7 +5,7 @@
+ # otherwise query for it.
+ QMAKE_MAC_SDK_VERSION = $$eval(QMAKE_MAC_SDK.$${QMAKE_MAC_SDK}.SDKVersion)
+ isEmpty(QMAKE_MAC_SDK_VERSION) {
+-     QMAKE_MAC_SDK_VERSION = $$system("/usr/bin/xcodebuild -sdk $${QMAKE_MAC_SDK} -version SDKVersion 2>/dev/null")
++     QMAKE_MAC_SDK_VERSION = $$system("xcodebuild -sdk $${QMAKE_MAC_SDK} -version SDKVersion 2>/dev/null")
+      isEmpty(QMAKE_MAC_SDK_VERSION): error("Could not resolve SDK version for \'$${QMAKE_MAC_SDK}\'")
+ }
  
- GYP_CONFIG += \
-     qt_os=\"mac\" \
--    mac_sdk_min=\"10.7\" \
-+    mac_sdk_min=\"10.9\" \
-     mac_deployment_target=\"$${QMAKE_MACOSX_DEPLOYMENT_TARGET}\" \
-     make_clang_dir=\"$${QMAKE_CLANG_DIR}\" \
-     clang_use_chrome_plugins=0 \
+--- qtwebengine/tools/qmake/mkspecs/features/functions.prf.orig	2017-10-16 12:19:07.000000000 +0100
++++ qtwebengine/tools/qmake/mkspecs/features/functions.prf	2017-10-16 12:21:22.000000000 +0100
+@@ -116,7 +116,7 @@
+     requested_minor = $$2
+     requested_patch = $$3
+     isEmpty(requested_patch): requested_patch = 0
+-    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("/usr/bin/xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
++    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
+     export(WEBENGINE_OSX_SDK_PRODUCT_VERSION)
+     isEmpty(WEBENGINE_OSX_SDK_PRODUCT_VERSION) {
+         skipBuild("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")

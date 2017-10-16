@@ -23,8 +23,7 @@ source:
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine
-      # This has become QMAKE_MAC_SDK_VERSION
-      # - 0001-qtwebengine-mac_sdk_min-to-10.9.patch
+      - 0001-qtwebengine-mac_sdk_min-to-10.9.patch
       - 0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
       - 0003-qtwebengine-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-de.patch
 

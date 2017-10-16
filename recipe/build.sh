@@ -134,6 +134,8 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     cp "${RECIPE_DIR}"/xcodebuild .
     # Some test runs 'clang -v', but I do not want to add it as a requirement just for that.
     ln -s "${PREFIX}"/bin/${HOST}-clang++ ${HOST}-clang
+    # Qt passes clang flags to LD (e.g. -stdlib=c++)
+    export LD=${CXX}
     PATH=${PWD}:${PATH}
 
     ./configure -prefix $PREFIX \

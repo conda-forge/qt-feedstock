@@ -111,6 +111,8 @@ test:
   files:
     - test/hello.pro
     - test/main.cpp
+    - xcodebuild
+    - xcrun
   commands:
     - conda inspect linkages -p $PREFIX qt                                 # [not win]
     - conda inspect objects -p $PREFIX qt                                  # [osx]

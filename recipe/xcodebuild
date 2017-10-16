@@ -38,6 +38,9 @@ case ${1} in
       echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/" >> /tmp/xcodebuild-$$.log
       echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/"
       exit 0
+    elif [[ ${1} == ProductVersion ]]; then
+      echo "10.9"
+      exit 0
     fi
     ;;
 

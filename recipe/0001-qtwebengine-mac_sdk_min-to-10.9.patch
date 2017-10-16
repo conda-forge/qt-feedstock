@@ -20,3 +20,16 @@
      export(WEBENGINE_OSX_SDK_PRODUCT_VERSION)
      isEmpty(WEBENGINE_OSX_SDK_PRODUCT_VERSION) {
          skipBuild("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")
+--- qtwebengine/tools/qmake/mkspecs/features/functions.prf.orig	2017-10-16 06:31:41.000000000 -0700
++++ qtwebengine/tools/qmake/mkspecs/features/functions.prf	2017-10-16 06:32:17.000000000 -0700
+@@ -33,8 +33,8 @@
+       skipBuild("Qt WebEngine requires OS X version 10.9 or newer.")
+       return(false)
+     }
+-    !isMinOSXSDKVersion(10, 10): {
+-      skipBuild("Qt WebEngine requires an OS X SDK version of 10.10 or newer. Current version is $${WEBENGINE_OSX_SDK_PRODUCT_VERSION}.")
++    !isMinOSXSDKVersion(10, 9): {
++      skipBuild("Qt WebEngine requires an OS X SDK version of 10.9 or newer. Current version is $${WEBENGINE_OSX_SDK_PRODUCT_VERSION}.")
+       return(false)
+     }
+   } else {

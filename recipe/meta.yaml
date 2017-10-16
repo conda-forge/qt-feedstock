@@ -26,6 +26,7 @@ source:
       - 0001-qtwebengine-mac_sdk_min-to-10.9.patch
       - 0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
       - 0003-qtwebengine-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-de.patch
+      - 0004-qtwebengine-Fix-MM256_BROADCASTSI128_SI256-for-custom-clang.patch
 
   - url: http://download.qt.io/community_releases/5.6/{{ version }}/qtwebkit-opensource-src-{{ version }}.tar.xz  # [not osx]
     sha256: 528a6b8b1c5095367b26e8ce4f3a46bb739e2e9913ff4dfc6ef58a04fcd73966                                      # [not osx]

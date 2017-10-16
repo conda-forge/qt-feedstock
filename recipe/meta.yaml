@@ -1,12 +1,12 @@
-{% set version = "5.6.2" %}
+{% set version = "5.6.3" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/5.6/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.gz
-    sha256: 7551f5af1312082c3c8ab52f5e102e3f83aae2dd96dc4a3a9a197f3e58b3214c
+  - url: http://download.qt.io/official_releases/qt/5.6/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
+    sha256: 2fa0cf2e5e8841b29a4be62062c1a65c4f6f2cf1beaf61a5fd661f520cd776d0
     patches:
       - 0005-Remove-unused-include-sys-signalfd.h.patch
       - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
@@ -23,11 +23,10 @@ source:
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine
-      - 0001-qtwebengine-mac_sdk_min-to-10.9.patch
+      # This has become QMAKE_MAC_SDK_VERSION
+      # - 0001-qtwebengine-mac_sdk_min-to-10.9.patch
       - 0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
       - 0003-qtwebengine-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-de.patch
-      # https://codereview.chromium.org/1479893002
-      - 0004-chromium-issue1479893002_1.patch
 
   - url: http://download.qt.io/community_releases/5.6/{{ version }}/qtwebkit-opensource-src-{{ version }}.tar.xz  # [not osx]
     sha256: 528a6b8b1c5095367b26e8ce4f3a46bb739e2e9913ff4dfc6ef58a04fcd73966                                      # [not osx]
@@ -43,9 +42,6 @@ source:
       - 0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [not osx]
 
 build:
-  number: 12  # [win]
-  number: 14  # [linux]
-  number: 14  # [osx]
   detect_binary_files_with_prefix: true
   features:
     - vc{{ vc }} # [win]

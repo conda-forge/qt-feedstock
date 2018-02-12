@@ -120,8 +120,6 @@ test:
     - xcodebuild
     - xcrun
   commands:
-    - conda inspect linkages -p $PREFIX qt                                 # [not win]
-    - conda inspect objects -p $PREFIX qt                                  # [osx]
     - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1                     # [win]
     - test -f $PREFIX/lib/libQt5WebKit.so                                  # [linux]
     # sql plugin

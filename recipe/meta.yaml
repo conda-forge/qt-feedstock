@@ -97,6 +97,9 @@ requirements:
     - fontconfig                         # [linux]
     - freetype                           # [linux]
     - gst-plugins-base {{ gst_plugins_base }} # [linux]
+    - gstreamer                          # [linux]
+    - glib                               # [linux]
+    - libxml2                            # [linux]
     - icu
     - jpeg
     - libpng

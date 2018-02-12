@@ -43,11 +43,12 @@ source:
 
 build:
   number: 12  # [win]
-  number: 12  # [linux]
+  number: 14  # [linux]
   number: 14  # [osx]
   detect_binary_files_with_prefix: true
   features:
     - vc{{ vc }} # [win]
+  merge_build_host: True
 
 requirements:
   build:

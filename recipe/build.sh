@@ -104,6 +104,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -no-libudev \
                 -no-avx \
                 -no-avx2 \
+                --disable-new-dtags \
                 -Wno-expansion-to-defined \
                 -D _X_INLINE=inline \
                 -D XK_dead_currency=0xfe6f \

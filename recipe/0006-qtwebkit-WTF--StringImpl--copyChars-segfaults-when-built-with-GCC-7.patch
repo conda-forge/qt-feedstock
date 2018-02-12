@@ -43,77 +43,10 @@ git-svn-id: http://svn.webkit.org/repository/webkit/trunk@219182 268f45cc-cd09-0
  4 files changed, 45 insertions(+), 22 deletions(-)
  create mode 100644 JSTests/stress/string-repeat-copy-chars-crash.js
 
-diff --git a/JSTests/ChangeLog b/JSTests/ChangeLog
-index 1abb56abccc2..5eace444fc17 100644
---- a/JSTests/ChangeLog
-+++ b/JSTests/ChangeLog
-@@ -1,3 +1,13 @@
-+2017-07-05  Yusuke Suzuki  <utatane.tea@gmail.com>
-+
-+        WTF::StringImpl::copyChars segfaults when built with GCC 7
-+        https://bugs.webkit.org/show_bug.cgi?id=173407
-+
-+        Reviewed by Andreas Kling.
-+
-+        * stress/string-repeat-copy-chars-crash.js: Added.
-+        (shouldBe):
-+
- 2017-07-03  Saam Barati  <sbarati@apple.com>
- 
-         Skip unshiftCountSlowCase-correct-postCapacity.js on debug builds since it takes a long time to run.
-diff --git a/JSTests/stress/string-repeat-copy-chars-crash.js b/JSTests/stress/string-repeat-copy-chars-crash.js
-new file mode 100644
-index 000000000000..62758a3e63c8
---- /dev/null
-+++ b/JSTests/stress/string-repeat-copy-chars-crash.js
-@@ -0,0 +1,8 @@
-+function shouldBe(actual, expected) {
-+    if (actual !== expected)
-+        throw new Error('bad value: ' + actual);
-+}
-+
-+var s = 'xxxxxxxxxxxxxxAxxxxxxxxxxxxxxxxxxxxA–';
-+var result = s.replace(/A/g, 'b');
-+shouldBe(result, 'xxxxxxxxxxxxxxbxxxxxxxxxxxxxxxxxxxxb–');
-diff --git a/Source/WTF/ChangeLog b/Source/WTF/ChangeLog
-index ed0323c192ef..faf4160030ba 100644
---- a/Source/WTF/ChangeLog
-+++ b/Source/WTF/ChangeLog
-@@ -1,3 +1,29 @@
-+2017-07-05  Yusuke Suzuki  <utatane.tea@gmail.com>
-+
-+        WTF::StringImpl::copyChars segfaults when built with GCC 7
-+        https://bugs.webkit.org/show_bug.cgi?id=173407
-+
-+        Reviewed by Andreas Kling.
-+
-+        With GCC 7, StringImpl::copyChars() behaves as unexpected.
-+        This function violates strict aliasing rule.
-+
-+        This optimization is originally introduced to improve performance
-+        in SunSpider's string tests in 2008. When running it in my Linux
-+        box, it no longer causes any observable difference. So, we just
-+        remove this optimization.
-+
-+                                        baseline                  patched
-+
-+        string-base64                7.7544+-0.1761            7.6138+-0.2071          might be 1.0185x faster
-+        string-fasta                10.5429+-0.2746     ?     10.7500+-0.2669        ? might be 1.0196x slower
-+        string-tagcloud             14.8588+-0.2828           14.8039+-0.3039
-+        string-unpack-code          36.1769+-0.4251           35.3397+-0.5398          might be 1.0237x faster
-+        string-validate-input        8.5182+-0.2206            8.3514+-0.2179          might be 1.0200x faster
-+
-+        * wtf/text/StringImpl.h:
-+        (WTF::StringImpl::copyChars):
-+
- 2017-07-05  Yusuke Suzuki  <utatane.tea@gmail.com>
- 
-         Use std::lock_guard instead of std::unique_lock if move semantics and try_lock is not necessary
-diff --git a/Source/WTF/wtf/text/StringImpl.h b/Source/WTF/wtf/text/StringImpl.h
-index 1d1a2543afe6..4fdfc8c10901 100644
---- a/Source/WTF/wtf/text/StringImpl.h
-+++ b/Source/WTF/wtf/text/StringImpl.h
-@@ -627,25 +627,7 @@ class StringImpl : private StringImplShape {
+diff -urN qtwebkit.orig/Source/WTF/wtf/text/StringImpl.h qtwebkit/Source/WTF/wtf/text/StringImpl.h
+--- qtwebkit.orig/Source/WTF/wtf/text/StringImpl.h	2018-02-12 12:14:02.778420779 +0000
++++ qtwebkit/Source/WTF/wtf/text/StringImpl.h	2018-02-12 12:18:30.385666017 +0000
+@@ -629,25 +629,7 @@
              *destination = *source;
              return;
          }
@@ -140,13 +73,29 @@ index 1d1a2543afe6..4fdfc8c10901 100644
      }
  
      ALWAYS_INLINE static void copyChars(UChar* destination, const LChar* source, unsigned numCharacters)
-@@ -859,9 +841,6 @@ class StringImpl : private StringImplShape {
-         return *tailPointer<StringImpl*>();
+@@ -771,9 +753,6 @@
+         return reinterpret_cast<const void*>(m_data16) == reinterpret_cast<const void*>(this + 1);
      }
  
 -    // This number must be at least 2 to avoid sharing empty, null as well as 1 character strings from SmallStrings.
 -    static const unsigned s_copyCharsInlineCutOff = 20;
 -
-     enum class CaseConvertType { Upper, Lower };
-     template<CaseConvertType type, typename CharacterType> static Ref<StringImpl> convertASCIICase(StringImpl&, const CharacterType*, unsigned);
- 
+     BufferOwnership bufferOwnership() const { return static_cast<BufferOwnership>(m_hashAndFlags & s_hashMaskBufferOwnership); }
+     bool isStatic() const { return m_refCount & s_refCountFlagIsStaticString; }
+     template <class UCharPredicate> PassRefPtr<StringImpl> stripMatchedCharacters(UCharPredicate);
+diff -urN qtwebkit.orig/Source/WTF/wtf/text/StringImpl.h.rej qtwebkit/Source/WTF/wtf/text/StringImpl.h.rej
+--- qtwebkit.orig/Source/WTF/wtf/text/StringImpl.h.rej	1970-01-01 00:00:00.000000000 +0000
++++ qtwebkit/Source/WTF/wtf/text/StringImpl.h.rej	2018-02-12 12:17:26.235366283 +0000
+@@ -0,0 +1,12 @@
++--- Source/WTF/wtf/text/StringImpl.h
+++++ Source/WTF/wtf/text/StringImpl.h
++@@ -841,9 +823,6 @@
++         return *tailPointer<StringImpl*>();
++     }
++ 
++-    // This number must be at least 2 to avoid sharing empty, null as well as 1 character strings from SmallStrings.
++-    static const unsigned s_copyCharsInlineCutOff = 20;
++-
++     enum class CaseConvertType { Upper, Lower };
++     template<CaseConvertType type, typename CharacterType> static Ref<StringImpl> convertASCIICase(StringImpl&, const CharacterType*, unsigned);
++ 

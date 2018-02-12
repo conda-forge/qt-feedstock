@@ -25,8 +25,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
         exit 1
     fi
 
-    ln -s ${GXX} g++
-    ln -s ${GCC} gcc
+    ln -s ${GXX} g++ || true
+    ln -s ${GCC} gcc || true
     export PATH=${PWD}:${PATH}
     export LD=${GXX}
     export CC=${GCC}

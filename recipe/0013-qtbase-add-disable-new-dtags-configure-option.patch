@@ -1,5 +1,19 @@
---- qtbase/configure.orig	2018-02-12 14:38:18.283559229 +0000
-+++ qtbase/configure	2018-02-12 14:39:14.325811274 +0000
+--- a/qtbase/configure	2018-02-12 14:38:18.283559229 +0000
++++ b/qtbase/configure	2018-02-12 14:39:14.325811274 +0000
+@@ -1695,6 +1695,13 @@
+             UNKNOWN_OPT=yes
+         fi
+         ;;
++    new-dtags)
++        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
++            CFG_ENABLE_NEW_DTAGS="$VAL"
++        else
++            UNKNOWN_OPT=yes
++        fi
++        ;;
+     zlib)
+         [ "$VAL" = "qt" ] && VAL=yes
+         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ] || [ "$VAL" = "system" ]; then
 @@ -3568,10 +3568,12 @@
  fi
  
@@ -15,5 +29,3 @@
 +        CFG_ENABLE_NEW_DTAGS=no
 +    fi
  fi
- 
- # auto-detect -fstack-protector-strong support (for QNX only currently)

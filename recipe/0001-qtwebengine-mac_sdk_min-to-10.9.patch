@@ -1,29 +1,17 @@
---- qtwebengine/src/core/config/mac_osx.pri.orig	2017-10-16 12:21:30.000000000 +0100
-+++ qtwebengine/src/core/config/mac_osx.pri	2017-10-16 12:21:53.000000000 +0100
-@@ -5,7 +5,7 @@
- # otherwise query for it.
- QMAKE_MAC_SDK_VERSION = $$eval(QMAKE_MAC_SDK.$${QMAKE_MAC_SDK}.SDKVersion)
- isEmpty(QMAKE_MAC_SDK_VERSION) {
--     QMAKE_MAC_SDK_VERSION = $$system("/usr/bin/xcodebuild -sdk $${QMAKE_MAC_SDK} -version SDKVersion 2>/dev/null")
-+     QMAKE_MAC_SDK_VERSION = $$system("xcodebuild -sdk $${QMAKE_MAC_SDK} -version SDKVersion 2>/dev/null")
-      isEmpty(QMAKE_MAC_SDK_VERSION): error("Could not resolve SDK version for \'$${QMAKE_MAC_SDK}\'")
- }
- 
---- qtwebengine/tools/qmake/mkspecs/features/functions.prf.orig	2017-10-16 12:19:07.000000000 +0100
-+++ qtwebengine/tools/qmake/mkspecs/features/functions.prf	2017-10-16 12:21:22.000000000 +0100
-@@ -116,7 +116,7 @@
-     requested_minor = $$2
-     requested_patch = $$3
-     isEmpty(requested_patch): requested_patch = 0
--    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("/usr/bin/xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
-+    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
-     export(WEBENGINE_OSX_SDK_PRODUCT_VERSION)
-     isEmpty(WEBENGINE_OSX_SDK_PRODUCT_VERSION) {
-         skipBuild("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")
---- qtwebengine/tools/qmake/mkspecs/features/functions.prf.orig	2017-10-16 06:31:41.000000000 -0700
-+++ qtwebengine/tools/qmake/mkspecs/features/functions.prf	2017-10-16 06:32:17.000000000 -0700
-@@ -33,8 +33,8 @@
-       skipBuild("Qt WebEngine requires OS X version 10.9 or newer.")
+diff -urN qtwebengine.orig/mkspecs/features/functions.prf qtwebengine/mkspecs/features/functions.prf
+--- qtwebengine.orig/mkspecs/features/functions.prf	2018-02-13 12:04:11.000000000 +0000
++++ qtwebengine/mkspecs/features/functions.prf	2018-02-13 12:17:37.000000000 +0000
+@@ -46,14 +46,14 @@
+         skipBuild("Qt WebEngine on macOS requires Clang.")
+         return(false)
+     }
+-    # We require OS X 10.0 (darwin version 14.0.0) or newer
++    # We require OS X 10.9 (darwin version 13.0.0) or newer
+     darwin_major_version = $$section(QMAKE_HOST.version, ., 0, 0)
+-    lessThan(darwin_major_version, 14) {
+-      skipBuild("Qt WebEngine requires OS X version 10.10 or newer.")
++    lessThan(darwin_major_version, 13) {
++      skipBuild("Qt WebEngine requires OS X version 10.9 or newer.")
        return(false)
      }
 -    !isMinOSXSDKVersion(10, 10): {
@@ -33,3 +21,24 @@
        return(false)
      }
    } else {
+@@ -223,7 +223,7 @@
+     requested_minor = $$2
+     requested_patch = $$3
+     isEmpty(requested_patch): requested_patch = 0
+-    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("/usr/bin/xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
++    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
+     export(WEBENGINE_OSX_SDK_PRODUCT_VERSION)
+     isEmpty(WEBENGINE_OSX_SDK_PRODUCT_VERSION) {
+         skipBuild("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")
+diff -urN qtwebengine.orig/src/3rdparty/chromium/build/mac_toolchain.py qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py
+--- qtwebengine.orig/src/3rdparty/chromium/build/mac_toolchain.py	2018-02-13 12:05:21.000000000 +0000
++++ qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py	2018-02-13 12:11:09.000000000 +0000
+@@ -128,7 +128,7 @@
+   try:
+     build_dir = os.path.join(TOOLCHAIN_BUILD_DIR, 'Contents/Developer')
+     subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', build_dir])
+-    subprocess.check_call(['sudo', '/usr/bin/xcodebuild', '-license', 'accept'])
++    subprocess.check_call(['sudo', 'xcodebuild', '-license', 'accept'])
+   finally:
+     subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', old_path])
+ 

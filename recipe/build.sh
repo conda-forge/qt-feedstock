@@ -15,7 +15,8 @@ MAKE_JOBS=$CPU_COUNT
 if [[ -d qtwebkit ]]; then
   # From: http://www.linuxfromscratch.org/blfs/view/svn/x/qtwebkit5.html
   # Should really be a patch:
-  sed -i.bak -e '/CONFIG/a QMAKE_CXXFLAGS += -Wno-expansion-to-defined' qtwebkit/Tools/qmake/mkspecs/features/unix/default_pre.prf
+  sed -i.bak -e '/CONFIG/a\
+    QMAKE_CXXFLAGS += -Wno-expansion-to-defined' qtwebkit/Tools/qmake/mkspecs/features/unix/default_pre.prf
 fi
 
 if [[ ${HOST} =~ .*linux.* ]]; then
@@ -134,7 +135,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     cp "${RECIPE_DIR}"/xcrun .
     cp "${RECIPE_DIR}"/xcodebuild .
     # Some test runs 'clang -v', but I do not want to add it as a requirement just for that.
-    ln -s "${PREFIX}"/bin/${HOST}-clang++ ${HOST}-clang
+    ln -s "${PREFIX}"/bin/${HOST}-clang++ ${HOST}-clang || true
     # Qt passes clang flags to LD (e.g. -stdlib=c++)
     export LD=${CXX}
     PATH=${PWD}:${PATH}
@@ -169,7 +170,6 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -system-zlib \
                 -qt-freetype \
                 -qt-pcre \
-                -c++11 \
                 -no-framework \
                 -no-dbus \
                 -no-mtdev \

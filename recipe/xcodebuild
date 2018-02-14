@@ -44,6 +44,10 @@ case ${1} in
     fi
     ;;
 
+  -license)
+    exit 0
+    ;;
+
   *)
     echo "ERROR :: Unimplemented xcodebuild mode ${1}" >> /tmp/xcodebuild-$$.log
     echo "ERROR :: Unimplemented xcodebuild mode ${1}"

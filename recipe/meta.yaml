@@ -1,23 +1,22 @@
-{% set version = "5.6.3" %}
+{% set version = "5.9.4" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/5.6/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
-    sha256: 2fa0cf2e5e8841b29a4be62062c1a65c4f6f2cf1beaf61a5fd661f520cd776d0
+  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
+    sha256: e3acd9cbeafba3aed9f14592f4d70bf0b255e0203943e8d2b4235002268274d5
     patches:
-      - 0005-Remove-unused-include-sys-signalfd.h.patch
-      - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
-      - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
-      - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
+      # Moved elsewhere now it seems?
+      # - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
       # qtbase
       - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
-      - 0010-osx-xctest-check.patch                                      # [osx]
+      - 0010-osx-xctest-check.patch
       - 0011-osx-allow-any-xcrun-in-PATH.patch
       - 0012-qtbase-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-all-mac.patch
-      - 0013-qtbase-add-disable-new-dtags-configure-option.patch
+      - 0013-Restore-macOS-10.9-support.patch
+      - 0014-Fix-command-line-tools-build.patch
       # qt3d
       - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch         # [win]
       # qtwinextras
@@ -25,21 +24,17 @@ source:
       # qtwebengine
       - 0001-qtwebengine-mac_sdk_min-to-10.9.patch
       - 0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      - 0003-qtwebengine-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-de.patch
-      - 0004-qtwebengine-Fix-MM256_BROADCASTSI128_SI256-for-custom-clang.patch
 
-  - url: http://download.qt.io/community_releases/5.6/{{ version }}/qtwebkit-opensource-src-{{ version }}.tar.xz  # [not osx]
-    sha256: 098c6bb25798fbf1b619b540621287787064efc9b586d76ac0ce7e39b87a3896                                      # [not osx]
-    folder: qtwebkit                                                                                              # [not osx]
-    patches:                                                                                                      # [not osx]
-      - 0001-qtwebkit-old-ld-compat.patch                                                                         # [not osx]
-      - 0002-qtwebkit-ruby-1.8.patch                                                                              # [not osx]
+  - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
+    sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']
+    folder: qtwebkit                                                                                              # [qtwebkit == 'true']
+    patches:                                                                                                      # [qtwebkit == 'true']
+      - 0001-qtwebkit-old-ld-compat.patch                                                                         # [qtwebkit == 'true']
+      - 0002-qtwebkit-ruby-1.8.patch                                                                              # [qtwebkit == 'true']
       # Not needed since updating to CentOS6?
-      # - 0003-qtwebkit-O_CLOEXEC-workaround.patch                                                                # [not osx]
-      - 0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [not osx]
-      # From https://bugs.webkit.org/show_bug.cgi?id=70610, http://trac.webkit.org/changeset/172759, https://github.com/WebKit/webkit/commit/4d7f0f
-      - 0005-qtwebkit-fix-TEXTREL-on-x86-changeset_172759.patch                                                   # [not osx]
-      - 0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [not osx]
+      # - 0003-qtwebkit-O_CLOEXEC-workaround.patch                                                                # [qtwebkit == 'true']
+      - 0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [qtwebkit == 'true']
+      - 0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
 
 build:
   detect_binary_files_with_prefix: true

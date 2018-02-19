@@ -43,6 +43,16 @@ case ${1} in
     exit 0
     ;;
 
+  --show-sdk-platform-path)
+    echo /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
+    exit 0
+    ;;
+
+  --show-sdk-build-version)
+    echo 16C58
+    exit 0
+    ;;
+
 esac
 
 if [[ -n ${HOST} ]] && [[ -f ${HOST}-${1} ]]; then

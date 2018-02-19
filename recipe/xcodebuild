@@ -35,8 +35,8 @@ case ${1} in
       exit 0
     elif [[ ${1} == PlatformPath ]]; then
       echo "Making this one up entirely, you may need a real Xcode" >> /tmp/xcodebuild-$$.log
-      echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/" >> /tmp/xcodebuild-$$.log
-      echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/"
+      echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform" >> /tmp/xcodebuild-$$.log
+      echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform"
       exit 0
     elif [[ ${1} == ProductVersion ]]; then
       echo "10.9"

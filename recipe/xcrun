@@ -39,7 +39,7 @@ case ${1} in
     ;;
 
   --show-sdk-version)
-    echo 10.9
+    echo 10.10
     exit 0
     ;;
 

@@ -179,7 +179,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-libudev \
                 -no-egl \
                 -no-openssl \
-                -sdk macosx10.9
+                -sdk macosx10.10
     ####
     make -j${MAKE_JOBS} module-qtwebengine || exit 1
     if find . -name "libQt5WebEngine*dylib" -exec false {} +; then
@@ -221,8 +221,8 @@ then
         mv ${BIN}/${_name}.app ${BIN}/${_name}app
     done
 
-    # We built Qt itself with SDK 10.9, but we shouldn't
-    # force users to also build their Qt apps with SDK 10.9
+    # We built Qt itself with SDK 10.10, but we shouldn't
+    # force users to also build their Qt apps with SDK 10.10
     # https://bugreports.qt.io/browse/QTBUG-41238
     sed -i '' s/macosx10\../macosx/g ${PREFIX}/mkspecs/qdevice.pri
 

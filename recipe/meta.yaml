@@ -77,7 +77,12 @@ requirements:
     - {{ cdt('libselinux-devel') }}      # [linux]
     - {{ cdt('libxdamage') }}            # [linux]
     - {{ cdt('libxfixes') }}             # [linux]
+    - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
+    # For WebEngine ..
+    - libvpx                             # [unix]
+    - libxml2                            # [unix]
+    - libxslt                            # [unix]
     # For fontconfig + freetype
     - pkg-config                         # [linux]
     - pthread-stubs                      # [linux]
@@ -91,7 +96,6 @@ requirements:
     - m2-bison                           # [win]
     - m2-flex                            # [win]
     - jom                                # [win]
-    - msinttypes                         # [win and vc != 14]
     - perl 5.*
   host:
     - dbus                               # [linux]

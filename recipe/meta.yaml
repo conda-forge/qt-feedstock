@@ -95,7 +95,7 @@ requirements:
     - dbus                               # [linux]
     - fontconfig                         # [linux]
     - freetype                           # [linux]
-    - gst-plugins-base {{ gst_plugins_base }} # [linux]
+    - gst-plugins-base                   # [linux]
     - gstreamer                          # [linux]
     - glib                               # [linux]
     - libxml2                            # [linux]

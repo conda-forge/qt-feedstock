@@ -26,6 +26,8 @@ source:
       - 0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - 0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
       # - 0003-qtwebengine-mac_sdk_min-to-10.9.patch
+      # qtgamepad
+      - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
 
   - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
     sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']

@@ -90,7 +90,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -skip wayland \
                 -skip canvas3d \
                 -skip 3d \
-                -skip webengine \
                 -system-libjpeg \
                 -system-libpng \
                 -system-zlib \
@@ -105,7 +104,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -no-libudev \
                 -no-avx \
                 -no-avx2 \
-                --disable-new-dtags \
                 -Wno-expansion-to-defined \
                 -D _X_INLINE=inline \
                 -D XK_dead_currency=0xfe6f \
@@ -114,17 +112,13 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
                 -D GLX_GLXEXT_PROTOTYPES
+
+#                --disable-new-dtags \
+
 # To get a much quicker turnaround you can add this: (remember also to add the backslash after GLX_GLXEXT_PROTOTYPES)
 # -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
-# If we must not remove strict_c++ from qtbase/mkspecs/features/qt_common.prf
-# (0007-qtbase-CentOS5-Do-not-use-strict_c++.patch) then we need to add these
-# defines instead:
-# -D __u64="unsigned long long" \
-# -D __s64="__signed__ long long" \
-# -D __le64="unsigned long long" \
-# -D __be64="__signed__ long long"
-
+    LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
     LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
     make install
 fi

@@ -39,6 +39,7 @@ source:
       - 0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
 
 build:
+  skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   features:
     - vc{{ vc }} # [win]

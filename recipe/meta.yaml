@@ -16,15 +16,16 @@ source:
       - 0011-osx-allow-any-xcrun-in-PATH.patch
       # - 0012-qtbase-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-all-mac.patch
       # - 0013-Restore-macOS-10.9-support.patch
-      - 0013-NSEnumerator-is-a-non-parameterized-class.patch
+      # - 0013-NSEnumerator-is-a-non-parameterized-class.patch
       - 0014-Fix-command-line-tools-build.patch
       # qt3d
       - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch         # [win]
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine
-      # - 0001-qtwebengine-mac_sdk_min-to-10.9.patch
+      - 0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - 0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
+      # - 0003-qtwebengine-mac_sdk_min-to-10.9.patch
 
   - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
     sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']

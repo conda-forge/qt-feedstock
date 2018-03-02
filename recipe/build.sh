@@ -19,6 +19,19 @@ if [[ -d qtwebkit ]]; then
     QMAKE_CXXFLAGS += -Wno-expansion-to-defined' qtwebkit/Tools/qmake/mkspecs/features/unix/default_pre.prf
 fi
 
+# Problems: https://bugreports.qt.io/browse/QTBUG-61158
+#           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
+# Something to do with BUILD.gn files and/or ninja
+# To find the files that do not include $PREFIX/include:
+# pushd /opt/conda/conda-bld/qt_1520013782031/work/qtwebengine/src
+# grep -R include_dirs . | grep ninja | grep -v _h_env_ | cut -d':' -f 1 | sort | uniq
+# To find the files that do:
+# pushd /opt/conda/conda-bld/qt_1520013782031/work/qtwebengine/src
+# grep -R include_dirs . | grep ninja | grep _h_env_ | cut -d':' -f 1 | sort | uniq
+# Need to figure out what in the BUILD.gn files is different, so compare the smallest file from each?
+# grep -R include_dirs . | grep ninja | grep -v _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
+# grep -R include_dirs . | grep ninja | grep    _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
+
 if [[ ${HOST} =~ .*linux.* ]]; then
 
     if ! which ruby > /dev/null 2>&1; then

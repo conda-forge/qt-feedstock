@@ -79,10 +79,16 @@ requirements:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
-    # For WebEngine ..
-    - libvpx                             # [unix]
-    - libxml2                            # [unix]
-    - libxslt                            # [unix]
+
+    # For WebEngine, but for compatiblity I have decided
+    # not to use our own libs. FFMPEG was not detected
+    # anyway, and neither was libvpx (AFAICT).
+    # - libxml2                            # [unix]
+    # - libxslt                            # [unix]
+    # - libopus                            # [unix]
+    # - libvpx                             # [unix]
+    # - ffmpeg                             # [unix]
+
     # For fontconfig + freetype
     - pkg-config                         # [linux]
     - pthread-stubs                      # [linux]

@@ -31,6 +31,7 @@ fi
 # Need to figure out what in the BUILD.gn files is different, so compare the smallest file from each?
 # grep -R include_dirs . | grep ninja | grep -v _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
 # grep -R include_dirs . | grep ninja | grep    _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
+# Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
 
 if [[ ${HOST} =~ .*linux.* ]]; then
 

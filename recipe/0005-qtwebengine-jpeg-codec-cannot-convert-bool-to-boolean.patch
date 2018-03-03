@@ -1,0 +1,44 @@
+--- a/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp	2018-03-03 16:22:09.354028397 +0000
++++ b/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp	2018-03-03 16:24:54.348053417 +0000
+@@ -57,12 +57,12 @@
+ };
+ extern "C" {
+ static boolean _src_fill_buffer(j_decompress_ptr cinfo) {
+-  return 0;
++  return FALSE;
+ }
+ };
+ extern "C" {
+ static boolean _src_resync(j_decompress_ptr cinfo, int desired) {
+-  return 0;
++  return FALSE;
+ }
+ };
+ extern "C" {
+@@ -126,7 +126,7 @@
+     jpeg_destroy_decompress(&cinfo);
+     return false;
+   }
+-  int ret = jpeg_read_header(&cinfo, true);
++  int ret = jpeg_read_header(&cinfo, 1);
+   if (ret != JPEG_HEADER_OK) {
+     jpeg_destroy_decompress(&cinfo);
+     return false;
+@@ -210,7 +210,7 @@
+   }
+   cinfo.image_width = m_OrigWidth;
+   cinfo.image_height = m_OrigHeight;
+-  int ret = jpeg_read_header(&cinfo, true);
++  int ret = jpeg_read_header(&cinfo, 1);
+   if (ret != JPEG_HEADER_OK)
+     return false;
+ 
+@@ -433,7 +433,7 @@
+   if (setjmp(ctx->m_JumpMark) == -1)
+     return 1;
+ 
+-  int ret = jpeg_read_header(&ctx->m_Info, true);
++  int ret = jpeg_read_header(&ctx->m_Info, 1);
+   if (ret == JPEG_SUSPENDED)
+     return 2;
+   if (ret != JPEG_HEADER_OK)

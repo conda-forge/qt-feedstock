@@ -26,6 +26,10 @@ source:
       - 0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - 0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
       # - 0003-qtwebengine-mac_sdk_min-to-10.9.patch
+      - 0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
+      - 0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
+      - 0006-qtwebengine-run-gn-verbosely.patch
+
       # qtgamepad
       - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
 

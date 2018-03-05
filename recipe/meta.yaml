@@ -144,8 +144,9 @@ test:
     - xcodebuild
     - xcrun
   commands:
-    - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1                     # [win]
-    - test -f $PREFIX/lib/libQt5WebKit.so                                  # [linux]
+    - if not exist %LIBRARY_BIN%\\Qt5WebEngine.dll exit 1                  # [win]
+    - test -f $PREFIX/lib/libQt5WebEngine.so                               # [linux]
+    - test -f $PREFIX/lib/libQt5WebEngine.dylib                            # [osx]
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]

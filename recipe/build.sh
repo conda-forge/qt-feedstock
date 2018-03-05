@@ -47,6 +47,13 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     export CC=${GCC}
     export CXX=${GXX}
 
+    mkdir -p "${SRC_DIR}/openssl_hack"
+    conda install -c https://repo.continuum.io/pkgs/main \
+                  --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack" \
+                  openssl
+    export OPENSSL_LIBS="-L${SRC_DIR}/openssl_hack/lib -lssl -lcrypto"
+    rm -rf ${PREFIX}/include/openssl
+
     # Qt has some braindamaged behaviour around handling compiler system include and lib paths. Basically, if it finds any include dir
     # that is a system include dir then it prefixes it with -isystem. Problem is, passing -isystem <blah> causes GCC to forget all the
     # other system include paths. The reason that Qt needs to know about these paths is probably due to moc needing to know about them
@@ -86,6 +93,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -headerdir $PREFIX/include/qt \
                 -archdatadir $PREFIX \
                 -datadir $PREFIX \
+                -I ${SRC_DIR}/openssl_hack/include \
                 -L $PREFIX/lib \
                 "${INCDIRS[@]}" \
                 -release \

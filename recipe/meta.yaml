@@ -29,7 +29,9 @@ source:
       - 0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
       - 0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
       - 0006-qtwebengine-run-gn-verbosely.patch
-
+      # https://github.com/google/boringssl/commit/17cf2cb1d226b0ba2401304242df7ddd3b6f1ff2
+      # https://www.imperialviolet.org/2016/06/26/nonnull.html
+      - 0007-qtwebengine-boringssl-Work-around-language-and-compiler-bug-in-memcpy-etc.patch
       # qtgamepad
       - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
 
@@ -85,15 +87,6 @@ requirements:
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
 
-    # For WebEngine, but for compatiblity I have decided
-    # not to use our own libs. FFMPEG was not detected
-    # anyway, and neither was libvpx (AFAICT).
-    # - libxml2                            # [unix]
-    # - libxslt                            # [unix]
-    # - libopus                            # [unix]
-    # - libvpx                             # [unix]
-    # - ffmpeg                             # [unix]
-
     # For fontconfig + freetype
     - pkg-config                         # [linux]
     - pthread-stubs                      # [linux]
@@ -116,13 +109,28 @@ requirements:
     - gstreamer                          # [linux]
     - glib                               # [linux]
     - libxml2                            # [linux]
+    # For WebEngine, but for compatiblity we want to restrict
+    # usage of our own libraries. It seems Chromium prefers
+    # expat to libxml2 and we will try to froce it to use the
+    # bundled one.
+    # Other than that (and esp. for Google developed libs) we
+    # avoid our own packagess. FFMPEG was not detected anyway,
+    # and neither was libvpx (AFAICT).
+    # - libxml2                            # [unix]
+    # - libxslt                            # [unix]
+    # - libopus                            # [unix]
+    # - libvpx                             # [unix]
+    # - ffmpeg                             # [unix]
+    - expat                              # [linux]
     - icu
     - jpeg
     - libpng
     - sqlite
     - zlib
     - libxcb                             # [linux]
-    - openssl 1.0.*                      # [not osx]
+    # We cannot install OpenSSL into the prefix when building qtwebengine
+    # on linux as BoringSSL and OpenSSL then conflict with each other.
+    - openssl 1.0.*                      # [win]
   run:
     - openssl 1.0.*                      # [not osx]
     - libxcb                             # [linux]

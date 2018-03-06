@@ -34,6 +34,10 @@ case ${1} in
       echo ${CONDA_BUILD_SYSROOT}
       exit 0
     fi
+    if [[ -f /usr/bin/xcrun ]]; then
+      /usr/bin/xcrun --sdk macosx --show-sdk-path
+      exit $?
+    fi
     echo "TODO :: Implement fallback for xcrun --show-sdk-path"
     exit 1
     ;;

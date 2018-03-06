@@ -29,6 +29,7 @@ source:
       # https://github.com/google/boringssl/commit/17cf2cb1d226b0ba2401304242df7ddd3b6f1ff2
       # https://www.imperialviolet.org/2016/06/26/nonnull.html
       - 0007-qtwebengine-boringssl-Work-around-language-and-compiler-bug-in-memcpy-etc.patch
+      - 0008-qtwebengine-Allow-build-to-proceed-on-macOS-10-9.patch
       # qtgamepad
       - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
 

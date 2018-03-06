@@ -26,6 +26,10 @@ case ${1} in
         echo ${CONDA_BUILD_SYSROOT}
         exit 0
       fi
+      if [[ -f /usr/bin/xcodebuild ]]; then
+        /usr/bin/xcodebuild --sdk macosx Path
+        exit $?
+      fi
       echo "TODO :: Implement fallback for xcodebuild --show-sdk-path" >> /tmp/xcodebuild-$$.log
       echo "TODO :: Implement fallback for xcodebuild --show-sdk-path"
       exit 1

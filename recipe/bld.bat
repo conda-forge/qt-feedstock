@@ -2,18 +2,6 @@
 setlocal EnableDelayedExpansion
 set SHORT_VERSION=%PKG_VERSION:~0,-2%
 
-:: conda-forge/obviousci's obvci_appveyor_python_build_env.cmd used
-:: so we shouldn't include it finally.  I use it to set the correct
-:: Windows SDK, but conda-build should take care of that probably??
-:: It requires TARGET_ARCH to be one of x64 or x86.  On conda-forge
-:: this script is run *before* bld.bat.
-if "%ARCH%" == "64" (
-  set TARGET_ARCH=x64
-) else (
-  set TARGET_ARCH=x86
-)
-call %RECIPE_DIR%\obvci_appveyor_python_build_env.cmd
-
 :: if "%DXSDK_DIR%" == "" (
 ::   echo You do not appear to have the DirectX SDK installed.  Please get it from
 ::   echo    https://www.microsoft.com/en-us/download/details.aspx?id=6812
@@ -32,14 +20,7 @@ call %RECIPE_DIR%\obvci_appveyor_python_build_env.cmd
 :: `set QT_OPENGL=software` forces Qt5 to use that but
 :: but when I tried it it was too buggy; Spyder crashed a
 :: little bit later, though it worked for Carlos.
-set AVOID_WEBENGINE=yes
 set WEBBACKEND=qtwebengine
-if %VS_MAJOR% LSS 14 (
-  set WEBBACKEND=qtwebkit
-)
-if "%AVOID_WEBENGINE%" == "yes" (
-  set WEBBACKEND=qtwebkit
-)
 
 where perl.exe
 if %ERRORLEVEL% neq 0 (
@@ -85,25 +66,11 @@ if "%WEBBACKEND%" == "qtwebengine" (
   rmdir /s /q qtwebengine
 )
 
-:: Angle requires C++11 compilers so vc9 Qt5 must only use DesktopGL
-:: QT_OPENGL=software *may* work too given non-broken opengl32sw.dll
-if %VS_MAJOR% LSS 10 (
-  set OPENGLVER=desktop
-) else (
-  set OPENGLVER=dynamic
-)
+set OPENGLVER=dynamic
 
 :: Patch does not apply cleanly.  Copy file.
 :: https://codereview.qt-project.org/#/c/141019/
 copy %RECIPE_DIR%\tst_compiler.cpp qtbase\tests\auto\other\compiler\
-
-:: A check here for msinttypes
-if %VS_MAJOR% LSS 10 (
-  if not exist %PREFIX%/Library/include/stdint.h (
-    echo %PREFIX%/include/stdint.h does not exist, please use msinttypes
-    exit /b 1
-  )
-)
 
 :: TODO: should we always be rebuilding configure.exe anyway
 :: Mentioned patch no longer applied
@@ -202,13 +169,10 @@ if "%WEBBACKEND%" == "qtwebengine" (
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
 if errorlevel 1 exit /b 1
-onda remove` also causes immediate build failure.
 if "%WEBBACKEND%" == "qtwebengine" (
   conda remove -y -n python27_qt5_build --all
 )
 
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
-if errorlevel 1 exit /b 1
-k.bat"
 if errorlevel 1 exit /b 1

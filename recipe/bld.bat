@@ -1,6 +1,5 @@
 @echo on
 setlocal EnableDelayedExpansion
-set QMAKESPEC=win32-msvc%VS_YEAR%
 set SHORT_VERSION=%PKG_VERSION:~0,-2%
 
 :: conda-forge/obviousci's obvci_appveyor_python_build_env.cmd used
@@ -15,13 +14,13 @@ if "%ARCH%" == "64" (
 )
 call %RECIPE_DIR%\obvci_appveyor_python_build_env.cmd
 
-if "%DXSDK_DIR%" == "" (
-  echo You do not appear to have the DirectX SDK installed.  Please get it from
-  echo    https://www.microsoft.com/en-us/download/details.aspx?id=6812
-  echo and try this build again.  If you have installed it, and are still seeing
-  echo this message, please open a new console to refresh your environment variables.
-  exit /b 1
-)
+:: if "%DXSDK_DIR%" == "" (
+::   echo You do not appear to have the DirectX SDK installed.  Please get it from
+::   echo    https://www.microsoft.com/en-us/download/details.aspx?id=6812
+::   echo and try this build again.  If you have installed it, and are still seeing
+::   echo this message, please open a new console to refresh your environment variables.
+::   exit /b 1
+:: )
 
 :: Webengine requires either working OpenGL drivers or
 :: Angle (therefore DirectX >= 11). This works on some
@@ -42,23 +41,11 @@ if "%AVOID_WEBENGINE%" == "yes" (
   set WEBBACKEND=qtwebkit
 )
 
-:: Add the gnuwin32 tools to PATH - needed for webkit
-:: Ruby is also needed but this is supplied by AppVeyor
-:: Actually MSYS2 ruby needs to be installed instead.
-set PATH=%cd%\gnuwin32\bin;%PATH%
-
-where ruby.exe
-if %ERRORLEVEL% neq 0 (
-  echo Could not find ruby.exe
-  exit /b 1
-)
-
 where perl.exe
 if %ERRORLEVEL% neq 0 (
   echo Could not find perl.exe
   exit /b 1
 )
-
 
 :: Install a custom python 27 environment for us, to use in building webengine, otherwise
 :: add SYS_PREFIX to PATH to find the conda root env python; QtQml works with any python:
@@ -214,4 +201,14 @@ if "%WEBBACKEND%" == "qtwebengine" (
 
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
+if errorlevel 1 exit /b 1
+onda remove` also causes immediate build failure.
+if "%WEBBACKEND%" == "qtwebengine" (
+  conda remove -y -n python27_qt5_build --all
+)
+
+:: To rewrite qt.conf contents per conda environment
+copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
+if errorlevel 1 exit /b 1
+k.bat"
 if errorlevel 1 exit /b 1

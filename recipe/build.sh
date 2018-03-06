@@ -216,6 +216,11 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     fi
     make -j${MAKE_JOBS} || exit 1
     make install
+
+    # Avoid Xcode (2)
+    mkdir -p "${PREFIX}"/bin/xc-avoidance || true
+    cp "${RECIPE_DIR}"/xcrun "${PREFIX}"/bin/xc-avoidance/
+    cp "${RECIPE_DIR}"/xcodebuild "${PREFIX}"/bin/xc-avoidance/
 fi
 
 

@@ -28,18 +28,6 @@ if %ERRORLEVEL% neq 0 (
   exit /b 1
 )
 
-:: Install a custom python 27 environment for us, to use in building webengine, otherwise
-:: add SYS_PREFIX to PATH to find the conda root env python; QtQml works with any python:
-:: https://bugreports.qt.io/browse/QTBUG-51753
-if "%WEBBACKEND%" == "qtwebengine" (
-  if not exist %SYS_PREFIX%\envs\python27_qt5_build (
-    conda create -y -n python27_qt5_build python=2.7
-  )
-  set "PATH=%SYS_PREFIX%\envs\python27_qt5_build;%SYS_PREFIX%\envs\python27_qt5_build\Scripts;%SYS_PREFIX%\envs\python27_qt5_build\Library\bin;%PATH%"
-) else (
-  set "PATH=%SYS_PREFIX%;%PATH%"
-)
-
 :: make sure we can find ICU and openssl:
 set "INCLUDE=%LIBRARY_INC%;%INCLUDE%"
 set "LIB=%LIBRARY_LIB%;%LIB%"
@@ -160,18 +148,6 @@ echo Finished `jom -U release`
 jom -U install
 if errorlevel 1 exit /b 1
 echo Finished `jom -U install`
-
-:: See above. At present `conda remove` also causes immediate build failure.
-if "%WEBBACKEND%" == "qtwebengine" (
-  conda remove -y -n python27_qt5_build --all
-)
-
-:: To rewrite qt.conf contents per conda environment
-copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
-if errorlevel 1 exit /b 1
-if "%WEBBACKEND%" == "qtwebengine" (
-  conda remove -y -n python27_qt5_build --all
-)
 
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"

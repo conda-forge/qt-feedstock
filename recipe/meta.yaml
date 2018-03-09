@@ -47,6 +47,8 @@ source:
 build:
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
+  # QtWebEngine fails on Linux unless we merge
+  merge_build_host: true  # [linux]
   features:
     - vc{{ vc }} # [win]
   missing_dso_whitelist:  # [osx]

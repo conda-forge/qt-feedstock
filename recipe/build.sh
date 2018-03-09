@@ -141,6 +141,10 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 # -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
     LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
+    if find . -name "libQt5WebEngine*so" -exec false {} +; then
+      echo "Did not build qtwebengine, exiting"
+      exit 1
+    fi
     LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
     make install
 fi

@@ -118,6 +118,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -no-libudev \
                 -no-avx \
                 -no-avx2 \
+                -ltcg \
+                -reduce-relocations \
                 -Wno-expansion-to-defined \
                 -D _X_INLINE=inline \
                 -D XK_dead_currency=0xfe6f \
@@ -147,7 +149,10 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     cp "${RECIPE_DIR}"/xcrun .
     cp "${RECIPE_DIR}"/xcodebuild .
     # Some test runs 'clang -v', but I do not want to add it as a requirement just for that.
-    ln -s "${PREFIX}"/bin/${HOST}-clang++ ${HOST}-clang || true
+    ln -s "${CXX}" ${HOST}-clang || true
+    # For ltcg we cannot use libtool (or at least not the macOS 10.9 system one) due to lack of LLVM bitcode support.
+    ln -s "${LIBTOOL}" libtool || true
+    chmod +x ${HOST}-clang libtool
     # Qt passes clang flags to LD (e.g. -stdlib=c++)
     export LD=${CXX}
     PATH=${PWD}:${PATH}

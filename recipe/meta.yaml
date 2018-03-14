@@ -17,6 +17,7 @@ source:
       # - 0013-Restore-macOS-10.9-support.patch
       # - 0013-NSEnumerator-is-a-non-parameterized-class.patch
       - 0014-Fix-command-line-tools-build.patch
+      - 0015-qtbase-use-better-clang-optimize-size.patch
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine

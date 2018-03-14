@@ -152,7 +152,9 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     ln -s "${CXX}" ${HOST}-clang || true
     # For ltcg we cannot use libtool (or at least not the macOS 10.9 system one) due to lack of LLVM bitcode support.
     ln -s "${LIBTOOL}" libtool || true
-    chmod +x ${HOST}-clang libtool
+    # Just in-case our strip is better than the system one.
+    ln -s "${STRIP}" strip || true
+    chmod +x ${HOST}-clang libtool strip
     # Qt passes clang flags to LD (e.g. -stdlib=c++)
     export LD=${CXX}
     PATH=${PWD}:${PATH}
@@ -195,12 +197,17 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-dbus \
                 -no-mtdev \
                 -no-harfbuzz \
-                -no-xinput2 \
-                -no-xcb-xlib \
                 -no-libudev \
                 -no-egl \
                 -no-openssl \
-                -sdk macosx10.10
+                -optimize-size \
+                -sdk macosx10.10 \
+
+# For quicker turnaround when e.g. checking compilers optimizations
+#                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
+# lto causes an increase in final tar.bz2 size of about 4% (tested with the above -skip options though, not the whole thing)
+#                -ltcg \
+
     ####
     make -j${MAKE_JOBS} module-qtwebengine || exit 1
     if find . -name "libQt5WebEngine*dylib" -exec false {} +; then

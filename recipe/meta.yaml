@@ -18,6 +18,7 @@ source:
       # - 0013-NSEnumerator-is-a-non-parameterized-class.patch
       - 0014-Fix-command-line-tools-build.patch
       - 0015-qtbase-use-better-clang-optimize-size.patch
+      - 0016-qtbase-use-better-gcc-optimize-size.patch
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine
@@ -33,6 +34,8 @@ source:
       - 0008-qtwebengine-Allow-build-to-proceed-on-macOS-10-9.patch
       # qtgamepad
       - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
+      # qtscript
+      - 0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 
   - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
     sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']

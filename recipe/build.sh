@@ -42,6 +42,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 
     ln -s ${GXX} g++ || true
     ln -s ${GCC} gcc || true
+    # Needed for -ltcg, it we split build and host again, change to ${BUILD_PREFIX}
+    ln -s ${PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
+    chmod +x g++ gcc gcc-ar
     export PATH=${PWD}:${PATH}
     export LD=${GXX}
     export CC=${GCC}
@@ -118,7 +121,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -no-libudev \
                 -no-avx \
                 -no-avx2 \
-                -ltcg \
+                -optimize-size \
                 -reduce-relocations \
                 -Wno-expansion-to-defined \
                 -D _X_INLINE=inline \
@@ -127,8 +130,11 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -D XK_ISO_Level5_Lock=0xfe13 \
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
-                -D GLX_GLXEXT_PROTOTYPES
+                -D GLX_GLXEXT_PROTOTYPES \
 
+# ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
+#                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
+#                -ltcg \
 #                --disable-new-dtags \
 
 # To get a much quicker turnaround you can add this: (remember also to add the backslash after GLX_GLXEXT_PROTOTYPES)

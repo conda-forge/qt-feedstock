@@ -11,6 +11,10 @@ do
 done
 
 MAKE_JOBS=$CPU_COUNT
+# You can use this to cut down on the number of modules built. Of course the Qt package will not be of
+# much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
+# size of the libraries.
+MINIMAL_BUILD=no
 
 if [[ -d qtwebkit ]]; then
   # From: http://www.linuxfromscratch.org/blfs/view/svn/x/qtwebkit5.html
@@ -89,6 +93,21 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     echo "exit 0"                                                                    >> ./pkg-config
     chmod +x ./pkg-config
     export PATH=${PWD}:${PATH}
+    declare -a SKIPS
+    if [[ ${MINIMAL_BUILD} == yes ]]; then
+      SKIPS+=(-skip); SKIPS+=(qtwebsockets)
+      SKIPS+=(-skip); SKIPS+=(qtwebchannel)
+      SKIPS+=(-skip); SKIPS+=(qtwebengine)
+      SKIPS+=(-skip); SKIPS+=(qtsvg)
+      SKIPS+=(-skip); SKIPS+=(qtsensors)
+      SKIPS+=(-skip); SKIPS+=(qtcanvas3d)
+      SKIPS+=(-skip); SKIPS+=(qtconnectivity)
+      SKIPS+=(-skip); SKIPS+=(declarative)
+      SKIPS+=(-skip); SKIPS+=(multimedia)
+      SKIPS+=(-skip); SKIPS+=(qttools)
+      SKIPS+=(-skip); SKIPS+=(qtlocation)
+      SKIPS+=(-skip); SKIPS+=(qt3d)
+    fi
 
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
@@ -131,19 +150,18 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
                 -D GLX_GLXEXT_PROTOTYPES \
+                "${SKIPS[@]}"
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
-#                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
 #                -ltcg \
 #                --disable-new-dtags \
 
-# To get a much quicker turnaround you can add this: (remember also to add the backslash after GLX_GLXEXT_PROTOTYPES)
-# -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
-
-    LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
-    if find . -name "libQt5WebEngine*so" -exec false {} +; then
-      echo "Did not build qtwebengine, exiting"
-      exit 1
+    if [[ ${MINIMAL_BUILD} != yes ]]; then
+      LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
+      if find . -name "libQt5WebEngine*so" -exec false {} +; then
+        echo "Did not build qtwebengine, exiting"
+        exit 1
+      fi
     fi
     LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
     make install

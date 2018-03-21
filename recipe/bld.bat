@@ -138,16 +138,24 @@ if errorlevel 1 exit /b 1
 :: re-enable echoing which is disabled by configure
 echo on
      
-:: To get a much quicker turnaround you can add this: (remember also to add the hat symbol after -system-zlib)
-:: -skip %WEBBACKEND% -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtwinextras -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
+:: To get a much quicker turnaround you can add this: (remember also to add the hat symbol after -plugin-sql-sqlite)
+::     -skip %WEBBACKEND% -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtwinextras -skip qtsvg -skip qtsensors ^
+::     -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
-:: jom is nmake alternative with multicore support, uses all cores by default
 jom -U release
 if errorlevel 1 exit /b 1
 echo Finished `jom -U release`
 jom -U install
 if errorlevel 1 exit /b 1
 echo Finished `jom -U install`
+jom -U install_mkspecs
+if errorlevel 1 exit /b 1
+echo Finished `jom -U install_mkspecs`
+
+if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
+echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. Copying it from qtbase\bin\qmake.exe
+copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
+:ok_qmake_exists
 
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"

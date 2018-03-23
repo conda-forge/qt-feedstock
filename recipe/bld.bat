@@ -124,7 +124,7 @@ call configure ^
      -opengl %OPENGLVER% ^
      -opensource ^
      -openssl ^
-     -platform win32-msvc%VS_YEAR% ^
+     -platform win32-msvc ^
      -release ^
      -shared ^
      -qt-freetype ^
@@ -133,6 +133,7 @@ call configure ^
      -system-zlib ^
      -system-sqlite ^
      -plugin-sql-sqlite
+
 if errorlevel 1 exit /b 1
 
 :: re-enable echoing which is disabled by configure
@@ -148,7 +149,9 @@ echo Finished `jom -U release`
 jom -U install
 if errorlevel 1 exit /b 1
 echo Finished `jom -U install`
-jom -U install_mkspecs
+pushd qtbase
+  jom -U install_mkspecs
+popd
 if errorlevel 1 exit /b 1
 echo Finished `jom -U install_mkspecs`
 

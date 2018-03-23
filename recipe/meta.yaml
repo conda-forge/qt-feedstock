@@ -56,8 +56,6 @@ build:
   merge_build_host: true  # [linux]
   run_exports:
     - {{ pin_subpackage('qt', max_pin='x.x') }}
-  features:
-    - vc{{ vc }} # [win]
   missing_dso_whitelist:  # [osx]
     - /usr/lib/libbsm.0.dylib  # [osx]
     - /usr/lib/libcups.2.dylib  # [osx]

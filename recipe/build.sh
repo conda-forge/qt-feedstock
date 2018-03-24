@@ -218,7 +218,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -qt-freetype \
                 -qt-pcre \
                 -no-framework \
-                -no-dbus \
+                -dbus \
                 -no-mtdev \
                 -no-harfbuzz \
                 -no-libudev \

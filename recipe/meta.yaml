@@ -62,6 +62,8 @@ build:
     - /usr/lib/libresolv.9.dylib  # [osx]
     - /usr/lib/libsandbox.1.dylib  # [osx]
     - /System/Library/Frameworks/CoreLocation.framework/**  # [osx]
+  features:
+    - vc{{ vc }} # [win]
 
 requirements:
   build:

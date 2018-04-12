@@ -160,6 +160,11 @@ echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very 
 copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
 :ok_qmake_exists
 
+:: Support systems with neither capable OpenGL (desktop mode) nor DirectX 11 (ANGLE mode) drivers
+:: https://github.com/ContinuumIO/anaconda-issues/issues/9142
+copy opengl32sw\opengl32sw.dll "%LIBRARY_BIN%"\opengl32sw.dll
+if errorlevel 1 exit /b 1
+
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
 if errorlevel 1 exit /b 1

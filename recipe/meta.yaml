@@ -1,4 +1,4 @@
-{% set version = "5.9.4" %}
+{% set version = "5.9.5" %}
 
 package:
   name: qt
@@ -6,7 +6,7 @@ package:
 
 source:
   - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
-    sha256: e3acd9cbeafba3aed9f14592f4d70bf0b255e0203943e8d2b4235002268274d5
+    md5: 0e6eaa2d118f9854345c2debb12e8536
     patches:
       # Moved elsewhere now it seems?
       # - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
@@ -48,6 +48,14 @@ source:
       # - 0003-qtwebkit-O_CLOEXEC-workaround.patch                                                                # [qtwebkit == 'true']
       - 0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [qtwebkit == 'true']
       - 0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
+
+  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-32-mesa_12_0_rc2.7z      # [win32]
+    sha256: 656015ab03a6686854b920a0a0bf77b4e46525ee8d5396bf04a49ef80a53427d                                      # [win32]
+    folder: opengl32sw                                                                                            # [win32]
+
+  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-64-mesa_12_0_rc2.7z      # [win64]
+    sha256: 2a0d2f92c60e0962ef5f6039d3793424c6f39e49ba27ac04a5b21ca4ae012e15                                      # [win64]
+    folder: opengl32sw                                                                                            # [win64]
 
 build:
   skip: True  # [win and vc != 14]

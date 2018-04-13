@@ -32,6 +32,12 @@ if %ERRORLEVEL% neq 0 (
 set "INCLUDE=%LIBRARY_INC%;%INCLUDE%"
 set "LIB=%LIBRARY_LIB%;%LIB%"
 
+:: Support systems with neither capable OpenGL (desktop mode) nor DirectX 11 (ANGLE mode) drivers
+:: https://github.com/ContinuumIO/anaconda-issues/issues/9142
+if not exist "%LIBRARY_BIN%" mkdir "%LIBRARY_BIN%"
+bsdtar.exe -C "%LIBRARY_BIN%" -xf opengl32sw\opengl32sw-%ARCH%-mesa_12_0_rc2.7z
+if errorlevel 1 exit /b 1
+
 :: WebEngine (Chromium) specific definitions.  Only build this with VS 2015 (no support for python < 3.5)
 if "%WEBBACKEND%" == "qtwebengine" (
   set "WSDK8=C:\\Program\ Files\ (x86)\\Windows\ Kits\\8.1"
@@ -159,11 +165,6 @@ if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
 echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. Copying it from qtbase\bin\qmake.exe
 copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
 :ok_qmake_exists
-
-:: Support systems with neither capable OpenGL (desktop mode) nor DirectX 11 (ANGLE mode) drivers
-:: https://github.com/ContinuumIO/anaconda-issues/issues/9142
-copy opengl32sw\opengl32sw.dll "%LIBRARY_BIN%"\opengl32sw.dll
-if errorlevel 1 exit /b 1
 
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"

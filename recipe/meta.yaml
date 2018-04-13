@@ -105,9 +105,6 @@ requirements:
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
 
-    # To unpack opengl32sw.dll
-    - libarchive                         # [win]
-
     # For fontconfig + freetype
     - pkg-config                         # [linux]
     - pthread-stubs                      # [linux]

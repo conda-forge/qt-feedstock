@@ -49,16 +49,13 @@ source:
       - 0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [qtwebkit == 'true']
       - 0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
 
-# It would be nice to use this, but .7z files are not handled by conda-build. While we could use libarchive's bsdtar to extract
-# them, we do not currently have vc2008 builds of that and Chromium/QtWebEngine requires Python 2.7 in the build env. Instead I
-# have just added the DLLs to the recipe. Google need to add Python 3 support to depot_tools.
-#  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-32-mesa_12_0_rc2.7z      # [win32]
-#    sha256: 656015ab03a6686854b920a0a0bf77b4e46525ee8d5396bf04a49ef80a53427d                                      # [win32]
-#    folder: opengl32sw                                                                                            # [win32]
-#
-#  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-64-mesa_12_0_rc2.7z      # [win64]
-#    sha256: 2a0d2f92c60e0962ef5f6039d3793424c6f39e49ba27ac04a5b21ca4ae012e15                                      # [win64]
-#    folder: opengl32sw                                                                                            # [win64]
+  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-32-mesa_12_0_rc2.7z      # [win32]
+    sha256: 656015ab03a6686854b920a0a0bf77b4e46525ee8d5396bf04a49ef80a53427d                                      # [win32]
+    folder: opengl32sw                                                                                            # [win32]
+
+  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-64-mesa_12_0_rc2.7z      # [win64]
+    sha256: 2a0d2f92c60e0962ef5f6039d3793424c6f39e49ba27ac04a5b21ca4ae012e15                                      # [win64]
+    folder: opengl32sw                                                                                            # [win64]
 
 build:
   skip: True  # [win and vc != 14]
@@ -104,6 +101,9 @@ requirements:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
+
+    # To unpack opengl32sw.dll
+    - libarchive                         # [win]
 
     # For fontconfig + freetype
     - pkg-config                         # [linux]

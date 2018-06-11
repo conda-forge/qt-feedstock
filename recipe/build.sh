@@ -258,34 +258,9 @@ popd > /dev/null
 # Add qt.conf file to the package to make it fully relocatable
 cp "${RECIPE_DIR}"/qt.conf "${PREFIX}"/bin/
 
-if [[ ${HOST} =~ .*darwin.* ]];
-then
-    BIN=${PREFIX}/bin
-
-    # This stuff needs to go away. It is working around some automatic .app handling by pkgbuild and installer.
-    # It may be possible to set up a correct (i.e. non-default) COMPONENT PROPERTY LIST from:
-    # https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/pkgbuild.1.html
-    # where we specify:
-    # BundleIsRelocatable = True
-    # BundleIsVersionChecked = False
-    # BundleHasStrictIdentifier = False
-    # BundleOverwriteAction = ? not sure
-    # .. to invesigate this, we should create installers with .apps and see
-    #    what pkgbuild auto-creates with --analyze and iterate on that.
-    # Failing that, we should use a different installer technology, one that we use only to install
-    # Python and conda which is then used to install everything else.
-    for _name in Assistant Designer Linguist pixeltool qml; do
-        mv ${BIN}/${_name}.app ${BIN}/${_name}app
-    done
-
+if [[ ${HOST} =~ .*darwin.* ]]; then
     # We built Qt itself with SDK 10.10, but we shouldn't
     # force users to also build their Qt apps with SDK 10.10
     # https://bugreports.qt.io/browse/QTBUG-41238
     sed -i '' 's/macosx.*$/macosx/g' ${PREFIX}/mkspecs/qdevice.pri
-
-    POST_LINK=${BIN}/.qt-post-link.sh
-    PRE_UNLINK=${BIN}/.qt-pre-unlink.sh
-    cp ${RECIPE_DIR}/osx-post.sh ${POST_LINK}
-    cp ${RECIPE_DIR}/osx-pre.sh ${PRE_UNLINK}
-    chmod +x ${POST_LINK} ${PRE_UNLINK}
 fi

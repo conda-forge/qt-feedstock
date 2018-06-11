@@ -1,4 +1,4 @@
-{% set version = "5.9.5" %}
+{% set version = "5.9.6" %}
 
 package:
   name: qt
@@ -6,7 +6,7 @@ package:
 
 source:
   - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
-    md5: 0e6eaa2d118f9854345c2debb12e8536
+    md5: a427428c65f35909ef6ae865b8ee0da6
     patches:
       # Moved elsewhere now it seems?
       # - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
@@ -58,7 +58,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 1
+  number: 0
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge

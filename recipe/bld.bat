@@ -35,7 +35,7 @@ set "LIB=%LIBRARY_LIB%;%LIB%"
 :: Support systems with neither capable OpenGL (desktop mode) nor DirectX 11 (ANGLE mode) drivers
 :: https://github.com/ContinuumIO/anaconda-issues/issues/9142
 if not exist "%LIBRARY_BIN%" mkdir "%LIBRARY_BIN%"
-bsdtar.exe -C "%LIBRARY_BIN%" -xf opengl32sw\opengl32sw-%ARCH%-mesa_12_0_rc2.7z
+copy opengl32sw\opengl32sw.dll  %LIBRARY_BIN%\opengl32sw.dll
 if errorlevel 1 exit /b 1
 if not exist %LIBRARY_BIN%\opengl32sw.dll exit /b 1
 

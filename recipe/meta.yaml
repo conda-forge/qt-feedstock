@@ -5,8 +5,10 @@ package:
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
-    md5: a427428c65f35909ef6ae865b8ee0da6
+  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz  # [not win]
+    md5: a427428c65f35909ef6ae865b8ee0da6  # [not win]
+  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.zip  # [win]
+    md5: a06dcc454bbaaeba5c8f25bc6d4b7a91  # [win]
     patches:
       # Moved elsewhere now it seems?
       # - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
@@ -103,9 +105,6 @@ requirements:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
-
-    # To unpack opengl32sw.dll
-    - libarchive                         # [win]
 
     # For fontconfig + freetype
     - pkg-config                         # [linux]

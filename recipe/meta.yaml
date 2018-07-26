@@ -22,7 +22,7 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 7
+  number: 8
   skip: True  # [osx or win]
   detect_binary_files_with_prefix: true
   features:
@@ -39,7 +39,7 @@ requirements:
     - gperf  # [linux]
     - curl >=7.44.0,<8  # [win]
     - msinttypes  # [win and py27]
-    - perl 5.22.2.1
+    - perl
     - freetype 2.8.1  # [linux]
     - fontconfig 2.12.*  # [linux]
     - openssl 1.0.*  # [not osx]

@@ -22,51 +22,46 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 7
-  skip: True  # [osx or win]
+  number: 8
+  skip: True  # [ win]
   detect_binary_files_with_prefix: true
-  features:
-    - vc9  # [win and py27]
-    - vc14  # [win and (py35 or py36)]
 
 requirements:
   build:
-    - python  # [win]
-    - python 2.7*  # [unix]
+    - perl
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - curl  # [win]
+  host:
+    - python  # [unix]
     - 7za  # [win]
     - bison  # [linux]
     - flex  # [linux]
     - gperf  # [linux]
-    - curl >=7.44.0,<8  # [win]
     - msinttypes  # [win and py27]
-    - perl 5.22.2.1
-    - freetype 2.8.1  # [linux]
-    - fontconfig 2.12.*  # [linux]
-    - openssl 1.0.*  # [not osx]
-    - jpeg 9*
-    - zlib 1.2.11
-    - libpng >=1.6.32,<1.6.35
+    - freetype  # [linux]
+    - fontconfig  # [linux]
+    - openssl  # [not osx]
+    - jpeg
+    - zlib
+    - libpng
     - gst-plugins-base  # [linux]
-    - icu 58.*
-    - sqlite 3.20.*
+    - icu
+    - sqlite
     - libxcb  # [linux]
     - dbus  # [linux]
-    - vc 9  # [win and py27]
-    - vc 14  # [win and (py35 or py36)]
   run:
-    - freetype 2.8.1  # [linux]
-    - fontconfig 2.12.*  # [linux]
-    - openssl 1.0.*  # [not osx]
-    - jpeg 9*
-    - zlib 1.2.11
-    - libpng >=1.6.32,<1.6.35
+    - freetype  # [linux]
+    - fontconfig  # [linux]
+    - openssl  # [not osx]
+    - jpeg
+    - zlib
+    - libpng
     - gst-plugins-base  # [linux]
-    - icu 58.*
-    - sqlite 3.20.*
+    - icu
+    - sqlite
     - libxcb  # [linux]
     - dbus  # [linux]
-    - vc 9  # [win and py27]
-    - vc 14  # [win and (py35 or py36)]
 
 test:
   files:

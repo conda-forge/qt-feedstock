@@ -1,36 +1,48 @@
-{% set version = "5.6.2" %}
+{% set ver = "5.6" %}
+{% set version = ver + ".2" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  url: http://download.qt.io/official_releases/qt/5.6/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.gz
-  sha256: 7551f5af1312082c3c8ab52f5e102e3f83aae2dd96dc4a3a9a197f3e58b3214c
-  patches:
-    - 0005-Remove-unused-include-sys-signalfd.h.patch
-    - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
-    - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
-    - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
-    # qtbase
-    - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
-    - 0009-osx-force-10.9-deployment-target.patch  # [osx]
-    - 0010-osx-xctest-check.patch  # [osx]
-    # qt3d
-    - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch  # [win]
-    # qtwinextras
-    - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
+  - url: http://download.qt.io/official_releases/qt/{{ ver }}/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.gz
+    sha256: 7551f5af1312082c3c8ab52f5e102e3f83aae2dd96dc4a3a9a197f3e58b3214c
+    patches:
+      - 0005-Remove-unused-include-sys-signalfd.h.patch
+      - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
+      - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
+      - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
+      # qtbase
+      - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
+      - 0009-osx-force-10.9-deployment-target.patch  # [osx]
+      - 0010-osx-xctest-check.patch  # [osx]
+      # qt3d
+      - 0001-Don-t-re-typedef-int-_t-if-_STDINT-is-defined.patch  # [win]
+      # qtwinextras
+      - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
+
+  - url: http://download.qt.io/community_releases/{{ ver }}/{{ version }}/qtwebkit-opensource-src-{{ version }}.tar.xz  # [not osx]
+    sha256: 528a6b8b1c5095367b26e8ce4f3a46bb739e2e9913ff4dfc6ef58a04fcd73966  # [not osx]
+    patches:  # [not osx]
+      - 0001-qtwebkit-old-ld-compat.patch  # [not osx]
+      # - 0002-qtwebkit-ruby-1.8.patch  # [not osx]
+      - 0003-qtwebkit-O_CLOEXEC-workaround.patch  # [not osx]
+      - 0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch  # [not osx]
+      # rg/show_bug.cgi?id=70610, http://trac.webkit.org/changeset/172759, https://github.com/WebKit/webkit/commit/4d7f0f
+      - 0005-qtwebkit-fix-TEXTREL-on-x86-changeset_172759.patch  # [not osx]
+    folder: qtwebkit
 
 build:
-  number: 8
+  number: 0
   skip: True  # [ win]
   detect_binary_files_with_prefix: true
 
 requirements:
   build:
-    - perl
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - perl
     - curl  # [win]
   host:
     - python  # [unix]

@@ -1,0 +1,40 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.9'
+c_compiler:
+- toolchain_c
+cxx_compiler:
+- toolchain_cxx
+icu:
+- '58'
+jpeg:
+- '9'
+libpng:
+- 1.6.34
+macos_machine:
+- x86_64-apple-darwin13.4.0
+macos_min_version:
+- '10.9'
+perl:
+- '5.26'
+pin_run_as_build:
+  icu:
+    max_pin: x
+  jpeg:
+    max_pin: x
+  libpng:
+    max_pin: x.x
+  perl:
+    max_pin: x.x.x
+  python:
+    max_pin: x.x
+    min_pin: x.x
+  sqlite:
+    max_pin: x
+  zlib:
+    max_pin: x.x
+python:
+- '2.7'
+sqlite:
+- '3'
+zlib:
+- '1.2'

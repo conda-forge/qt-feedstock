@@ -1,5 +1,14 @@
 #!/bin/bash
 
+chmod +x configure
+
+# Let Qt set its own flags and vars
+for x in OSX_ARCH CFLAGS CXXFLAGS LDFLAGS
+do
+    unset $x
+done
+
+
 # Compile
 # -------
 chmod +x configure
@@ -7,17 +16,11 @@ chmod +x configure
 if [ $(uname) == Linux ]; then
 
     # Download QtWebkit
-    curl "http://linorg.usp.br/Qt/community_releases/5.6/${PKG_VERSION}/qtwebkit-opensource-src-${PKG_VERSION}.tar.xz" > qtwebkit.tar.xz
-    unxz qtwebkit.tar.xz
-    tar xf qtwebkit.tar
-    mv qtwebkit-opensource-src* qtwebkit
-    patch -p0 < "${RECIPE_DIR}"/0001-qtwebkit-old-ld-compat.patch
-    patch -p0 < "${RECIPE_DIR}"/0002-qtwebkit-ruby-1.8.patch
-    patch -p0 < "${RECIPE_DIR}"/0003-qtwebkit-O_CLOEXEC-workaround.patch
-    patch -p0 < "${RECIPE_DIR}"/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch
-    # From https://bugs.webkit.org/show_bug.cgi?id=70610, http://trac.webkit.org/changeset/172759, https://github.com/WebKit/webkit/commit/4d7f0f
-    patch -p0 < "${RECIPE_DIR}"/0005-qtwebkit-fix-TEXTREL-on-x86-changeset_172759.patch
-    rm qtwebkit.tar
+    if [[ -d qtwebkit ]]; then
+    # From: http://www.linuxfromscratch.org/blfs/view/svn/x/qtwebkit5.html
+    # Should really be a patch:
+    sed -i.bak -e '/CONFIG/a QMAKE_CXXFLAGS += -Wno-expansion-to-defined' qtwebkit/Tools/qmake/mkspecs/features/unix/default_pre.prf
+    fi
 
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \

@@ -32,8 +32,10 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - curl  # [win]
+    - python   3.6  # [osx]
+    - python   2.7  # [linux]
+    - xz
   host:
-    - python  # [unix]
     - 7za  # [win]
     - bison  # [linux]
     - flex  # [linux]

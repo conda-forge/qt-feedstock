@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Let Qt set its own flags and vars
+for x in OSX_ARCH CFLAGS CXXFLAGS LDFLAGS
+do
+    unset $x
+done
+
+
 # Compile
 # -------
 chmod +x configure

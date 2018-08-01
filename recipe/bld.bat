@@ -170,10 +170,10 @@ echo on
      
 :: Note - webengine only built when you ask (nmake module-webengine) - so we can skip it easily.
      
-nmake Release
+jom Release
 if errorlevel 1 exit /b 1
 
-nmake install
+jom install
 if errorlevel 1 exit /b 1
      
 :: To rewrite qt.conf contents per conda environment

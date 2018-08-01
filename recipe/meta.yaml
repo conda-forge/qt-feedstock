@@ -35,6 +35,7 @@ requirements:
     - python   3.6  # [osx]
     - python   2.7  # [linux]
     - xz
+    - jom   # [win]
   host:
     - 7za  # [win]
     - bison  # [linux]

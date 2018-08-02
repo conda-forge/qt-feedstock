@@ -40,7 +40,7 @@ requirements:
     - bison  # [linux]
     - flex  # [linux]
     - gperf  # [linux]
-    - msinttypes  # [win and py27]
+    - msinttypes  # [win and vc<14]
     - freetype  # [linux]
     - fontconfig  # [linux]
     - openssl  # [not osx]

@@ -1,0 +1,44 @@
+c_compiler:
+- vs2008
+curl:
+- '7.59'
+cxx_compiler:
+- vs2008
+icu:
+- '58'
+jpeg:
+- '9'
+libpng:
+- 1.6.34
+openssl:
+- 1.0.2
+perl:
+- '5.26'
+pin_run_as_build:
+  curl:
+    max_pin: x
+  icu:
+    max_pin: x
+  jpeg:
+    max_pin: x
+  libpng:
+    max_pin: x.x
+  openssl:
+    max_pin: x.x.x
+  perl:
+    max_pin: x.x.x
+  sqlite:
+    max_pin: x
+  xz:
+    max_pin: x.x
+  zlib:
+    max_pin: x.x
+sqlite:
+- '3'
+xz:
+- '5.2'
+zip_keys:
+- - c_compiler
+  - cxx_compiler
+zlib:
+- '1.2'

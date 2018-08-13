@@ -37,7 +37,7 @@ requirements:
     - xz
   host:
     - 7za  # [win]
-    - bison  # [linux]
+    - bison =3.0.4  # [linux]
     - flex  # [linux]
     - gperf  # [linux]
     - msinttypes  # [win and py27]

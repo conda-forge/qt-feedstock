@@ -7,7 +7,7 @@ dbus:
 fontconfig:
 - '2.13'
 freetype:
-- 2.8.1
+- 2.9.1
 gst_plugins_base:
 - '1.12'
 icu:
@@ -26,7 +26,7 @@ pin_run_as_build:
   fontconfig:
     max_pin: x
   freetype:
-    max_pin: x.x
+    max_pin: x
   gst-plugins-base:
     max_pin: x.x
   icu:

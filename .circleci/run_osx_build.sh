@@ -23,8 +23,6 @@ conda config --set show_channel_urls true
 conda install --yes --quiet conda-forge-ci-setup=1
 source run_conda_forge_build_setup
 
-rm -r ${CONDA_BUILD_SYSROOT}/../MacOSX10.13.sdk
-rm -r ${CONDA_BUILD_SYSROOT}/../MacOSX.sdk
 
 set -e
 conda build ./recipe -m ./.ci_support/${CONFIG}.yaml

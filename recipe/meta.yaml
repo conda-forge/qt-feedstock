@@ -22,7 +22,7 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 8
+  number: 9
   skip: True  # [ win]
   detect_binary_files_with_prefix: true
 
@@ -37,7 +37,7 @@ requirements:
     - xz
   host:
     - 7za  # [win]
-    - bison  # [linux]
+    - bison =3.0.4  # [linux]
     - flex  # [linux]
     - gperf  # [linux]
     - msinttypes  # [win and py27]

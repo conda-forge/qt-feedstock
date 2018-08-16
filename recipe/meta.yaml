@@ -10,6 +10,9 @@ source:
   - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.zip  # [win]
     md5: a06dcc454bbaaeba5c8f25bc6d4b7a91  # [win]
     patches:
+      # Spyder ran into this: https://codereview.qt-project.org/#/c/233482/
+      # https://github.com/spyder-ide/spyder/issues/7693
+      - 0000-Revert-Fix-restoring-geometry-of-dockwidget.patch
       # Moved elsewhere now it seems?
       # - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
       # qtbase
@@ -60,7 +63,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 1
+  number: 2
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge

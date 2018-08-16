@@ -215,6 +215,8 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -system-libjpeg \
                 -system-libpng \
                 -system-zlib \
+                -system-sqlite \
+                -plugin-sql-sqlite \
                 -qt-freetype \
                 -qt-pcre \
                 -no-framework \
@@ -225,7 +227,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                -sdk macosx10.10 \
+                -sdk macosx10.10
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
@@ -247,6 +249,13 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     cp "${RECIPE_DIR}"/xcodebuild "${PREFIX}"/bin/xc-avoidance/
 fi
 
+# Qt Charts
+# ---------
+pushd qtcharts
+${PREFIX}/bin/qmake qtcharts.pro PREFIX=${PREFIX}
+make || exit 1
+make install || exit 1
+popd
 
 # Post build setup
 # ----------------

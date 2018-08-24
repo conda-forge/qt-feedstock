@@ -1,0 +1,12 @@
+--- work/qtbase/src/plugins/platforms/windows/windows.pri.orig	2018-06-07 00:28:10.000000000 -0500
++++ work/qtbase/src/plugins/platforms/windows/windows.pri	2018-08-24 06:06:15.378635200 -0500
+@@ -9,7 +9,8 @@
+ # For the dialog helpers:
+ LIBS += -lshlwapi -lshell32 -ladvapi32
+ 
+-DEFINES *= QT_NO_CAST_FROM_ASCII
++# DISABLE_WINRT_DEPRECATION is needed since 10.0.16299.0 and maybe eariler
++DEFINES *= QT_NO_CAST_FROM_ASCII DISABLE_WINRT_DEPRECATION
+ 
+ SOURCES += \
+     $$PWD/qwindowswindow.cpp \

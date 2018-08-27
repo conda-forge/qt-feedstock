@@ -1,6 +1,6 @@
---- qtbase/src/testlib/testlib.pro
-+++ qtbase/src/testlib/testlib.pro
-@@ -81,7 +81,7 @@
+--- a/qtbase/src/testlib/testlib.pro
++++ b/qtbase/src/testlib/testlib.pro
+@@ -91,7 +91,7 @@
      }
  
      # XCTest support (disabled for now)

@@ -12,22 +12,22 @@ Change-Id: I5bf297bfc5624d98838e48288c5139acf13fc431
  src/winextras/winshobjidl_p.h | 6 +-----
  1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git qtwinextras/src/winextras/winshobjidl_p.h qtwinextras/src/winextras/winshobjidl_p.h
+diff --git a/qtwinextras/src/winextras/winshobjidl_p.h b/qtwinextras/src/winextras/winshobjidl_p.h
 index 224150d..c0893f8 100644
---- qtwinextras/src/winextras/winshobjidl_p.h
-+++ qtwinextras/src/winextras/winshobjidl_p.h
-@@ -223,9 +223,7 @@ public:
+--- a/qtwinextras/src/winextras/winshobjidl_p.h
++++ b/qtwinextras/src/winextras/winshobjidl_p.h
+@@ -229,9 +229,7 @@
  
  #endif
  
--#if (defined _MSC_VER && _MSC_VER < 1600) || defined(Q_CC_MINGW)
+-#ifdef Q_CC_MINGW
 -
 -#   if !defined(__MINGW64_VERSION_MAJOR) || !defined(__MINGW64_VERSION_MINOR) || __MINGW64_VERSION_MAJOR * 100 + __MINGW64_VERSION_MINOR < 301
 +#if (NTDDI_VERSION < NTDDI_WIN7)
  
  typedef struct SHARDAPPIDINFOLINK
  {
-@@ -235,8 +233,6 @@ typedef struct SHARDAPPIDINFOLINK
+@@ -241,8 +239,6 @@
      PCWSTR pszAppID;        // The id of the application that should be associated with this recent doc.
  } SHARDAPPIDINFOLINK;
  
@@ -36,6 +36,3 @@ index 224150d..c0893f8 100644
  #endif
  
  #endif // WINSHOBJIDL_P_H
--- 
-2.10.2
-

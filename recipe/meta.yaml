@@ -1,43 +1,36 @@
-{% set version = "5.9.6" %}
+# Note, you cannot build this with macOS SDK < 10.12, despite there being a few patches
+# to add back support. QtWebengine scuppers us with:
+#   error: unknown type name 'SecKeyAlgorithm'
+# .. these 10.11 support patches should be removed anyway as they could break some things.
+# .. such as pop-up Window mouse-events.
+{% set version = "5.11.1" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz  # [not win]
-    md5: a427428c65f35909ef6ae865b8ee0da6  # [not win]
-  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.zip  # [win]
-    md5: a06dcc454bbaaeba5c8f25bc6d4b7a91  # [win]
+  - url: http://download.qt.io/official_releases/qt/5.11/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz  # [not win]
+    md5: c6f0854d7de7bde80cfd8cc85bb7152b  # [not win]
+  - url: http://download.qt.io/official_releases/qt/5.11/{{ version }}/single/qt-everywhere-src-{{ version }}.zip  # [win]
+    md5: c30891e1bf4c24739d5e4043be3add2c  # [win]
     patches:
-      # Spyder ran into this: https://codereview.qt-project.org/#/c/233482/
-      # https://github.com/spyder-ide/spyder/issues/7693
-      - 0000-Revert-Fix-restoring-geometry-of-dockwidget.patch
-      # Moved elsewhere now it seems?
-      # - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
       # qtbase
       - 0010-osx-xctest-check.patch
       - 0011-osx-allow-any-xcrun-in-PATH.patch
-      # - 0012-qtbase-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-all-mac.patch
-      # - 0013-Restore-macOS-10.9-support.patch
-      # - 0013-NSEnumerator-is-a-non-parameterized-class.patch
-      - 0014-Fix-command-line-tools-build.patch
       - 0015-qtbase-use-better-clang-optimize-size.patch
       - 0016-qtbase-use-better-gcc-optimize-size.patch
       - 0017-qtbase-never-enable-new-dtags.patch
+      - 0018-Revert-macOS-ensure-mouse-events-from-the-global-mon.patch
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine
       - 0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - 0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      # - 0003-qtwebengine-mac_sdk_min-to-10.9.patch
       - 0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
       - 0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
       - 0006-qtwebengine-run-gn-verbosely.patch
-      # https://github.com/google/boringssl/commit/17cf2cb1d226b0ba2401304242df7ddd3b6f1ff2
-      # https://www.imperialviolet.org/2016/06/26/nonnull.html
-      - 0007-qtwebengine-boringssl-Work-around-language-and-compiler-bug-in-memcpy-etc.patch
-      - 0008-qtwebengine-Allow-build-to-proceed-on-macOS-10-9.patch
+      - 0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
       # qtgamepad
       - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
       # qtscript
@@ -49,8 +42,6 @@ source:
     patches:                                                                                                      # [qtwebkit == 'true']
       - 0001-qtwebkit-old-ld-compat.patch                                                                         # [qtwebkit == 'true']
       - 0002-qtwebkit-ruby-1.8.patch                                                                              # [qtwebkit == 'true']
-      # Not needed since updating to CentOS6?
-      # - 0003-qtwebkit-O_CLOEXEC-workaround.patch                                                                # [qtwebkit == 'true']
       - 0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [qtwebkit == 'true']
       - 0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
 

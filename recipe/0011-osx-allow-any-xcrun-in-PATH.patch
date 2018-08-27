@@ -33,6 +33,15 @@ diff -urN work_failed_provide.orig/qtbase/configure work_failed_provide/qtbase/c
 diff -urN work_failed_provide.orig/qtbase/mkspecs/features/mac/default_pre.prf work_failed_provide/qtbase/mkspecs/features/mac/default_pre.prf
 --- work_failed_provide.orig/qtbase/mkspecs/features/mac/default_pre.prf	2018-02-13 10:11:01.000000000 +0000
 +++ work_failed_provide/qtbase/mkspecs/features/mac/default_pre.prf	2018-02-13 10:17:26.000000000 +0000
+@@ -3,7 +3,7 @@
+ 
+ isEmpty(QMAKE_XCODE_DEVELOPER_PATH) {
+     # Get path of Xcode's Developer directory
+-    QMAKE_XCODE_DEVELOPER_PATH = $$system("/usr/bin/xcode-select --print-path 2>/dev/null")
++    QMAKE_XCODE_DEVELOPER_PATH = $$system("xcode-select --print-path 2>/dev/null")
+     isEmpty(QMAKE_XCODE_DEVELOPER_PATH): \
+         error("Xcode path is not set. Please use xcode-select to choose Xcode installation path.")
+ 
 @@ -13,16 +13,16 @@
  }
  
@@ -60,11 +69,11 @@ diff -urN work_failed_provide.orig/qtbase/mkspecs/features/mac/sdk.prf work_fail
          sdk = $$QMAKE_MAC_SDK
  
      isEmpty(QMAKE_MAC_SDK.$${sdk}.$${info}) {
--        QMAKE_MAC_SDK.$${sdk}.$${info} = $$system("/usr/bin/xcrun --sdk $$sdk $$info 2>/dev/null")
-+        QMAKE_MAC_SDK.$${sdk}.$${info} = $$system("xcrun --sdk $$sdk $$info 2>/dev/null")
+-        QMAKE_MAC_SDK.$${sdk}.$${info} = $$system("/usr/bin/xcrun --sdk $$sdk $$infoarg 2>/dev/null")
++        QMAKE_MAC_SDK.$${sdk}.$${info} = $$system("xcrun --sdk $$sdk $$infoarg 2>/dev/null")
          # --show-sdk-platform-path won't work for Command Line Tools; this is fine
          # only used by the XCTest backend to testlib
-         isEmpty(QMAKE_MAC_SDK.$${sdk}.$${info}):if(!isEmpty(QMAKE_XCODEBUILD_PATH)|!equals(info, "--show-sdk-platform-path")): \
+         isEmpty(QMAKE_MAC_SDK.$${sdk}.$${info}):if(!isEmpty(QMAKE_XCODEBUILD_PATH)|!equals(infoarg, "--show-sdk-platform-path")): \
 @@ -50,7 +50,7 @@
      value = $$eval($$tool)
      isEmpty(value): next()

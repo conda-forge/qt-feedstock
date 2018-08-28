@@ -16,6 +16,7 @@ source:
     md5: f6647d66d1c062b0603831290a4c7e4a  # [win]
     patches:
       # qtbase
+      - 0000-Fix-MSVC2017-compilation-with-enabled-relaxed-constexpr-on-32-bit-target.patch
       - 0010-osx-xctest-check.patch
       - 0011-osx-allow-any-xcrun-in-PATH.patch
       - 0015-qtbase-use-better-clang-optimize-size.patch
@@ -54,7 +55,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 2
+  number: 3
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge

@@ -104,7 +104,6 @@ if [ $(uname) == Darwin ]; then
                 -system-zlib \
                 -qt-pcre \
                 -qt-freetype \
-                -c++11 \
                 -no-framework \
                 -no-dbus \
                 -no-mtdev \

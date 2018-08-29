@@ -46,6 +46,7 @@ requirements:
     - sqlite
     - libxcb  # [linux]
     - dbus  # [linux]
+    - re2  # [unix]
   run:
     - freetype  # [linux]
     - fontconfig  # [linux]
@@ -58,6 +59,7 @@ requirements:
     - sqlite
     - libxcb  # [linux]
     - dbus  # [linux]
+    - re2  # [unix]
 
 test:
   files:

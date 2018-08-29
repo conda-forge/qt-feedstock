@@ -1,17 +1,13 @@
-{% set version = "5.6.2" %}
+{% set version = "5.11.1" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  url: http://download.qt.io/official_releases/qt/5.6/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.gz
-  sha256: 7551f5af1312082c3c8ab52f5e102e3f83aae2dd96dc4a3a9a197f3e58b3214c
+  url: http://download.qt.io/official_releases/qt/5.11/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
+  #sha256: dacc995ae3a7cdad80eb9fdf6470299a8fac41f468a9bb941670ece523b62af4
   patches:
-    - 0005-Remove-unused-include-sys-signalfd.h.patch
-    - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
-    - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
-    - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
     # qtbase
     - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
     - 0009-osx-force-10.9-deployment-target.patch  # [osx]
@@ -22,7 +18,7 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 9
+  number: 0
   skip: True  # [ win]
   detect_binary_files_with_prefix: true
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cd test
 ln -s ${GXX} g++
 cp ../xcrun .

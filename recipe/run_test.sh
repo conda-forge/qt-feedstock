@@ -8,3 +8,7 @@ export PATH=${PWD}:${PATH}
 qmake hello.pro
 make
 ./hello
+# Only test that this builds
+make clean
+qmake qtwebengine
+make

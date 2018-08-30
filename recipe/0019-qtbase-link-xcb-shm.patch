@@ -1,0 +1,11 @@
+--- work/qtbase/src/gui/configure.json.orig	2018-08-28 08:55:23.199249012 +0100
++++ work/qtbase/src/gui/configure.json	2018-08-28 08:58:16.358631403 +0100
+@@ -451,7 +451,7 @@
+             },
+             "sources": [
+                 { "type": "pkgConfig", "args": "xcb >= 1.5" },
+-                "-lxcb"
++                "-lxcb -lxcb-shm"
+             ]
+         },
+         "xcb_syslibs": {

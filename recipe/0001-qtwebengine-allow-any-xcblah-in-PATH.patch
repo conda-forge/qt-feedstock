@@ -1,0 +1,60 @@
+--- a/qtwebengine/src/core/config/mac_osx.pri	2018-02-28 17:24:37.000000000 +0000
++++ b/qtwebengine/src/core/config/mac_osx.pri	2018-02-28 17:25:04.000000000 +0000
+@@ -5,7 +5,7 @@
+ # otherwise query for it.
+ QMAKE_MAC_SDK_VERSION = $$eval(QMAKE_MAC_SDK.$${QMAKE_MAC_SDK}.SDKVersion)
+ isEmpty(QMAKE_MAC_SDK_VERSION) {
+-     QMAKE_MAC_SDK_VERSION = $$system("/usr/bin/xcodebuild -sdk $${QMAKE_MAC_SDK} -version SDKVersion 2>/dev/null")
++     QMAKE_MAC_SDK_VERSION = $$system("xcodebuild -sdk $${QMAKE_MAC_SDK} -version SDKVersion 2>/dev/null")
+      isEmpty(QMAKE_MAC_SDK_VERSION): error("Could not resolve SDK version for \'$${QMAKE_MAC_SDK}\'")
+ }
+ 
+--- a/qtwebengine/mkspecs/features/platform.prf	2018-08-27 08:55:14.000000000 +0100
++++ b/qtwebengine/mkspecs/features/platform.prf	2018-08-27 08:55:33.000000000 +0100
+@@ -108,7 +108,7 @@
+     requested_minor = $$2
+     requested_patch = $$3
+     isEmpty(requested_patch): requested_patch = 0
+-    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("/usr/bin/xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
++    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
+     export(WEBENGINE_OSX_SDK_PRODUCT_VERSION)
+     isEmpty(WEBENGINE_OSX_SDK_PRODUCT_VERSION) {
+         skipBuild("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")
+--- qt-everywhere-src-5.11.1/qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py	2018-08-27 13:21:10.000000000 +0100
++++ qt-everywhere-src-5.11.1.orig/qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py	2018-08-27 12:00:31.000000000 +0100
+@@ -165,19 +165,19 @@
+       output_dir, 'Contents','version.plist')
+   target_version_plist = LoadPlist(target_version_plist_path)
+   short_version_string = target_version_plist['CFBundleShortVersionString']
+-  old_path = subprocess.Popen(['/usr/bin/xcode-select', '-p'],
++  old_path = subprocess.Popen(['xcode-select', '-p'],
+                                stdout=subprocess.PIPE).communicate()[0].strip()
+   try:
+     build_dir = os.path.join(output_dir, 'Contents/Developer')
+-    subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', build_dir])
+-    subprocess.check_call(['sudo', '/usr/bin/xcodebuild', '-license', 'accept'])
++    subprocess.check_call(['sudo', 'xcode-select', '-s', build_dir])
++    subprocess.check_call(['sudo', 'xcodebuild', '-license', 'accept'])
+ 
+     if target_os == 'ios' and \
+         LooseVersion(short_version_string) >= LooseVersion("9.0"):
+       print "Installing packages."
+-      subprocess.check_call(['sudo', '/usr/bin/xcodebuild', '-runFirstLaunch'])
++      subprocess.check_call(['sudo', 'xcodebuild', '-runFirstLaunch'])
+   finally:
+-    subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', old_path])
++    subprocess.check_call(['sudo', 'xcode-select', '-s', old_path])
+ 
+ 
+ def _UseHermeticToolchain(target_os):
+--- qt-everywhere-src-5.11.1/qtwebengine/src/3rdparty/chromium/build/swarming_xcode_install.py	2018-08-27 13:23:03.000000000 +0100
++++ qt-everywhere-src-5.11.1.orig/qtwebengine/src/3rdparty/chromium/build/swarming_xcode_install.py	2018-08-27 12:00:31.000000000 +0100
+@@ -53,7 +53,7 @@
+   mac_toolchain.FinalizeUnpack(OUTPUT_DIR, 'ios')
+ 
+   # Set new Xcode as default.
+-  subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', OUTPUT_DIR])
++  subprocess.check_call(['sudo', 'xcode-select', '-s', OUTPUT_DIR])
+ 
+   if os.path.exists(REMOVE_DIR):
+     shutil.rmtree(REMOVE_DIR)

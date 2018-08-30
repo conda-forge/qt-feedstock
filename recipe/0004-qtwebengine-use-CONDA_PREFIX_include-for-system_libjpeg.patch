@@ -1,0 +1,10 @@
+--- a/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn	2018-03-03 13:05:08.449001652 +0000
++++ b/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn	2018-03-03 14:07:04.457211038 +0000
+@@ -17,6 +17,7 @@
+ }
+ 
+ config("system_libjpeg_config") {
++  include_dirs = [ getenv("CONDA_PREFIX")+"/include" ]
+   libs = [ "jpeg" ]
+   defines = [ "USE_SYSTEM_LIBJPEG" ]
+ }

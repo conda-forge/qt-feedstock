@@ -1,0 +1,52 @@
+--- qt-everywhere-src-5.11.1.orig/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp	2018-06-15 08:47:20.000000000 +0100
++++ qt-everywhere-src-5.11.1/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp	2018-08-27 13:29:25.000000000 +0100
+@@ -77,11 +77,11 @@
+ }
+ 
+ static boolean _src_fill_buffer(j_decompress_ptr cinfo) {
+-  return 0;
++  return FALSE;
+ }
+ 
+ static boolean _src_resync(j_decompress_ptr cinfo, int desired) {
+-  return 0;
++  return FALSE;
+ }
+ 
+ static void _error_do_nothing(j_common_ptr cinfo) {}
+@@ -94,7 +94,7 @@
+ static void _dest_do_nothing(j_compress_ptr cinfo) {}
+ 
+ static boolean _dest_empty(j_compress_ptr cinfo) {
+-  return false;
++  return FALSE;
+ }
+ #endif  // _FX_PLATFORM_ == _FX_PLATFORM_WINDOWS_
+ }  // extern "C"
+@@ -150,7 +150,7 @@
+     jpeg_destroy_decompress(&cinfo);
+     return false;
+   }
+-  int ret = jpeg_read_header(&cinfo, true);
++  int ret = jpeg_read_header(&cinfo, TRUE);
+   if (ret != JPEG_HEADER_OK) {
+     jpeg_destroy_decompress(&cinfo);
+     return false;
+@@ -234,7 +234,7 @@
+   }
+   cinfo.image_width = m_OrigWidth;
+   cinfo.image_height = m_OrigHeight;
+-  int ret = jpeg_read_header(&cinfo, true);
++  int ret = jpeg_read_header(&cinfo, TRUE);
+   if (ret != JPEG_HEADER_OK)
+     return false;
+ 
+@@ -459,7 +459,7 @@
+                                   int* nComps) {
+ #endif  // PDF_ENABLE_XFA
+   auto* ctx = static_cast<CJpegContext*>(pContext);
+-  int ret = jpeg_read_header(&ctx->m_Info, true);
++  int ret = jpeg_read_header(&ctx->m_Info, TRUE);
+   if (ret == JPEG_SUSPENDED)
+     return 2;
+   if (ret != JPEG_HEADER_OK)

@@ -1,0 +1,24 @@
+diff -urN qt-everywhere-src-5.11.1.orig/qtbase/configure.json qt-everywhere-src-5.11.1/qtbase/configure.json
+--- qt-everywhere-src-5.11.1.orig/qtbase/configure.json	2018-08-27 13:06:16.000000000 +0100
++++ qt-everywhere-src-5.11.1/qtbase/configure.json	2018-08-27 13:06:07.000000000 +0100
+@@ -306,7 +306,7 @@
+         "enable_new_dtags": {
+             "label": "new dtags support",
+             "type": "linkerSupportsFlag",
+-            "flag": "--enable-new-dtags"
++            "flag": "--disable-new-dtags"
+         },
+         "gdb_index": {
+             "label": "gdb index support",
+diff -urN qt-everywhere-src-5.11.1.orig/qtbase/mkspecs/common/gcc-base-unix.conf qt-everywhere-src-5.11.1/qtbase/mkspecs/common/gcc-base-unix.conf
+--- qt-everywhere-src-5.11.1.orig/qtbase/mkspecs/common/gcc-base-unix.conf	2018-08-27 13:06:16.000000000 +0100
++++ qt-everywhere-src-5.11.1/qtbase/mkspecs/common/gcc-base-unix.conf	2018-08-27 13:06:07.000000000 +0100
+@@ -18,7 +18,7 @@
+ QMAKE_LFLAGS_THREAD    +=
+ QMAKE_LFLAGS_RPATH      = -Wl,-rpath,
+ QMAKE_LFLAGS_RPATHLINK  = -Wl,-rpath-link,
+-QMAKE_LFLAGS_NEW_DTAGS  = -Wl,--enable-new-dtags
++QMAKE_LFLAGS_NEW_DTAGS  = -Wl,--disable-new-dtags
+ QMAKE_LFLAGS_GDB_INDEX  = -Wl,--gdb-index
+ QMAKE_LFLAGS_USE_GOLD   = -fuse-ld=gold
+ 

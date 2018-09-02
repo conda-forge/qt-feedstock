@@ -137,11 +137,11 @@ call configure ^
      -qt-freetype ^
      -system-libjpeg ^
      -system-libpng ^
-     -system-zlib ^
      -system-sqlite ^
+     -system-zlib ^
      -plugin-sql-sqlite
 
-if errorlevel 1 exit /b 1
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 :: re-enable echoing which is disabled by configure
 echo on
@@ -151,15 +151,15 @@ echo on
 ::     -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
 jom -U release
-if errorlevel 1 exit /b 1
+if %errorlevel% neq 0 exit /b %errorlevel%
 echo Finished `jom -U release`
 jom -U install
-if errorlevel 1 exit /b 1
+if %errorlevel% neq 0 exit /b %errorlevel%
 echo Finished `jom -U install`
 pushd qtbase
   jom -U install_mkspecs
 popd
-if errorlevel 1 exit /b 1
+if %errorlevel% neq 0 exit /b %errorlevel%
 echo Finished `jom -U install_mkspecs`
 
 if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
@@ -169,4 +169,4 @@ copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
 
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
-if errorlevel 1 exit /b 1
+if %errorlevel% neq 0 exit /b %errorlevel%

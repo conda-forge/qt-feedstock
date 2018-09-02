@@ -108,6 +108,7 @@ requirements:
     - pthread-stubs                      # [linux]
     # Probably only needed for WebEngine
     - python 2.7*
+    - ninja
     - ruby                               # [linux]
     - bison                              # [linux]
     - flex                               # [linux]

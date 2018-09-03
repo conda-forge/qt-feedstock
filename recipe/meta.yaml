@@ -193,6 +193,9 @@ test:
   files:
     - test/hello.pro
     - test/main.cpp
+    - test/main-qtwebengine.cpp
+    - test/qml.cpp
+    - test/qtwebengine.pro
     - xcodebuild
     - xcrun
   commands:

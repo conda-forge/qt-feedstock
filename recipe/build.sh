@@ -82,7 +82,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     for SYSINCDIR in ${SYSINCDIRS}; do
       INCDIRS+=(-I ${SYSINCDIR})
     done
-    echo "#!/usr/bin/env sh"                                                          > ./pkg-config
+    echo "#!/usr/bin/env bash"                                                        > ./pkg-config
     echo "pc_res=\$(\${PREFIX}/bin/pkg-config \"\$@\")"                              >> ./pkg-config
     echo "res=\$?"                                                                   >> ./pkg-config
     echo "if [[ \${res} != 0 ]]; then"                                               >> ./pkg-config
@@ -125,6 +125,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -nomake examples \
                 -nomake tests \
                 -verbose \
+                -cups \
                 -skip wayland \
                 -system-libjpeg \
                 -system-libpng \

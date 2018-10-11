@@ -132,6 +132,7 @@ requirements:
     - m2-flex                            # [win]
     - jom                                # [win]
     - perl 5.*
+
   host:
     - dbus                               # [linux]
     - fontconfig                         # [linux]

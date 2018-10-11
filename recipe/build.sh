@@ -124,7 +124,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -nomake examples \
                 -nomake tests \
                 -verbose \
-                -cups \
                 -skip wayland \
                 -system-libjpeg \
                 -system-libpng \

@@ -1,18 +1,26 @@
+@echo on
+setlocal EnableDelayedExpansion
+set SHORT_VERSION=%PKG_VERSION:~0,-2%
 
-:: Currently, we only support qtwebit, in future we may support
-:: qtwebengine for MSVC 2015 and above. Have left qtwebengine code in
-:: from upstream recipe (https://github.com/ContinuumIO/anaconda-recipes/blob/master/qt/bld.bat)
-set WEBBACKEND=qtwebkit
+:: if "%DXSDK_DIR%" == "" (
+::   echo You do not appear to have the DirectX SDK installed.  Please get it from
+::   echo    https://www.microsoft.com/en-us/download/details.aspx?id=6812
+::   echo and try this build again.  If you have installed it, and are still seeing
+::   echo this message, please open a new console to refresh your environment variables.
+::   exit /b 1
+:: )
 
-:: Add the gnuwin32 tools to PATH - needed for webkit
-:: Ruby is also needed but this is supplied by AppVeyor
-set PATH=%cd%\gnuwin32\bin;%PATH%
-
-where ruby.exe
-if %ERRORLEVEL% neq 0 (
-  echo Could not find ruby.exe
-  exit /b 1
-)
+:: Webengine requires either working OpenGL drivers or
+:: Angle (therefore DirectX >= 11). This works on some
+:: VMs and not others.  Windows 7 VirtualBox instantly
+:: aborts when loading Spyder sSo we've had to disable
+:: it globally.
+:: Using Mesa from MSYS2 is mentioned as a workaround:
+::  http://wiki.qt.io/Cross-compiling-Mesa-for-Windows
+:: `set QT_OPENGL=software` forces Qt5 to use that but
+:: but when I tried it it was too buggy; Spyder crashed a
+:: little bit later, though it worked for Carlos.
+set WEBBACKEND=qtwebengine
 
 where perl.exe
 if %ERRORLEVEL% neq 0 (
@@ -20,34 +28,18 @@ if %ERRORLEVEL% neq 0 (
   exit /b 1
 )
 
-:: Install a custom python 27 environment for us, to use in building webengine which needs Py27, but avoid feature activation
-:: At present (5th July 2016) calling `conda create -y -n python27_qt5_build python=2.7` causes the build to
-:: fail immediately after, so I'm bodging around that by not doing it if it exists.  This means you must run
-:: the builds twice. Sorry. Time is not on my side here.
-if "%WEBBACKEND%" == "qtwebengine" (
-  if not exist %SYS_PREFIX%\envs\python27_qt5_build (
-    conda create -y -n python27_qt5_build python=2.7
-  )
-  set "PATH=%SYS_PREFIX%\envs\python27_qt5_build;%SYS_PREFIX%\envs\python27_qt5_build\Scripts;%SYS_PREFIX%\envs\python27_qt5_build\Library\bin;%PATH%"
-)
+:: make sure we can find ICU and openssl:
+set "INCLUDE=%LIBRARY_INC%;%INCLUDE%"
+set "LIB=%LIBRARY_LIB%;%LIB%"
 
-:: Webkit is not part of the distributed Qt5 tarballs anymore in 5.6 or after. 
-:: You need to download it separately and move it to the build directory by yourself. 
-set SHORT_VERSION=%PKG_VERSION:~0,-2%
-if "%DIRTY%" == "" (
-    if "%WEBBACKEND%" == "qtwebkit" (
-        :: TODO: checksum
-        curl -LO "http://download.qt.io/community_releases/%SHORT_VERSION%/%PKG_VERSION%/qtwebkit-opensource-src-%PKG_VERSION%.tar.xz"
-        if errorlevel 1 exit 1
-        7za x -so qtwebkit-opensource-src-%PKG_VERSION%.tar.xz | 7za x -si -aoa -ttar > NUL 2>&1
-        if errorlevel 1 exit 1
-        move qtwebkit-opensource-src-%PKG_VERSION% qtwebkit
-        if errorlevel 1 exit 1
-    )
-)
+:: Support systems with neither capable OpenGL (desktop mode) nor DirectX 11 (ANGLE mode) drivers
+:: https://github.com/ContinuumIO/anaconda-issues/issues/9142
+if not exist "%LIBRARY_BIN%" mkdir "%LIBRARY_BIN%"
+copy opengl32sw\opengl32sw.dll  %LIBRARY_BIN%\opengl32sw.dll
+if errorlevel 1 exit /b 1
+if not exist %LIBRARY_BIN%\opengl32sw.dll exit /b 1
 
-:: WebEngine (Chromium) specific definitions.  Only build this when we decide to 
-:: move away from qtwebkit for MSCV >= 2015
+:: WebEngine (Chromium) specific definitions.  Only build this with VS 2015 (no support for python < 3.5)
 if "%WEBBACKEND%" == "qtwebengine" (
   set "WSDK8=C:\\Program\ Files\ (x86)\\Windows\ Kits\\8.1"
   set "WDK=C:\\WinDDK\\7600.16385.1"
@@ -69,17 +61,11 @@ if "%WEBBACKEND%" == "qtwebengine" (
   rmdir /s /q qtwebengine
 )
 
-:: Get the paths right 
-set "INCLUDE=%LIBRARY_INC%;%INCLUDE%"
-set "LIB=%LIBRARY_LIB%;%LIB%"
+set OPENGLVER=dynamic
 
-:: A check here for msinttypes
-if %VS_MAJOR% LSS 10 (
-  if not exist %PREFIX%/Library/include/stdint.h (
-    echo %PREFIX%/include/stdint.h does not exist, please use msinttypes
-    exit /b 1
-  )
-)
+:: Patch does not apply cleanly.  Copy file.
+:: https://codereview.qt-project.org/#/c/141019/
+copy %RECIPE_DIR%\tst_compiler.cpp qtbase\tests\auto\other\compiler\
 
 :: TODO: should we always be rebuilding configure.exe anyway
 :: Mentioned patch no longer applied
@@ -91,13 +77,6 @@ goto SKIP_REBUILD_CONFIGURE_EXE
 :: file conflates needing to rebuild configure.exe with using a git repo
 :: clone (OK, we should really remove that conflation instead and always
 :: just rebuild configure.exe).
-
-:: Not sure if this needed or not...
-:: Patch does not apply cleanly.  Copy file.
-:: https://codereview.qt-project.org/#/c/141019/
-copy %RECIPE_DIR%\tst_compiler.cpp qtbase\tests\auto\other\compiler\
-if errorlevel 1 exit /b 1
-
 pushd qtbase
 del /q configure.exe
 set QTSRC=%CD%\
@@ -130,8 +109,7 @@ popd
 popd
 :SKIP_REBUILD_CONFIGURE_EXE
 
-:: We use '-opengl desktop'. Other options need DirectX SDK or Angle (C++11 only)
-
+:: See http://doc-snapshot.qt-project.org/qt5-5.4/windows-requirements.html
 :: this needs to be CALLed due to an exit statement at the end of configure:
 call configure ^
      -prefix %LIBRARY_PREFIX% ^
@@ -150,33 +128,45 @@ call configure ^
      -nomake examples ^
      -nomake tests ^
      -no-warnings-are-errors ^
-     -opengl desktop ^
+     -opengl %OPENGLVER% ^
      -opensource ^
      -openssl ^
-     -platform win32-msvc%VS_YEAR% ^
+     -platform win32-msvc ^
      -release ^
      -shared ^
      -qt-freetype ^
      -system-libjpeg ^
      -system-libpng ^
-     -system-zlib ^
      -system-sqlite ^
-     -plugin-sql-sqlite ^
-     -mp
-if errorlevel 1 exit /b 1
+     -system-zlib ^
+     -plugin-sql-sqlite
+
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 :: re-enable echoing which is disabled by configure
 echo on
      
-:: Note - webengine only built when you ask (nmake module-webengine) - so we can skip it easily.
-     
-nmake Release
-if errorlevel 1 exit /b 1
+:: To get a much quicker turnaround you can add this: (remember also to add the hat symbol after -plugin-sql-sqlite)
+::     -skip %WEBBACKEND% -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtwinextras -skip qtsvg -skip qtsensors ^
+::     -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
-nmake install
-if errorlevel 1 exit /b 1
-     
+jom -U release
+if %errorlevel% neq 0 exit /b %errorlevel%
+echo Finished `jom -U release`
+jom -U install
+if %errorlevel% neq 0 exit /b %errorlevel%
+echo Finished `jom -U install`
+pushd qtbase
+  jom -U install_mkspecs
+popd
+if %errorlevel% neq 0 exit /b %errorlevel%
+echo Finished `jom -U install_mkspecs`
+
+if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
+echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. Copying it from qtbase\bin\qmake.exe
+copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
+:ok_qmake_exists
+
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
-if errorlevel 1 exit /b 1
-
+if %errorlevel% neq 0 exit /b %errorlevel%

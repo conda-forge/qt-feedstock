@@ -1,0 +1,213 @@
+From db26fe48a2c253cac8b4a7f168281801774f54d2 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Tue, 13 Feb 2018 19:02:56 +0000
+Subject: [PATCH 13/13] Restore macOS 10.9 support
+
+Reverts either all or parts of:
+c1cece8e546a138609c974be94588ba4e72c6fb1 :: Fix deprecated API usage
+6b7e6332484df1d16ad539631685687f76f86159 :: Remove compatibility code paths for macOS < 10.10 and iOS < 8.0
+8ac9addd946637401e4685c6e91d1a3cd5b2d768 :: QCocoaWindow: Toggle titlebar transparency to support unified toolbar
+
+And also fixes for:
+NSURL has no fileURL property
+Use [NSMenuItem isHidden], [NSWindow isMiniaturized], [NSWindow isVisible], [NSWindow isZoomed]
+Fix use of NSEnumerator as a template (was NSEnumerator<NSWindow*> for some reason?)
+---
+ .../global/qoperatingsystemversion_darwin.mm       | 53 ++++++++++++++++++++--
+ src/corelib/io/qfilesystemengine_unix.cpp          |  7 ++-
+ .../fontdatabases/mac/qcoretextfontdatabase.mm     |  3 +-
+ src/plugins/platforms/cocoa/qcocoamenu.mm          |  2 +-
+ .../platforms/cocoa/qcocoanativeinterface.mm       |  7 ++-
+ src/plugins/platforms/cocoa/qcocoawindow.mm        | 10 ++--
+ 6 files changed, 64 insertions(+), 18 deletions(-)
+
+diff --git a/src/corelib/global/qoperatingsystemversion_darwin.mm b/src/corelib/global/qoperatingsystemversion_darwin.mm
+index d8b927ff5d..3dd007cbb3 100644
+--- a/src/corelib/global/qoperatingsystemversion_darwin.mm
++++ b/src/corelib/global/qoperatingsystemversion_darwin.mm
+@@ -40,16 +40,61 @@
+ #include "qoperatingsystemversion_p.h"
+ #import <Foundation/Foundation.h>
+ 
++#ifdef Q_OS_IOS
++#import <UIKit/UIKit.h>
++#endif
++
+ QT_BEGIN_NAMESPACE
+ 
++typedef qint16 (*GestaltFunction)(quint32 selector, qint32 *response);
++
+ QOperatingSystemVersion QOperatingSystemVersion::current()
+ {
+-    NSOperatingSystemVersion osv = NSProcessInfo.processInfo.operatingSystemVersion;
+     QOperatingSystemVersion v;
+     v.m_os = currentType();
+-    v.m_major = osv.majorVersion;
+-    v.m_minor = osv.minorVersion;
+-    v.m_micro = osv.patchVersion;
++    v.m_major = -1;
++    v.m_minor = -1;
++    v.m_micro = -1;
++#if QT_MACOS_IOS_PLATFORM_SDK_EQUAL_OR_ABOVE(__MAC_10_10, __IPHONE_8_0) || defined(Q_OS_TVOS) || defined(Q_OS_WATCHOS)
++    if ([NSProcessInfo instancesRespondToSelector:@selector(operatingSystemVersion)]) {
++        NSOperatingSystemVersion osv = NSProcessInfo.processInfo.operatingSystemVersion;
++        v.m_major = osv.majorVersion;
++        v.m_minor = osv.minorVersion;
++        v.m_micro = osv.patchVersion;
++        return v;
++    }
++#endif
++    // Use temporary variables so we can return 0.0.0 (unknown version)
++    // in case of an error partway through determining the OS version
++    qint32 major = 0, minor = 0, patch = 0;
++#if QT_MACOS_IOS_DEPLOYMENT_TARGET_BELOW(__MAC_10_10, __IPHONE_8_0)
++#if defined(Q_OS_IOS)
++    @autoreleasepool {
++        NSArray *parts = [UIDevice.currentDevice.systemVersion componentsSeparatedByString:@"."];
++        major = parts.count > 0 ? [[parts objectAtIndex:0] intValue] : 0;
++        minor = parts.count > 1 ? [[parts objectAtIndex:1] intValue] : 0;
++        patch = parts.count > 2 ? [[parts objectAtIndex:2] intValue] : 0;
++    }
++#elif defined(Q_OS_MACOS)
++    static GestaltFunction pGestalt = 0;
++    if (!pGestalt) {
++        CFBundleRef b = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.CoreServices"));
++        pGestalt = reinterpret_cast<GestaltFunction>(CFBundleGetFunctionPointerForName(b,
++                                                     CFSTR("Gestalt")));
++    }
++    if (!pGestalt)
++        return v;
++    if (pGestalt('sys1', &major) != 0)
++        return v;
++    if (pGestalt('sys2', &minor) != 0)
++        return v;
++    if (pGestalt('sys3', &patch) != 0)
++        return v;
++#endif
++#endif
++    v.m_major = major;
++    v.m_minor = minor;
++    v.m_micro = patch;
+     return v;
+ }
+ 
+diff --git a/src/corelib/io/qfilesystemengine_unix.cpp b/src/corelib/io/qfilesystemengine_unix.cpp
+index 7fed54f733..bbf5e6d6eb 100644
+--- a/src/corelib/io/qfilesystemengine_unix.cpp
++++ b/src/corelib/io/qfilesystemengine_unix.cpp
+@@ -126,8 +126,11 @@ static bool isPackage(const QFileSystemMetaData &data, const QFileSystemEntry &e
+ 
+ #ifdef Q_OS_MACOS
+         // Find if an application other than Finder claims to know how to handle the package
+-        QCFType<CFURLRef> application = LSCopyDefaultApplicationURLForURL(url,
+-            kLSRolesEditor | kLSRolesViewer, nullptr);
++        QCFType<CFURLRef> application;
++        LSGetApplicationForURL(url,
++                               kLSRolesEditor|kLSRolesViewer,
++                               NULL,
++                               &application);
+ 
+         if (application) {
+             QCFType<CFBundleRef> bundle = CFBundleCreate(kCFAllocatorDefault, application);
+diff --git a/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm b/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm
+index 237e8a89a5..eb02f8066e 100644
+--- a/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm
++++ b/src/platformsupport/fontdatabases/mac/qcoretextfontdatabase.mm
+@@ -452,7 +452,8 @@ static void getFontDescription(CTFontDescriptorRef font, FontDescription *fd)
+     CTFontDescriptorRef descriptor = static_cast<CTFontDescriptorRef>(usrPtr);
+ 
+     if (NSURL *url = descriptorAttribute<NSURL>(descriptor, kCTFontURLAttribute)) {
+-        Q_ASSERT(url.fileURL);
++        // On macOS 10.9, NSURL has no fileURL property.
++        // Q_ASSERT(url.fileURL);
+         QFontEngine::FaceId faceId;
+         faceId.filename = QString::fromNSString(url.path).toUtf8();
+         return QFontEngineFT::create(fontDef, faceId);
+diff --git a/src/plugins/platforms/cocoa/qcocoamenu.mm b/src/plugins/platforms/cocoa/qcocoamenu.mm
+index 8bdd0512de..db4cecf5f7 100644
+--- a/src/plugins/platforms/cocoa/qcocoamenu.mm
++++ b/src/plugins/platforms/cocoa/qcocoamenu.mm
+@@ -331,7 +331,7 @@ - (NSMenuItem *)findItem:(NSMenu *)menu forKey:(NSString *)key forModifiers:(NSU
+ 
+     // Empty menus on a menubar are hidden by default. If the menu gets
+     // added to the menubar before it contains any item, we need to sync.
+-    if (isVisible() && attachedItem().hidden) {
++    if (isVisible() && [attachedItem() isHidden]) {
+         if (auto *mb = qobject_cast<QCocoaMenuBar *>(menuParent()))
+             mb->syncMenu(this);
+     }
+diff --git a/src/plugins/platforms/cocoa/qcocoanativeinterface.mm b/src/plugins/platforms/cocoa/qcocoanativeinterface.mm
+index 5504c2427f..3378323a1c 100644
+--- a/src/plugins/platforms/cocoa/qcocoanativeinterface.mm
++++ b/src/plugins/platforms/cocoa/qcocoanativeinterface.mm
+@@ -172,12 +172,11 @@
+ 
+ QPixmap QCocoaNativeInterface::defaultBackgroundPixmapForQWizard()
+ {
++    QCFType<CFURLRef> url;
+     const int ExpectedImageWidth = 242;
+     const int ExpectedImageHeight = 414;
+-    QCFType<CFArrayRef> urls = LSCopyApplicationURLsForBundleIdentifier(
+-        CFSTR("com.apple.KeyboardSetupAssistant"), nullptr);
+-    if (urls && CFArrayGetCount(urls) > 0) {
+-        CFURLRef url = (CFURLRef)CFArrayGetValueAtIndex(urls, 0);
++    if (LSFindApplicationForInfo(kLSUnknownCreator, CFSTR("com.apple.KeyboardSetupAssistant"),
++                                 0, 0, &url) == noErr) {
+         QCFType<CFBundleRef> bundle = CFBundleCreate(kCFAllocatorDefault, url);
+         if (bundle) {
+             url = CFBundleCopyResourceURL(bundle, CFSTR("Background"), CFSTR("png"), 0);
+diff --git a/src/plugins/platforms/cocoa/qcocoawindow.mm b/src/plugins/platforms/cocoa/qcocoawindow.mm
+index aeeef55598..d6cae3f825 100644
+--- a/src/plugins/platforms/cocoa/qcocoawindow.mm
++++ b/src/plugins/platforms/cocoa/qcocoawindow.mm
+@@ -325,7 +325,7 @@ @implementation QNSPanel
+ + (void)applicationActivationChanged:(NSNotification*)notification
+ {
+     const id sender = self;
+-    NSEnumerator<NSWindow*> *windowEnumerator = nullptr;
++    NSEnumerator *windowEnumerator = nullptr;
+     NSApplication *application = [NSApplication sharedApplication];
+ 
+ #if QT_MACOS_PLATFORM_SDK_EQUAL_OR_ABOVE(__MAC_10_12)
+@@ -781,7 +781,7 @@ static void qRegisterNotificationCallbacks()
+     if ([m_nsWindow isVisible])
+         return;
+ 
+-    if (m_view.window.parentWindow && !m_view.window.parentWindow.visible) {
++    if (m_view.window.parentWindow && !m_view.window.parentWindow.isVisible) {
+         m_hiddenByAncestor = true; // Parent still hidden, don't show now
+     } else if ((becauseOfAncestor == m_hiddenByAncestor) // Was NEITHER explicitly hidden
+                && !m_hiddenByClipping) { // ... NOR clipped
+@@ -2046,11 +2046,11 @@ Posted whenever an NSView object that has attached surfaces (that is,
+     // FIXME: Support compound states (Qt::WindowStates)
+ 
+     NSWindow *window = m_view.window;
+-    if (window.miniaturized)
++    if (window.isMiniaturized)
+         return Qt::WindowMinimized;
+     if (window.qt_fullScreen)
+         return Qt::WindowFullScreen;
+-    if ((window.zoomed && !isTransitioningToFullScreen())
++    if ((window.isZoomed && !isTransitioningToFullScreen())
+         || (m_lastReportedWindowState == Qt::WindowMaximized && isTransitioningToFullScreen()))
+         return Qt::WindowMaximized;
+ 
+@@ -2181,7 +2181,6 @@ Posted whenever an NSView object that has attached surfaces (that is,
+     if (!m_drawContentBorderGradient) {
+         [window setStyleMask:[window styleMask] & ~NSTexturedBackgroundWindowMask];
+         [[[window contentView] superview] setNeedsDisplay:YES];
+-        window.titlebarAppearsTransparent = NO;
+         return;
+     }
+ 
+@@ -2206,7 +2205,6 @@ Posted whenever an NSView object that has attached surfaces (that is,
+     int effectiveBottomContentBorderThickness = m_bottomContentBorderThickness;
+ 
+     [window setStyleMask:[window styleMask] | NSTexturedBackgroundWindowMask];
+-    window.titlebarAppearsTransparent = YES;
+ 
+     [window setContentBorderThickness:effectiveTopContentBorderThickness forEdge:NSMaxYEdge];
+     [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
+-- 
+2.14.3 (Apple Git-98)
+

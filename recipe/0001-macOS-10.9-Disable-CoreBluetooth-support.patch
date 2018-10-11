@@ -1,0 +1,59 @@
+From 4f554e7ada3a89698bb18e0c9905700728ca0cae Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Fri, 16 Feb 2018 12:19:29 +0000
+Subject: [PATCH 1/2] macOS 10.9: Disable CoreBluetooth support
+
+---
+ chromium/base/mac/sdk_forward_declarations.h     | 2 +-
+ chromium/device/bluetooth/BUILD.gn               | 8 ++++----
+ chromium/ios/chrome/common/physical_web/BUILD.gn | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/base/mac/sdk_forward_declarations.h b/qtwebengine/src/3rdparty/chromium/base/mac/sdk_forward_declarations.h
+index 535e663c0e..6d2468f540 100644
+--- a/qtwebengine/src/3rdparty/chromium/base/mac/sdk_forward_declarations.h
++++ b/qtwebengine/src/3rdparty/chromium/base/mac/sdk_forward_declarations.h
+@@ -12,7 +12,7 @@
+ #define BASE_MAC_SDK_FORWARD_DECLARATIONS_H_
+ 
+ #import <AppKit/AppKit.h>
+-#import <CoreBluetooth/CoreBluetooth.h>
++// #import <CoreBluetooth/CoreBluetooth.h>
+ #import <CoreWLAN/CoreWLAN.h>
+ #import <ImageCaptureCore/ImageCaptureCore.h>
+ #import <IOBluetooth/IOBluetooth.h>
+diff --git a/qtwebengine/src/3rdparty/chromium/device/bluetooth/BUILD.gn b/qtwebengine/src/3rdparty/chromium/device/bluetooth/BUILD.gn
+index 890d444456..4e1b1e6f25 100644
+--- a/qtwebengine/src/3rdparty/chromium/device/bluetooth/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/device/bluetooth/BUILD.gn
+@@ -102,10 +102,10 @@ component("bluetooth") {
+     "bluetooth_low_energy_central_manager_delegate.mm",
+     "bluetooth_low_energy_defs_win.cc",
+     "bluetooth_low_energy_defs_win.h",
+-    "bluetooth_low_energy_device_mac.h",
+-    "bluetooth_low_energy_device_mac.mm",
+-    "bluetooth_low_energy_discovery_manager_mac.h",
+-    "bluetooth_low_energy_discovery_manager_mac.mm",
++    # "bluetooth_low_energy_device_mac.h",
++    # "bluetooth_low_energy_device_mac.mm",
++    # "bluetooth_low_energy_discovery_manager_mac.h",
++    # "bluetooth_low_energy_discovery_manager_mac.mm",
+     "bluetooth_low_energy_peripheral_delegate.h",
+     "bluetooth_low_energy_peripheral_delegate.mm",
+     "bluetooth_low_energy_win.cc",
+diff --git a/qtwebengine/src/3rdparty/chromium/ios/chrome/common/physical_web/BUILD.gn b/qtwebengine/src/3rdparty/chromium/ios/chrome/common/physical_web/BUILD.gn
+index 0afdd5bad2..53433d743d 100644
+--- a/qtwebengine/src/3rdparty/chromium/ios/chrome/common/physical_web/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/ios/chrome/common/physical_web/BUILD.gn
+@@ -24,7 +24,7 @@ source_set("physical_web") {
+   ]
+ 
+   libs = [
+-    "CoreBluetooth.framework",
++    # "CoreBluetooth.framework",
+     "Foundation.framework",
+   ]
+ }
+-- 
+2.15.0
+

@@ -1,0 +1,26 @@
+From db26fe48a2c253cac8b4a7f168281801774f54d2 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Tue, 13 Feb 2018 19:02:56 +0000
+Subject: [PATCH 13/13] NSEnumerator is a non-parameterized class
+
+Fix use of NSEnumerator as a template (was NSEnumerator<NSWindow*> for some reason?)
+---
+ src/plugins/platforms/cocoa/qcocoawindow.mm        | 2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/qtbase/src/plugins/platforms/cocoa/qcocoawindow.mm b/qtbase/src/plugins/platforms/cocoa/qcocoawindow.mm
+index aeeef55598..d6cae3f825 100644
+--- a/qtbase/src/plugins/platforms/cocoa/qcocoawindow.mm
++++ b/qtbase/src/plugins/platforms/cocoa/qcocoawindow.mm
+@@ -325,7 +325,7 @@ @implementation QNSPanel
+ + (void)applicationActivationChanged:(NSNotification*)notification
+ {
+     const id sender = self;
+-    NSEnumerator<NSWindow*> *windowEnumerator = nullptr;
++    NSEnumerator *windowEnumerator = nullptr;
+     NSApplication *application = [NSApplication sharedApplication];
+ 
+ #if QT_MACOS_PLATFORM_SDK_EQUAL_OR_ABOVE(__MAC_10_12)
+-- 
+2.14.3 (Apple Git-98)
+

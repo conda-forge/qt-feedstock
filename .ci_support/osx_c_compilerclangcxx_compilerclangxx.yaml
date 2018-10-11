@@ -1,9 +1,15 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '10.9'
+build_number_decrement:
+- '0'
 c_compiler:
-- toolchain_c
+- clang
+channel_sources:
+- conda-forge/label/gcc7,defaults
+channel_targets:
+- conda-forge gcc7
 cxx_compiler:
-- toolchain_cxx
+- clangxx
 icu:
 - '58'
 jpeg:
@@ -14,8 +20,6 @@ macos_machine:
 - x86_64-apple-darwin13.4.0
 macos_min_version:
 - '10.9'
-perl:
-- '5.26'
 pin_run_as_build:
   icu:
     max_pin: x
@@ -23,17 +27,17 @@ pin_run_as_build:
     max_pin: x
   libpng:
     max_pin: x.x
-  perl:
-    max_pin: x.x.x
   sqlite:
     max_pin: x
-  xz:
-    max_pin: x.x
   zlib:
     max_pin: x.x
 sqlite:
 - '3'
-xz:
-- '5.2'
+zip_keys:
+- - c_compiler
+  - cxx_compiler
+  - channel_sources
+  - channel_targets
+  - build_number_decrement
 zlib:
 - '1.2'

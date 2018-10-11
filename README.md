@@ -16,8 +16,6 @@ anywhere on any device, on any operating system at any time.
 Current build status
 ====================
 
-[![Linux,OSX](https://img.shields.io/circleci/project/github/conda-forge/qt-feedstock/master.svg?label=Linux,OSX)](https://circleci.com/gh/conda-forge/qt-feedstock)
-![Windows disabled](https://img.shields.io/badge/Windows-disabled-lightgrey.svg)
 
 Current release info
 ====================

@@ -21,6 +21,11 @@ if [ $(uname) == Linux ]; then
     compiler_mkspec=qtbase/mkspecs/common/g++-base.conf
     flag_mkspec=qtbase/mkspecs/linux-g++/qmake.conf
 
+    # The Anaconda gcc7 compiler flags specify -std=c++17 by default, which
+    # activates features that break compilation. Begone!
+    CXXFLAGS=$(echo $CXXFLAGS | sed -E 's@\-std=[^ ]+@@')
+    export CXXFLAGS="$CXXFLAGS -std=c++11"
+
     # /usr stuff needed to get system X11
     export LDFLAGS="$LDFLAGS -L/usr/lib64 -Wl,-rpath-link,$PREFIX/lib -Wl,-rpath-link,/usr/lib64"
     export CPPFLAGS="$CPPFLAGS -I/usr/include"

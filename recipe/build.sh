@@ -32,6 +32,7 @@ else
     flag_mkspec=qtbase/mkspecs/macx-clang/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib"
+    export CXXFLAGS="$CXXFLAGS -std=c++11"
 fi
 
 sed -i -e "s|^QMAKE_CC.*=.*|QMAKE_CC = $CC|" $compiler_mkspec

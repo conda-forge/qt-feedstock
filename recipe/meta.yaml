@@ -7,8 +7,10 @@ package:
 source:
 #  - git_url: git://code.qt.io/qt/qt5.git
 #    git_tag: v5.9.7
-  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
-    md5: 70e617aeb1f9bbf84a12b8cf09b01ece
+  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz  # [not win]
+    md5: 70e617aeb1f9bbf84a12b8cf09b01ece  # [not win]
+  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.zip  # [win]
+    md5: 98102a8e9eefa2f05ecaa9a349c414d4  # [win]
     patches:
       # qtbase
       - 0010-osx-xctest-check.patch

@@ -140,7 +140,7 @@ call configure ^
      -system-sqlite ^
      -system-zlib ^
      -plugin-sql-sqlite ^
-     -qtlibinfix .cda
+     -qtlibinfix .conda
 
 if %errorlevel% neq 0 exit /b %errorlevel%
 

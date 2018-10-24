@@ -40,8 +40,11 @@ else
     export CXXFLAGS="$CXXFLAGS -std=c++11"
 fi
 
-sed -i -e "s|^QMAKE_CC.*=.*|QMAKE_CC = $CC|" $compiler_mkspec
-sed -i -e "s|^QMAKE_CXX.*=.*|QMAKE_CXX = $CXX|" $compiler_mkspec
+# If we don't $(basename) here, when $CC contains an absolute path it will
+# point into the *build* environment directory, which won't get replaced when
+# making the package -- breaking the mkspec for downstream consumers.
+sed -i -e "s|^QMAKE_CC.*=.*|QMAKE_CC = $(basename $CC)|" $compiler_mkspec
+sed -i -e "s|^QMAKE_CXX.*=.*|QMAKE_CXX = $(basename $CXX)|" $compiler_mkspec
 
 # The mkspecs only append to QMAKE_*FLAGS, so if we set them at the very top
 # of the main mkspec file, the settings will be honored.

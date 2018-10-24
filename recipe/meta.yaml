@@ -1,22 +1,16 @@
-{% set version = "5.9.6" %}
+{% set version = "5.9.7" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz  # [not win]
-    md5: a427428c65f35909ef6ae865b8ee0da6  # [not win]
-  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.zip  # [win]
-    md5: a06dcc454bbaaeba5c8f25bc6d4b7a91  # [win]
+#  - git_url: git://code.qt.io/qt/qt5.git
+#    git_tag: v5.9.7
+  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
+    md5: 70e617aeb1f9bbf84a12b8cf09b01ece
     patches:
-      # Spyder ran into this: https://codereview.qt-project.org/#/c/233482/
-      # https://github.com/spyder-ide/spyder/issues/7693
-      - 0000-Revert-Fix-restoring-geometry-of-dockwidget.patch
-      # Moved elsewhere now it seems?
-      # - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
       # qtbase
-      - 0000-Fix-MSVC2017-compilation-with-enabled-relaxed-constexpr-on-32-bit-target.patch
       - 0010-osx-xctest-check.patch
       - 0011-osx-allow-any-xcrun-in-PATH.patch
       # - 0012-qtbase-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-all-mac.patch
@@ -65,7 +59,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 4
+  number: 0
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
@@ -157,9 +151,9 @@ requirements:
     - libxcb                             # [linux]
     # We cannot install OpenSSL into the prefix when building qtwebengine
     # on linux as BoringSSL and OpenSSL then conflict with each other.
-    - openssl 1.0.*                      # [win]
+    - openssl 1.1.*                      # [win]
   run:
-    - openssl 1.0.*                      # [not osx]
+    - openssl 1.1.*                      # [not osx]
     - libxcb                             # [linux]
 
 test:
@@ -192,9 +186,11 @@ test:
     - {{ cdt('libxxf86vm') }}            # [linux]
   files:
     - test/hello.pro
-    - test/main.cpp
     - test/main-qtwebengine.cpp
-    - test/qml.cpp
+    - test/main.cpp
+    - test/main.qml
+    - test/qml.qrc
+    - test/qrc_qml.cpp
     - test/qtwebengine.pro
     - xcodebuild
     - xcrun

@@ -57,7 +57,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     mkdir -p "${SRC_DIR}/openssl_hack"
     conda install -c https://repo.continuum.io/pkgs/main \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack" \
-                  openssl
+                  openssl=${openssl}
     export OPENSSL_LIBS="-L${SRC_DIR}/openssl_hack/lib -lssl -lcrypto"
     rm -rf ${PREFIX}/include/openssl
 

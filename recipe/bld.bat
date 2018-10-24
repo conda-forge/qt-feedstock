@@ -139,7 +139,8 @@ call configure ^
      -system-libpng ^
      -system-sqlite ^
      -system-zlib ^
-     -plugin-sql-sqlite
+     -plugin-sql-sqlite ^
+     -qtlibinfix .cda
 
 if %errorlevel% neq 0 exit /b %errorlevel%
 

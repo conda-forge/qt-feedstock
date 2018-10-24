@@ -26,6 +26,11 @@ if [ $(uname) == Linux ]; then
     CXXFLAGS=$(echo $CXXFLAGS | sed -E 's@\-std=[^ ]+@@')
     export CXXFLAGS="$CXXFLAGS -std=c++11"
 
+    # This warning causes a huge amount of spew in the build logs.
+    if [ "$cxx_compiler" = gxx ] ; then
+        CXXFLAGS="$CXXFLAGS -Wno-expansion-to-defined"
+    fi
+
     # /usr stuff needed to get system X11
     export LDFLAGS="$LDFLAGS -L/usr/lib64 -Wl,-rpath-link,$PREFIX/lib -Wl,-rpath-link,/usr/lib64"
     export CPPFLAGS="$CPPFLAGS -I/usr/include"

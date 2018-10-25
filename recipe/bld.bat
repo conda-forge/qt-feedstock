@@ -145,7 +145,7 @@ call configure ^
      -system-sqlite ^
      -system-zlib ^
      -plugin-sql-sqlite ^
-     -qtlibinfix .conda ^
+     -qtlibinfix QtCore5.9.conda.dll ^
      -verbose
 
 if %errorlevel% neq 0 exit /b %errorlevel%

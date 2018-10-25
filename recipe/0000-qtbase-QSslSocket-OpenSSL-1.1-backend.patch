@@ -1,10 +1,12 @@
-From 26395967dcecb09c22eca8f983d85061fed8914d Mon Sep 17 00:00:00 2001
+From 4463e6a135b5ab64bddb44cf41327a7dc27de5bf Mon Sep 17 00:00:00 2001
 From: "Richard J. Moore" <rich@kde.org>
 Date: Thu, 23 Mar 2017 12:43:22 +0100
 Subject: [PATCH] QSslSocket: OpenSSL 1.1 backend
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+
+Note: This patch is mainly as stated but I also rolled in some other changes.
 
 This patch-set implements a new QSslSocket backend based on OpenSSL 1.1.
 
@@ -44,7 +46,9 @@ Reviewed-by: André Klitzing <aklitzing@gmail.com>
 Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
 ---
  config.tests/openssl/openssl.cpp              |   4 +-
- src/network/configure.json                    |  11 +
+ config.tests/unix/openssl11/openssl.cpp       |  49 ++
+ config.tests/unix/openssl11/openssl.pro       |   2 +
+ src/network/configure.json                    |  16 +
  src/network/ssl/qsslcertificate_openssl.cpp   |  57 +-
  src/network/ssl/qsslcontext_openssl.cpp       | 309 +---------
  src/network/ssl/qsslcontext_openssl11.cpp     | 277 +++++++++
@@ -53,16 +57,18 @@ Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
  src/network/ssl/qsslellipticcurve.h           |   1 +
  src/network/ssl/qsslellipticcurve_openssl.cpp |   8 +-
  src/network/ssl/qsslkey_openssl.cpp           |  79 ++-
- src/network/ssl/qsslsocket_openssl.cpp        | 282 +--------
+ src/network/ssl/qsslsocket_openssl.cpp        | 395 ++----------
  src/network/ssl/qsslsocket_openssl11.cpp      | 285 +++++++++
  .../ssl/qsslsocket_openssl11_symbols_p.h      | 132 ++++
  src/network/ssl/qsslsocket_openssl_p.h        |   8 +-
  .../ssl/qsslsocket_openssl_symbols.cpp        | 568 ++++++++++++------
- .../ssl/qsslsocket_openssl_symbols_p.h        | 120 +---
+ .../ssl/qsslsocket_openssl_symbols_p.h        | 145 ++---
  src/network/ssl/qsslsocket_opensslpre11.cpp   | 424 +++++++++++++
  .../ssl/qsslsocket_opensslpre11_symbols_p.h   | 230 +++++++
  src/network/ssl/ssl.pri                       |  18 +-
- 19 files changed, 2300 insertions(+), 905 deletions(-)
+ 21 files changed, 2392 insertions(+), 1007 deletions(-)
+ create mode 100644 config.tests/unix/openssl11/openssl.cpp
+ create mode 100644 config.tests/unix/openssl11/openssl.pro
  create mode 100644 src/network/ssl/qsslcontext_openssl11.cpp
  create mode 100644 src/network/ssl/qsslcontext_opensslpre11.cpp
  create mode 100644 src/network/ssl/qsslsocket_openssl11.cpp
@@ -71,7 +77,6 @@ Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
  create mode 100644 src/network/ssl/qsslsocket_opensslpre11_symbols_p.h
 
 diff --git a/qtbase/config.tests/openssl/openssl.cpp b/qtbase/config.tests/openssl/openssl.cpp
-deleted file mode 100644
 index 6c8a9e8f19..9188fb008f 100644
 --- a/qtbase/config.tests/openssl/openssl.cpp
 +++ b/qtbase/config.tests/openssl/openssl.cpp
@@ -86,12 +91,85 @@ index 6c8a9e8f19..9188fb008f 100644
  #endif
  
  #include <openssl/ssl.h>
+diff --git a/qtbase/config.tests/unix/openssl11/openssl.cpp b/qtbase/config.tests/unix/openssl11/openssl.cpp
+new file mode 100644
+index 0000000000..c6a245d576
+--- /dev/null
++++ b/qtbase/config.tests/unix/openssl11/openssl.cpp
+@@ -0,0 +1,49 @@
++/****************************************************************************
++**
++** Copyright (C) 2017 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the config.tests of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include <openssl/opensslv.h>
++
++#if !defined(OPENSSL_VERSION_NUMBER) || OPENSSL_VERSION_NUMBER-0 < 0x10100000L
++#  error "OpenSSL >= 1.1 is required"
++#endif
++
++int main()
++{
++}
++
+diff --git a/qtbase/config.tests/unix/openssl11/openssl.pro b/qtbase/config.tests/unix/openssl11/openssl.pro
+new file mode 100644
+index 0000000000..a023aee4aa
+--- /dev/null
++++ b/qtbase/config.tests/unix/openssl11/openssl.pro
+@@ -0,0 +1,2 @@
++SOURCES = openssl.cpp
++CONFIG -= x11 qt
 diff --git a/qtbase/src/network/configure.json b/qtbase/src/network/configure.json
-deleted file mode 100644
-index 2cf90ed94b..43debe0895 100644
+index 2cf90ed94b..38e9ed313a 100644
 --- a/qtbase/src/network/configure.json
 +++ b/qtbase/src/network/configure.json
-@@ -146,6 +146,12 @@
+@@ -75,6 +75,10 @@
+                     "libs": "-lssleay32 -llibeay32",
+                     "condition": "config.win32 && features.shared"
+                 },
++                {
++                    "libs": "-llibssl -llibcrypto",
++                    "condition": "config.win32"
++                },
+                 { "libs": "-lssl -lcrypto", "condition": "!config.win32" }
+             ]
+         }
+@@ -146,6 +150,12 @@
                  ]
              },
              "use": "network"
@@ -104,20 +182,27 @@ index 2cf90ed94b..43debe0895 100644
          }
      },
  
-@@ -213,6 +219,11 @@
+@@ -213,6 +223,11 @@
              "condition": "config.winrt || features.securetransport || features.openssl",
              "output": [ "publicFeature", "feature" ]
          },
 +        "opensslv11": {
-+            "label": "OpenSSL v. 1.1",
-+            "condition": "tests.openssl11",
-+            "output": ["publicFeature", "feature"]
++            "label": "OpenSSL 1.1",
++            "condition": "features.openssl && tests.openssl11",
++            "output": [ "publicFeature" ]
 +        },
          "sctp": {
              "label": "SCTP",
              "autoDetect": false,
+@@ -327,6 +342,7 @@ For example:
+                 },
+                 "openssl",
+                 "openssl-linked",
++                "opensslv11",
+                 "sctp",
+                 "system-proxies"
+             ]
 diff --git a/qtbase/src/network/ssl/qsslcertificate_openssl.cpp b/qtbase/src/network/ssl/qsslcertificate_openssl.cpp
-deleted file mode 100644
 index 28b7eda54a..71e514a025 100644
 --- a/qtbase/src/network/ssl/qsslcertificate_openssl.cpp
 +++ b/qtbase/src/network/ssl/qsslcertificate_openssl.cpp
@@ -276,7 +361,6 @@ index 28b7eda54a..71e514a025 100644
      certificate.d->notValidAfter = q_getTimeFromASN1(naft);
      certificate.d->null = false;
 diff --git a/qtbase/src/network/ssl/qsslcontext_openssl.cpp b/qtbase/src/network/ssl/qsslcontext_openssl.cpp
-deleted file mode 100644
 index c92d8fc3f8..cef503710c 100644
 --- a/qtbase/src/network/ssl/qsslcontext_openssl.cpp
 +++ b/qtbase/src/network/ssl/qsslcontext_openssl.cpp
@@ -1275,7 +1359,6 @@ index 0000000000..9c01c2f2dc
 +
 +QT_END_NAMESPACE
 diff --git a/qtbase/src/network/ssl/qssldiffiehellmanparameters_openssl.cpp b/qtbase/src/network/ssl/qssldiffiehellmanparameters_openssl.cpp
-deleted file mode 100644
 index 90687b05c5..5ebad822f1 100644
 --- a/qtbase/src/network/ssl/qssldiffiehellmanparameters_openssl.cpp
 +++ b/qtbase/src/network/ssl/qssldiffiehellmanparameters_openssl.cpp
@@ -1352,7 +1435,6 @@ index 90687b05c5..5ebad822f1 100644
      bad |= DH_CHECK_P_NOT_PRIME;
      bad |= DH_CHECK_P_NOT_SAFE_PRIME;
 diff --git a/qtbase/src/network/ssl/qsslellipticcurve.h b/qtbase/src/network/ssl/qsslellipticcurve.h
-deleted file mode 100644
 index 231566063e..57dda19bad 100644
 --- a/qtbase/src/network/ssl/qsslellipticcurve.h
 +++ b/qtbase/src/network/ssl/qsslellipticcurve.h
@@ -1365,7 +1447,6 @@ index 231566063e..57dda19bad 100644
      friend class QSslSocketBackendPrivate;
  };
 diff --git a/qtbase/src/network/ssl/qsslellipticcurve_openssl.cpp b/qtbase/src/network/ssl/qsslellipticcurve_openssl.cpp
-deleted file mode 100644
 index e18197b703..8cd14837f0 100644
 --- a/qtbase/src/network/ssl/qsslellipticcurve_openssl.cpp
 +++ b/qtbase/src/network/ssl/qsslellipticcurve_openssl.cpp
@@ -1400,7 +1481,6 @@ index e18197b703..8cd14837f0 100644
      return result;
  }
 diff --git a/qtbase/src/network/ssl/qsslkey_openssl.cpp b/qtbase/src/network/ssl/qsslkey_openssl.cpp
-deleted file mode 100644
 index 26119023d1..651b4f4c40 100644
 --- a/qtbase/src/network/ssl/qsslkey_openssl.cpp
 +++ b/qtbase/src/network/ssl/qsslkey_openssl.cpp
@@ -1538,8 +1618,7 @@ index 26119023d1..651b4f4c40 100644
      return output.left(len);
  }
 diff --git a/qtbase/src/network/ssl/qsslsocket_openssl.cpp b/qtbase/src/network/ssl/qsslsocket_openssl.cpp
-deleted file mode 100644
-index f5b493897e..e4014cb644 100644
+index f5b493897e..e73ca83730 100644
 --- a/qtbase/src/network/ssl/qsslsocket_openssl.cpp
 +++ b/qtbase/src/network/ssl/qsslsocket_openssl.cpp
 @@ -1,6 +1,6 @@
@@ -1550,7 +1629,15 @@ index f5b493897e..e4014cb644 100644
  ** Copyright (C) 2014 Governikus GmbH & Co. KG
  ** Contact: https://www.qt.io/licensing/
  **
-@@ -97,70 +97,6 @@ bool QSslSocketPrivate::s_loadRootCertsOnDemand = false;
+@@ -54,7 +54,6 @@
+ ****************************************************************************/
+ 
+ //#define QSSLSOCKET_DEBUG
+-//#define QT_DECRYPT_SSL_TRAFFIC
+ 
+ #include "qssl_p.h"
+ #include "qsslsocket_openssl_p.h"
+@@ -97,70 +96,6 @@ bool QSslSocketPrivate::s_loadRootCertsOnDemand = false;
  int QSslSocketBackendPrivate::s_indexForSSLExtraData = -1;
  #endif
  
@@ -1621,7 +1708,7 @@ index f5b493897e..e4014cb644 100644
  QString QSslSocketBackendPrivate::getErrorsFromOpenSsl()
  {
      QString errorString;
-@@ -175,20 +111,6 @@ QString QSslSocketBackendPrivate::getErrorsFromOpenSsl()
+@@ -175,20 +110,6 @@ QString QSslSocketBackendPrivate::getErrorsFromOpenSsl()
  }
  
  extern "C" {
@@ -1642,7 +1729,7 @@ index f5b493897e..e4014cb644 100644
  
  #if OPENSSL_VERSION_NUMBER >= 0x10001000L && !defined(OPENSSL_NO_PSK)
  static unsigned int q_ssl_psk_client_callback(SSL *ssl,
-@@ -227,7 +149,7 @@ QSslSocketBackendPrivate::~QSslSocketBackendPrivate()
+@@ -227,7 +148,7 @@ QSslSocketBackendPrivate::~QSslSocketBackendPrivate()
      destroySslContext();
  }
  
@@ -1651,7 +1738,23 @@ index f5b493897e..e4014cb644 100644
  {
      QSslCipher ciph;
  
-@@ -283,6 +205,7 @@ struct QSslErrorList
+@@ -268,12 +189,12 @@ QSslCipher QSslSocketBackendPrivate::QSslCipher_from_SSL_CIPHER(SSL_CIPHER *ciph
+ }
+ 
+ // static
+-inline QSslErrorEntry QSslErrorEntry::fromStoreContext(X509_STORE_CTX *ctx) {
+-    QSslErrorEntry result = {
++inline QSslErrorEntry QSslErrorEntry::fromStoreContext(X509_STORE_CTX *ctx)
++{
++    return {
+         q_X509_STORE_CTX_get_error(ctx),
+         q_X509_STORE_CTX_get_error_depth(ctx)
+     };
+-    return result;
+ }
+ 
+ // ### This list is shared between all threads, and protected by a
+@@ -283,6 +204,7 @@ struct QSslErrorList
      QMutex mutex;
      QVector<QSslErrorEntry> errors;
  };
@@ -1659,16 +1762,28 @@ index f5b493897e..e4014cb644 100644
  Q_GLOBAL_STATIC(QSslErrorList, _q_sslErrorList)
  
  int q_X509Callback(int ok, X509_STORE_CTX *ctx)
-@@ -312,7 +235,7 @@ int q_X509Callback(int ok, X509_STORE_CTX *ctx)
+@@ -290,6 +212,7 @@ int q_X509Callback(int ok, X509_STORE_CTX *ctx)
+     if (!ok) {
+         // Store the error and at which depth the error was detected.
+         _q_sslErrorList()->errors << QSslErrorEntry::fromStoreContext(ctx);
++#if !QT_CONFIG(opensslv11)
+ #ifdef QSSLSOCKET_DEBUG
+         qCDebug(lcSsl) << "verification error: dumping bad certificate";
+         qCDebug(lcSsl) << QSslCertificatePrivate::QSslCertificate_from_X509(q_X509_STORE_CTX_get_current_cert(ctx)).toPem();
+@@ -310,9 +233,10 @@ int q_X509Callback(int ok, X509_STORE_CTX *ctx)
+                 << "ST=" << cert.subjectInfo(QSslCertificate::StateOrProvinceName);
+             qCDebug(lcSsl) << "Valid:" << cert.effectiveDate() << '-' << cert.expiryDate();
          }
- #endif
+-#endif
++#endif // QSSLSOCKET_DEBUG
++#endif // !QT_CONFIG(opensslv11)
      }
 -    // Always return OK to allow verification to continue. We're handle the
 +    // Always return OK to allow verification to continue. We handle the
      // errors gracefully after collecting all errors, after verification has
      // completed.
      return 1;
-@@ -397,7 +320,7 @@ bool QSslSocketBackendPrivate::initSslContext()
+@@ -397,7 +321,7 @@ bool QSslSocketBackendPrivate::initSslContext()
      if (configuration.protocol != QSsl::SslV2 &&
          configuration.protocol != QSsl::SslV3 &&
          configuration.protocol != QSsl::UnknownProtocol &&
@@ -1677,7 +1792,7 @@ index f5b493897e..e4014cb644 100644
          // Set server hostname on TLS extension. RFC4366 section 3.1 requires it in ACE format.
          QString tlsHostName = verificationPeerName.isEmpty() ? q->peerName() : verificationPeerName;
          if (tlsHostName.isEmpty())
-@@ -438,13 +361,13 @@ bool QSslSocketBackendPrivate::initSslContext()
+@@ -438,13 +362,13 @@ bool QSslSocketBackendPrivate::initSslContext()
  
  #if OPENSSL_VERSION_NUMBER >= 0x10001000L
      // Save a pointer to this object into the SSL structure.
@@ -1693,7 +1808,7 @@ index f5b493897e..e4014cb644 100644
          if (mode == QSslSocket::SslClientMode)
              q_SSL_set_psk_client_callback(ssl, &q_ssl_psk_client_callback);
          else if (mode == QSslSocket::SslServerMode)
-@@ -464,16 +387,6 @@ void QSslSocketBackendPrivate::destroySslContext()
+@@ -464,16 +388,6 @@ void QSslSocketBackendPrivate::destroySslContext()
      sslContextPointer.clear();
  }
  
@@ -1710,7 +1825,99 @@ index f5b493897e..e4014cb644 100644
  /*!
      \internal
  
-@@ -587,26 +500,6 @@ void QSslSocketPrivate::ensureInitialized()
+@@ -486,91 +400,6 @@ bool QSslSocketPrivate::supportsSsl()
+     return ensureLibraryLoaded();
+ }
+ 
+-bool QSslSocketPrivate::ensureLibraryLoaded()
+-{
+-    if (!q_resolveOpenSslSymbols())
+-        return false;
+-
+-    // Check if the library itself needs to be initialized.
+-    QMutexLocker locker(openssl_locks()->initLock());
+-
+-    if (!s_libraryLoaded) {
+-        s_libraryLoaded = true;
+-
+-        // Initialize OpenSSL.
+-        q_CRYPTO_set_id_callback(id_function);
+-        q_CRYPTO_set_locking_callback(locking_function);
+-        if (q_SSL_library_init() != 1)
+-            return false;
+-        q_SSL_load_error_strings();
+-        q_OpenSSL_add_all_algorithms();
+-
+-#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+-        if (q_SSLeay() >= 0x10001000L)
+-            QSslSocketBackendPrivate::s_indexForSSLExtraData = q_SSL_get_ex_new_index(0L, NULL, NULL, NULL, NULL);
+-#endif
+-
+-        // Initialize OpenSSL's random seed.
+-        if (!q_RAND_status()) {
+-            qWarning("Random number generator not seeded, disabling SSL support");
+-            return false;
+-        }
+-    }
+-    return true;
+-}
+-
+-void QSslSocketPrivate::ensureCiphersAndCertsLoaded()
+-{
+-    QMutexLocker locker(openssl_locks()->initLock());
+-    if (s_loadedCiphersAndCerts)
+-        return;
+-    s_loadedCiphersAndCerts = true;
+-
+-    resetDefaultCiphers();
+-    resetDefaultEllipticCurves();
+-
+-#if QT_CONFIG(library)
+-    //load symbols needed to receive certificates from system store
+-#if defined(Q_OS_WIN)
+-    HINSTANCE hLib = LoadLibraryW(L"Crypt32");
+-    if (hLib) {
+-        ptrCertOpenSystemStoreW = (PtrCertOpenSystemStoreW)GetProcAddress(hLib, "CertOpenSystemStoreW");
+-        ptrCertFindCertificateInStore = (PtrCertFindCertificateInStore)GetProcAddress(hLib, "CertFindCertificateInStore");
+-        ptrCertCloseStore = (PtrCertCloseStore)GetProcAddress(hLib, "CertCloseStore");
+-        if (!ptrCertOpenSystemStoreW || !ptrCertFindCertificateInStore || !ptrCertCloseStore)
+-            qCWarning(lcSsl, "could not resolve symbols in crypt32 library"); // should never happen
+-    } else {
+-        qCWarning(lcSsl, "could not load crypt32 library"); // should never happen
+-    }
+-#elif defined(Q_OS_QNX)
+-    s_loadRootCertsOnDemand = true;
+-#elif defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
+-    // check whether we can enable on-demand root-cert loading (i.e. check whether the sym links are there)
+-    QList<QByteArray> dirs = unixRootCertDirectories();
+-    QStringList symLinkFilter;
+-    symLinkFilter << QLatin1String("[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].[0-9]");
+-    for (int a = 0; a < dirs.count(); ++a) {
+-        QDirIterator iterator(QLatin1String(dirs.at(a)), symLinkFilter, QDir::Files);
+-        if (iterator.hasNext()) {
+-            s_loadRootCertsOnDemand = true;
+-            break;
+-        }
+-    }
+-#endif
+-#endif // QT_CONFIG(library)
+-    // if on-demand loading was not enabled, load the certs now
+-    if (!s_loadRootCertsOnDemand)
+-        setDefaultCaCertificates(systemCaCertificates());
+-#ifdef Q_OS_WIN
+-    //Enabled for fetching additional root certs from windows update on windows 6+
+-    //This flag is set false by setDefaultCaCertificates() indicating the app uses
+-    //its own cert bundle rather than the system one.
+-    //Same logic that disables the unix on demand cert loading.
+-    //Unlike unix, we do preload the certificates from the cert store.
+-    if ((QSysInfo::windowsVersion() & QSysInfo::WV_NT_based) >= QSysInfo::WV_6_0)
+-        s_loadRootCertsOnDemand = true;
+-#endif
+-}
+ 
+ /*!
+     \internal
+@@ -587,26 +416,6 @@ void QSslSocketPrivate::ensureInitialized()
      ensureCiphersAndCertsLoaded();
  }
  
@@ -1737,7 +1944,7 @@ index f5b493897e..e4014cb644 100644
  long QSslSocketPrivate::sslLibraryBuildVersionNumber()
  {
      return OPENSSL_VERSION_NUMBER;
-@@ -628,7 +521,11 @@ QString QSslSocketPrivate::sslLibraryBuildVersionString()
+@@ -628,7 +437,11 @@ QString QSslSocketPrivate::sslLibraryBuildVersionString()
  */
  void QSslSocketPrivate::resetDefaultCiphers()
  {
@@ -1749,7 +1956,7 @@ index f5b493897e..e4014cb644 100644
      SSL *mySsl = q_SSL_new(myCtx);
  
      QList<QSslCipher> ciphers;
-@@ -664,7 +561,7 @@ void QSslSocketPrivate::resetDefaultEllipticCurves()
+@@ -664,7 +477,7 @@ void QSslSocketPrivate::resetDefaultEllipticCurves()
      QVector<QSslEllipticCurve> curves;
  
  #ifndef OPENSSL_NO_EC
@@ -1758,7 +1965,7 @@ index f5b493897e..e4014cb644 100644
  
      QVarLengthArray<EC_builtin_curve> builtinCurves(static_cast<int>(curveCount));
  
-@@ -698,13 +595,14 @@ QList<QSslCertificate> QSslSocketPrivate::systemCaCertificates()
+@@ -698,13 +511,14 @@ QList<QSslCertificate> QSslSocketPrivate::systemCaCertificates()
      if (ptrCertOpenSystemStoreW && ptrCertFindCertificateInStore && ptrCertCloseStore) {
          HCERTSTORE hSystemStore;
          hSystemStore = ptrCertOpenSystemStoreW(0, L"ROOT");
@@ -1779,7 +1986,60 @@ index f5b493897e..e4014cb644 100644
                  QSslCertificate cert(der, QSsl::Der);
                  systemCerts.append(cert);
              }
-@@ -1504,14 +1402,8 @@ QSslCipher QSslSocketBackendPrivate::sessionCipher() const
+@@ -861,7 +675,8 @@ void QSslSocketBackendPrivate::transmit()
+         // Check if we've got any data to be written to the socket.
+         QVarLengthArray<char, 4096> data;
+         int pendingBytes;
+-        while (plainSocket->isValid() && (pendingBytes = q_BIO_pending(writeBio)) > 0) {
++        while (plainSocket->isValid() && (pendingBytes = q_BIO_pending(writeBio)) > 0
++                && plainSocket->openMode() != QIODevice::NotOpen) {
+             // Read encrypted data from the write BIO into a buffer.
+             data.resize(pendingBytes);
+             int encryptedBytesRead = q_BIO_read(writeBio, data.data(), pendingBytes);
+@@ -893,9 +708,8 @@ void QSslSocketBackendPrivate::transmit()
+                 // Write encrypted data from the buffer into the read BIO.
+                 int writtenToBio = q_BIO_write(readBio, data.constData(), encryptedBytesRead);
+ 
+-                // do the actual read() here and throw away the results.
++                // Throw away the results.
+                 if (writtenToBio > 0) {
+-                    // ### TODO: make this cheaper by not making it memcpy. E.g. make it work with data=0x0 or make it work with seek
+                     plainSocket->read(data.data(), writtenToBio);
+                 } else {
+                     // ### Better error handling.
+@@ -945,15 +759,19 @@ void QSslSocketBackendPrivate::transmit()
+         // we have a readBufferMaxSize. There's no point in leaving data there
+         // just so that readBuffer.size() == readBufferMaxSize.
+         int readBytes = 0;
+-        data.resize(4096);
+-        ::memset(data.data(), 0, data.size());
++        const int bytesToRead = 4096;
+         do {
++            if (readChannelCount == 0) {
++                // The read buffer is deallocated, don't try resize or write to it.
++                break;
++            }
+             // Don't use SSL_pending(). It's very unreliable.
+-            if ((readBytes = q_SSL_read(ssl, data.data(), data.size())) > 0) {
++            readBytes = q_SSL_read(ssl, buffer.reserve(bytesToRead), bytesToRead);
++            if (readBytes > 0) {
+ #ifdef QSSLSOCKET_DEBUG
+                 qCDebug(lcSsl) << "QSslSocketBackendPrivate::transmit: decrypted" << readBytes << "bytes";
+ #endif
+-                buffer.append(data.constData(), readBytes);
++                buffer.chop(bytesToRead - readBytes);
+ 
+                 if (readyReadEmittedPointer)
+                     *readyReadEmittedPointer = true;
+@@ -962,6 +780,7 @@ void QSslSocketBackendPrivate::transmit()
+                 transmitting = true;
+                 continue;
+             }
++            buffer.chop(bytesToRead);
+ 
+             // Error.
+             switch (q_SSL_get_error(ssl, readBytes)) {
+@@ -1504,14 +1323,8 @@ QSslCipher QSslSocketBackendPrivate::sessionCipher() const
  {
      if (!ssl)
          return QSslCipher();
@@ -1796,7 +2056,7 @@ index f5b493897e..e4014cb644 100644
      return sessionCipher ? QSslCipher_from_SSL_CIPHER(sessionCipher) : QSslCipher();
  }
  
-@@ -1537,112 +1429,6 @@ QSsl::SslProtocol QSslSocketBackendPrivate::sessionProtocol() const
+@@ -1537,112 +1350,6 @@ QSsl::SslProtocol QSslSocketBackendPrivate::sessionProtocol() const
      return QSsl::UnknownProtocol;
  }
  
@@ -1909,7 +2169,7 @@ index f5b493897e..e4014cb644 100644
  QList<QSslCertificate> QSslSocketBackendPrivate::STACKOFX509_to_QSslCertificates(STACK_OF(X509) *x509)
  {
      ensureInitialized();
-@@ -1696,12 +1482,12 @@ QList<QSslError> QSslSocketBackendPrivate::verify(const QList<QSslCertificate> &
+@@ -1696,12 +1403,12 @@ QList<QSslError> QSslSocketBackendPrivate::verify(const QList<QSslCertificate> &
      QMutexLocker sslErrorListMutexLocker(&_q_sslErrorList()->mutex);
  
      // Register a custom callback to get all verification errors.
@@ -1924,7 +2184,7 @@ index f5b493897e..e4014cb644 100644
  
          if (!intermediates) {
              q_X509_STORE_free(certStore);
-@@ -1715,11 +1501,8 @@ QList<QSslError> QSslSocketBackendPrivate::verify(const QList<QSslCertificate> &
+@@ -1715,11 +1422,8 @@ QList<QSslError> QSslSocketBackendPrivate::verify(const QList<QSslCertificate> &
                  first = false;
                  continue;
              }
@@ -1938,7 +2198,7 @@ index f5b493897e..e4014cb644 100644
          }
      }
  
-@@ -1743,11 +1526,7 @@ QList<QSslError> QSslSocketBackendPrivate::verify(const QList<QSslCertificate> &
+@@ -1743,11 +1447,7 @@ QList<QSslError> QSslSocketBackendPrivate::verify(const QList<QSslCertificate> &
      (void) q_X509_verify_cert(storeContext);
  
      q_X509_STORE_CTX_free(storeContext);
@@ -1951,23 +2211,21 @@ index f5b493897e..e4014cb644 100644
  
      // Now process the errors
      const auto errorList = std::move(_q_sslErrorList()->errors);
-@@ -1821,7 +1600,8 @@ bool QSslSocketBackendPrivate::importPkcs12(QIODevice *device,
+@@ -1821,7 +1521,8 @@ bool QSslSocketBackendPrivate::importPkcs12(QIODevice *device,
      // Convert to Qt types
      if (!key->d->fromEVP_PKEY(pkey)) {
          qCWarning(lcSsl, "Unable to convert private key");
 -        q_sk_pop_free(reinterpret_cast<STACK *>(ca), reinterpret_cast<void(*)(void*)>(q_sk_free));
 +        q_OPENSSL_sk_pop_free(reinterpret_cast<OPENSSL_STACK *>(ca),
-+                              reinterpret_cast<void (*)(void *)>(q_OPENSSL_sk_free));
++                              reinterpret_cast<void (*)(void *)>(q_X509_free));
          q_X509_free(x509);
          q_EVP_PKEY_free(pkey);
          q_PKCS12_free(p12);
-@@ -1836,7 +1616,11 @@ bool QSslSocketBackendPrivate::importPkcs12(QIODevice *device,
+@@ -1836,7 +1537,9 @@ bool QSslSocketBackendPrivate::importPkcs12(QIODevice *device,
          *caCertificates = QSslSocketBackendPrivate::STACKOFX509_to_QSslCertificates(ca);
  
      // Clean up
 -    q_sk_pop_free(reinterpret_cast<STACK *>(ca), reinterpret_cast<void(*)(void*)>(q_sk_free));
-+    // TODO: verify ASAP, in the past we had sk_pop_free with q_OPENSSL_sk_free
-+    // which seems to be blatantly wrong and even crashes with 1.1.
 +    q_OPENSSL_sk_pop_free(reinterpret_cast<OPENSSL_STACK *>(ca),
 +                          reinterpret_cast<void (*)(void *)>(q_X509_free));
 +
@@ -2404,7 +2662,6 @@ index 0000000000..2980b3d23e
 +
 +#endif
 diff --git a/qtbase/src/network/ssl/qsslsocket_openssl_p.h b/qtbase/src/network/ssl/qsslsocket_openssl_p.h
-deleted file mode 100644
 index b2adb3e547..7f9e884045 100644
 --- a/qtbase/src/network/ssl/qsslsocket_openssl_p.h
 +++ b/qtbase/src/network/ssl/qsslsocket_openssl_p.h
@@ -2437,7 +2694,6 @@ index b2adb3e547..7f9e884045 100644
      static QList<QSslError> verify(const QList<QSslCertificate> &certificateChain, const QString &hostName);
      static QString getErrorsFromOpenSsl();
 diff --git a/qtbase/src/network/ssl/qsslsocket_openssl_symbols.cpp b/qtbase/src/network/ssl/qsslsocket_openssl_symbols.cpp
-deleted file mode 100644
 index c344a94427..59c93677dd 100644
 --- a/qtbase/src/network/ssl/qsslsocket_openssl_symbols.cpp
 +++ b/qtbase/src/network/ssl/qsslsocket_openssl_symbols.cpp
@@ -3289,8 +3545,7 @@ index c344a94427..59c93677dd 100644
  }
  #endif // QT_CONFIG(library)
 diff --git a/qtbase/src/network/ssl/qsslsocket_openssl_symbols_p.h b/qtbase/src/network/ssl/qsslsocket_openssl_symbols_p.h
-deleted file mode 100644
-index b35a895d38..f73b38120f 100644
+index b35a895d38..68b519d74e 100644
 --- a/qtbase/src/network/ssl/qsslsocket_openssl_symbols_p.h
 +++ b/qtbase/src/network/ssl/qsslsocket_openssl_symbols_p.h
 @@ -1,6 +1,6 @@
@@ -3309,7 +3564,7 @@ index b35a895d38..f73b38120f 100644
  //
  //  W A R N I N G
  //  -------------
-@@ -215,9 +216,14 @@ QT_BEGIN_NAMESPACE
+@@ -215,22 +216,26 @@ QT_BEGIN_NAMESPACE
  
  #endif // !defined QT_LINKED_OPENSSL
  
@@ -3325,7 +3580,31 @@ index b35a895d38..f73b38120f 100644
  int q_ASN1_STRING_length(ASN1_STRING *a);
  int q_ASN1_STRING_to_UTF8(unsigned char **a, ASN1_STRING *b);
  long q_BIO_ctrl(BIO *a, int b, long c, void *d);
-@@ -247,24 +253,21 @@ BN_ULONG q_BN_mod_word(const BIGNUM *a, BN_ULONG w);
+ Q_AUTOTEST_EXPORT int q_BIO_free(BIO *a);
+-Q_AUTOTEST_EXPORT BIO *q_BIO_new(BIO_METHOD *a);
+ BIO *q_BIO_new_mem_buf(void *a, int b);
+ int q_BIO_read(BIO *a, void *b, int c);
+-Q_AUTOTEST_EXPORT BIO_METHOD *q_BIO_s_mem();
+ Q_AUTOTEST_EXPORT int q_BIO_write(BIO *a, const void *b, int c);
+ int q_BN_num_bits(const BIGNUM *a);
+-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++
++#if QT_CONFIG(opensslv11)
+ int q_BN_is_word(BIGNUM *a, BN_ULONG w);
+-#else
++#else // opensslv11
+ // BN_is_word is implemented purely as a
+ // macro in OpenSSL < 1.1. It doesn't
+ // call any functions.
+@@ -241,32 +246,34 @@ int q_BN_is_word(BIGNUM *a, BN_ULONG w);
+ //
+ // Users are required to include <openssl/bn.h>.
+ #define q_BN_is_word BN_is_word
+-#endif // OPENSSL_VERSION_NUMBER >= 0x10100000L
++#endif // !opensslv11
++
+ BN_ULONG q_BN_mod_word(const BIGNUM *a, BN_ULONG w);
+ #ifndef OPENSSL_NO_EC
  const EC_GROUP* q_EC_KEY_get0_group(const EC_KEY* k);
  int q_EC_GROUP_get_degree(const EC_GROUP* g);
  #endif
@@ -3349,12 +3628,18 @@ index b35a895d38..f73b38120f 100644
 +int q_EVP_CipherInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher, ENGINE *impl, const unsigned char *key, const unsigned char *iv, int enc);
  int q_EVP_CipherUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl, const unsigned char *in, int inl);
  int q_EVP_CipherFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl);
++#ifndef OPENSSL_NO_DES
  const EVP_CIPHER *q_EVP_des_cbc();
-+const EVP_MD *q_EVP_sha1();
  const EVP_CIPHER *q_EVP_des_ede3_cbc();
++#endif
++#ifndef OPENSSL_NO_RC2
  const EVP_CIPHER *q_EVP_rc2_cbc();
++#endif
++const EVP_MD *q_EVP_sha1();
  int q_EVP_PKEY_assign(EVP_PKEY *a, int b, char *c);
-@@ -310,7 +313,7 @@ int q_PEM_write_bio_RSAPrivateKey(BIO *a, RSA *b, const EVP_CIPHER *c, unsigned
+ Q_AUTOTEST_EXPORT int q_EVP_PKEY_set1_RSA(EVP_PKEY *a, RSA *b);
+ int q_EVP_PKEY_set1_DSA(EVP_PKEY *a, DSA *b);
+@@ -310,7 +317,7 @@ int q_PEM_write_bio_RSAPrivateKey(BIO *a, RSA *b, const EVP_CIPHER *c, unsigned
  int q_PEM_write_bio_ECPrivateKey(BIO *a, EC_KEY *b, const EVP_CIPHER *c, unsigned char *d,
                                    int e, pem_password_cb *f, void *g);
  #endif
@@ -3363,7 +3648,7 @@ index b35a895d38..f73b38120f 100644
  Q_AUTOTEST_EXPORT EVP_PKEY *q_PEM_read_bio_PUBKEY(BIO *a, EVP_PKEY **b, pem_password_cb *c, void *d);
  DSA *q_PEM_read_bio_DSA_PUBKEY(BIO *a, DSA **b, pem_password_cb *c, void *d);
  RSA *q_PEM_read_bio_RSA_PUBKEY(BIO *a, RSA **b, pem_password_cb *c, void *d);
-@@ -326,23 +329,10 @@ void q_RAND_seed(const void *a, int b);
+@@ -326,23 +333,10 @@ void q_RAND_seed(const void *a, int b);
  int q_RAND_status();
  RSA *q_RSA_new();
  void q_RSA_free(RSA *a);
@@ -3389,7 +3674,22 @@ index b35a895d38..f73b38120f 100644
  int q_SSL_connect(SSL *a);
  int q_SSL_CTX_check_private_key(const SSL_CTX *a);
  long q_SSL_CTX_ctrl(SSL_CTX *a, int b, long c, void *d);
-@@ -374,8 +364,6 @@ int q_SSL_get_error(SSL *a, int b);
+@@ -362,6 +356,14 @@ int q_SSL_CTX_use_PrivateKey(SSL_CTX *a, EVP_PKEY *b);
+ int q_SSL_CTX_use_RSAPrivateKey(SSL_CTX *a, RSA *b);
+ int q_SSL_CTX_use_PrivateKey_file(SSL_CTX *a, const char *b, int c);
+ X509_STORE *q_SSL_CTX_get_cert_store(const SSL_CTX *a);
++#if OPENSSL_VERSION_NUMBER >= 0x10002000L
++SSL_CONF_CTX *q_SSL_CONF_CTX_new();
++void q_SSL_CONF_CTX_free(SSL_CONF_CTX *a);
++void q_SSL_CONF_CTX_set_ssl_ctx(SSL_CONF_CTX *a, SSL_CTX *b);
++unsigned int q_SSL_CONF_CTX_set_flags(SSL_CONF_CTX *a, unsigned int b);
++int q_SSL_CONF_CTX_finish(SSL_CONF_CTX *a);
++int q_SSL_CONF_cmd(SSL_CONF_CTX *a, const char *b, const char *c);
++#endif
+ void q_SSL_free(SSL *a);
+ STACK_OF(SSL_CIPHER) *q_SSL_get_ciphers(const SSL *a);
+ #if OPENSSL_VERSION_NUMBER >= 0x10000000L
+@@ -374,8 +376,6 @@ int q_SSL_get_error(SSL *a, int b);
  STACK_OF(X509) *q_SSL_get_peer_cert_chain(SSL *a);
  X509 *q_SSL_get_peer_certificate(SSL *a);
  long q_SSL_get_verify_result(const SSL *a);
@@ -3398,7 +3698,7 @@ index b35a895d38..f73b38120f 100644
  SSL *q_SSL_new(SSL_CTX *a);
  long q_SSL_ctrl(SSL *ssl,int cmd, long larg, void *parg);
  int q_SSL_read(SSL *a, void *b, int c);
-@@ -388,7 +376,6 @@ void q_SSL_SESSION_free(SSL_SESSION *ses);
+@@ -388,7 +388,6 @@ void q_SSL_SESSION_free(SSL_SESSION *ses);
  SSL_SESSION *q_SSL_get1_session(SSL *ssl);
  SSL_SESSION *q_SSL_get_session(const SSL *ssl);
  #if OPENSSL_VERSION_NUMBER >= 0x10001000L
@@ -3406,7 +3706,7 @@ index b35a895d38..f73b38120f 100644
  int q_SSL_set_ex_data(SSL *ssl, int idx, void *arg);
  void *q_SSL_get_ex_data(const SSL *ssl, int idx);
  #endif
-@@ -399,49 +386,6 @@ typedef unsigned int (*q_psk_server_callback_t)(SSL *ssl, const char *identity,
+@@ -399,49 +398,6 @@ typedef unsigned int (*q_psk_server_callback_t)(SSL *ssl, const char *identity,
  void q_SSL_set_psk_server_callback(SSL *ssl, q_psk_server_callback_t callback);
  int q_SSL_CTX_use_psk_identity_hint(SSL_CTX *ctx, const char *hint);
  #endif // OPENSSL_VERSION_NUMBER >= 0x10001000L && !defined(OPENSSL_NO_PSK)
@@ -3456,7 +3756,7 @@ index b35a895d38..f73b38120f 100644
  int q_SSL_write(SSL *a, const void *b, int c);
  int q_X509_cmp(X509 *a, X509 *b);
  #ifdef SSLEAY_MACROS
-@@ -452,6 +396,7 @@ void *q_ASN1_dup(i2d_of_void *i2d, d2i_of_void *d2i, char *x);
+@@ -452,6 +408,7 @@ void *q_ASN1_dup(i2d_of_void *i2d, d2i_of_void *d2i, char *x);
  X509 *q_X509_dup(X509 *a);
  #endif
  void q_X509_print(BIO *a, X509*b);
@@ -3464,7 +3764,7 @@ index b35a895d38..f73b38120f 100644
  ASN1_OBJECT *q_X509_EXTENSION_get_object(X509_EXTENSION *a);
  void q_X509_free(X509 *a);
  X509_EXTENSION *q_X509_get_ext(X509 *a, int b);
-@@ -471,6 +416,7 @@ int q_ASN1_STRING_print(BIO *a, ASN1_STRING *b);
+@@ -471,6 +428,7 @@ int q_ASN1_STRING_print(BIO *a, ASN1_STRING *b);
  int q_X509_check_issued(X509 *a, X509 *b);
  X509_NAME *q_X509_get_issuer_name(X509 *a);
  X509_NAME *q_X509_get_subject_name(X509 *a);
@@ -3472,7 +3772,7 @@ index b35a895d38..f73b38120f 100644
  int q_X509_verify_cert(X509_STORE_CTX *ctx);
  int q_X509_NAME_entry_count(X509_NAME *a);
  X509_NAME_ENTRY *q_X509_NAME_get_entry(X509_NAME *a,int b);
-@@ -488,7 +434,6 @@ int q_X509_STORE_CTX_set_purpose(X509_STORE_CTX *ctx, int purpose);
+@@ -488,7 +446,6 @@ int q_X509_STORE_CTX_set_purpose(X509_STORE_CTX *ctx, int purpose);
  int q_X509_STORE_CTX_get_error(X509_STORE_CTX *ctx);
  int q_X509_STORE_CTX_get_error_depth(X509_STORE_CTX *ctx);
  X509 *q_X509_STORE_CTX_get_current_cert(X509_STORE_CTX *ctx);
@@ -3480,7 +3780,7 @@ index b35a895d38..f73b38120f 100644
  
  // Diffie-Hellman support
  DH *q_DH_new();
-@@ -522,34 +467,9 @@ int q_PKCS12_parse(PKCS12 *p12, const char *pass, EVP_PKEY **pkey, X509 **cert,
+@@ -522,54 +479,26 @@ int q_PKCS12_parse(PKCS12 *p12, const char *pass, EVP_PKEY **pkey, X509 **cert,
  PKCS12 *q_d2i_PKCS12_bio(BIO *bio, PKCS12 **pkcs12);
  void q_PKCS12_free(PKCS12 *pkcs12);
  
@@ -3514,8 +3814,12 @@ index b35a895d38..f73b38120f 100644
 -#define q_SKM_sk_value(type, st,i) ((type * (*)(const STACK_OF(type) *, int))q_sk_value)(st, i)
  #define q_sk_GENERAL_NAME_num(st) q_SKM_sk_num(GENERAL_NAME, (st))
  #define q_sk_GENERAL_NAME_value(st, i) q_SKM_sk_value(GENERAL_NAME, (st), (i))
++
++void q_GENERAL_NAME_free(GENERAL_NAME *a);
++
  #define q_sk_X509_num(st) q_SKM_sk_num(X509, (st))
-@@ -558,18 +478,12 @@ DSA *q_d2i_DSAPrivateKey(DSA **a, unsigned char **pp, long length);
+ #define q_sk_X509_value(st, i) q_SKM_sk_value(X509, (st), (i))
+ #define q_sk_SSL_CIPHER_num(st) q_SKM_sk_num(SSL_CIPHER, (st))
  #define q_sk_SSL_CIPHER_value(st, i) q_SKM_sk_value(SSL_CIPHER, (st), (i))
  #define q_SSL_CTX_add_extra_chain_cert(ctx,x509) \
          q_SSL_CTX_ctrl(ctx,SSL_CTRL_EXTRA_CHAIN_CERT,0,(char *)x509)
@@ -4201,7 +4505,6 @@ index 0000000000..9686d22b98
 +
 +#endif // QSSLSOCKET_OPENSSL_PRE11_SYMBOLS_P_H
 diff --git a/qtbase/src/network/ssl/ssl.pri b/qtbase/src/network/ssl/ssl.pri
-deleted file mode 100644
 index d2b0c2d60d..2783effaf1 100644
 --- a/qtbase/src/network/ssl/ssl.pri
 +++ b/qtbase/src/network/ssl/ssl.pri

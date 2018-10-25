@@ -143,7 +143,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -optimize-size \
                 -reduce-relocations \
                 -cups \
-                -openssl-runtime \
+                -openssl-linked \
                 -openssl \
                 -Wno-expansion-to-defined \
                 -D _X_INLINE=inline \

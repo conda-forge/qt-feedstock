@@ -83,3 +83,11 @@ diff -urN work_failed_provide.orig/qtbase/mkspecs/features/mac/sdk.prf work_fail
      isEmpty(sysrooted): next()
  
      $$tool = $$sysrooted $$member(value, 1, -1)
+--- work.orig/qtbase/mkspecs/features/mac/sdk.mk	2018-10-25 15:18:12.000000000 +0100
++++ work/qtbase/mkspecs/features/mac/sdk.mk	2018-10-25 15:18:23.000000000 +0100
+@@ -1,4 +1,4 @@
+-CURRENT_MAC_SDK_VERSION := $(shell /usr/bin/xcrun --sdk $(EXPORT_QMAKE_MAC_SDK) -show-sdk-version)
++CURRENT_MAC_SDK_VERSION := $(shell xcrun --sdk $(EXPORT_QMAKE_MAC_SDK) -show-sdk-version)
+ 
+ ifneq ($(CURRENT_MAC_SDK_VERSION),$(EXPORT_QMAKE_MAC_SDK_VERSION))
+     $(info The platform SDK has been changed from version $(EXPORT_QMAKE_MAC_SDK_VERSION) to version $(CURRENT_MAC_SDK_VERSION).)

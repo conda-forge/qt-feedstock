@@ -2,6 +2,10 @@
 setlocal EnableDelayedExpansion
 set SHORT_VERSION=%PKG_VERSION:~0,-2%
 
+:: You may not always want this when doing dirty builds (debugging late stage
+:: problems, but if debugging configure time issues you probably do want this).
+if exist config.cache del config.cache
+
 :: if "%DXSDK_DIR%" == "" (
 ::   echo You do not appear to have the DirectX SDK installed.  Please get it from
 ::   echo    https://www.microsoft.com/en-us/download/details.aspx?id=6812
@@ -131,6 +135,7 @@ call configure ^
      -opengl %OPENGLVER% ^
      -opensource ^
      -openssl ^
+     -openssl-runtime ^
      -platform win32-msvc ^
      -release ^
      -shared ^
@@ -140,7 +145,8 @@ call configure ^
      -system-sqlite ^
      -system-zlib ^
      -plugin-sql-sqlite ^
-     -qtlibinfix .conda
+     -qtlibinfix .conda ^
+     -verbose
 
 if %errorlevel% neq 0 exit /b %errorlevel%
 

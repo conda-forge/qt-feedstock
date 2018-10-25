@@ -13,6 +13,7 @@ source:
     md5: 98102a8e9eefa2f05ecaa9a349c414d4  # [win]
     patches:
       # qtbase
+      - 0000-qtbase-QSslSocket-OpenSSL-1.1-backend.patch
       - 0010-osx-xctest-check.patch
       - 0011-osx-allow-any-xcrun-in-PATH.patch
       # - 0012-qtbase-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-all-mac.patch
@@ -108,10 +109,12 @@ requirements:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
+    - {{ cdt('cups-devel') }}            # [linux]
 
     # For fontconfig + freetype
     - pkg-config                         # [linux]
     - pthread-stubs                      # [linux]
+    - make                               # [unix]
     # Probably only needed for WebEngine
     - python 2.7*
     - ninja
@@ -122,6 +125,7 @@ requirements:
     - m2-gperf                           # [win]
     - m2-bison                           # [win]
     - m2-flex                            # [win]
+    - m2-patch                           # [win]
     - jom                                # [win]
     - perl 5.*
   host:

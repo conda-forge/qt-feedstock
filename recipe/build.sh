@@ -125,7 +125,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -nomake examples \
                 -nomake tests \
                 -verbose \
-                -cups \
                 -skip wayland \
                 -system-libjpeg \
                 -system-libpng \
@@ -143,6 +142,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -no-avx2 \
                 -optimize-size \
                 -reduce-relocations \
+                -cups \
+                -openssl-runtime \
+                -openssl \
                 -Wno-expansion-to-defined \
                 -D _X_INLINE=inline \
                 -D XK_dead_currency=0xfe6f \

@@ -66,4 +66,3 @@ else
   echo "calling $@" >> /tmp/xcrun-$$.log
   "$@"
 fi
-

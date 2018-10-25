@@ -14,7 +14,7 @@ if exist config.cache del config.cache
 ::   exit /b 1
 :: )
 
-:: Webengine requires either working OpenGL drivers or
+:: Webegine requires either working OpenGL drivers or
 :: Angle (therefore DirectX >= 11). This works on some
 :: VMs and not others.  Windows 7 VirtualBox instantly
 :: aborts when loading Spyder sSo we've had to disable
@@ -136,7 +136,7 @@ call configure ^
      -opensource ^
      -openssl ^
      -openssl-runtime ^
-     -platform win32-msvc ^
+     -platform msvc-desktop ^
      -release ^
      -shared ^
      -qt-freetype ^

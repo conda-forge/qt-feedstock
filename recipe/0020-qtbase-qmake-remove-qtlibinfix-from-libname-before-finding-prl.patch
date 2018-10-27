@@ -1,7 +1,15 @@
 --- work/qtbase/qmake/generators/win32/winmakefile.cpp.orig     2018-10-16 08:37:04.000000000 -0500
 +++ work/qtbase/qmake/generators/win32/winmakefile.cpp  2018-10-26 20:35:33.674123500 -0500
-@@ -46,8 +46,14 @@
-
+@@ -37,6 +37,7 @@
+ #include <qstringlist.h>
+ #include <qdir.h>
+ #include <stdlib.h>
++#include <qconfig.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+@@ -46,8 +47,14 @@
+ 
  ProString Win32MakefileGenerator::fixLibFlag(const ProString &lib)
  {
 -    if (lib.startsWith("-l"))  // Fallback for unresolved -l libs.
@@ -16,19 +24,20 @@
      if (lib.startsWith("-L"))  // Lib search path. Needed only by -l above.
          return QLatin1String("/LIBPATH:")
                  + escapeFilePath(Option::fixPathToTargetOS(lib.mid(2).toQString(), false));
-@@ -107,6 +107,16 @@
+@@ -101,6 +108,17 @@
              (*it) = "-L" + lp.real();
          } else if (type == LibFlagLib) {
              QString lib = arg.toQString();
-+            QString libinfix = project->propertyValue(ProKey("QT_LIBINFIX")).toQString();
-+            debug_msg(1, "findLibraries: lib %s", lib.toLatin1().constData());
-+            debug_msg(1, "findLibraries: libinfix %s", libinfix.toLatin1().constData());
++            QString libinfix = QLatin1String(QT_LIBINFIX);
++            debug_msg(1, "findLibraries (prl): lib %s", lib.toLatin1().constData());
 +            if (libinfix.length()) {
 +                if (lib.endsWith(libinfix + QLatin1String(".lib"))) {
 +                    lib = lib.mid(0, lib.length() - libinfix.length() - 4);
 +                } else if (lib.endsWith(libinfix)) {
 +                    lib = lib.mid(0, lib.length() - libinfix.length());
 +                }
++                debug_msg(1, "findLibraries (prl): Replacing lib (filename stub) due to libinfix: %s with: %s",
++                          libinfix.toLatin1().constData(), libinfix.toLatin1().constData());
 +            }
              ProString verovr =
                      project->first(ProKey("QMAKE_" + lib.toUpper() + "_VERSION_OVERRIDE"));
@@ -45,3 +54,5 @@
      if (!libinfo.readLib(meta_file)) {
          fprintf(stderr, "Error processing meta file %s\n", meta_file.toLatin1().constData());
          return false;
+--- work/qtbase/qmake/generators/win32/winmakefile.cpp.orig	2018-10-27 17:11:20.236181800 -0500
++++ work/qtbase/qmake/generators/win32/winmakefile.cpp	2018-10-27 17:11:20.251806100 -0500

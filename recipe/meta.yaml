@@ -24,6 +24,8 @@ source:
       - 0016-qtbase-use-better-gcc-optimize-size.patch
       - 0017-qtbase-never-enable-new-dtags.patch
       - 0018-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.16299.0.patch
+      # - 0019-qtbase-Hack-static-extension-onto-libs-for-qtlibinfix-on-Windows.patch
+      - 0020-qtbase-qmake-remove-qtlibinfix-from-libname-before-finding-prl.patch
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine

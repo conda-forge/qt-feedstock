@@ -136,7 +136,7 @@ call configure ^
      -opensource ^
      -openssl ^
      -openssl-runtime ^
-     -platform msvc-desktop ^
+     -platform win32-msvc ^
      -release ^
      -shared ^
      -qt-freetype ^
@@ -145,7 +145,7 @@ call configure ^
      -system-sqlite ^
      -system-zlib ^
      -plugin-sql-sqlite ^
-     -qtlibinfix QtCore5.9.conda.dll ^
+     -qtlibinfix .conda ^
      -verbose
 
 if %errorlevel% neq 0 exit /b %errorlevel%
@@ -158,6 +158,11 @@ echo on
 ::     -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
 jom -U release
+pushd qtbase\src
+jom sub-moc-release
+if %errorlevel% neq 0 exit /b %errorlevel%
+popd
+
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo Finished `jom -U release`
 jom -U install

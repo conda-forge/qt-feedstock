@@ -25,7 +25,7 @@ source:
       - 0017-qtbase-never-enable-new-dtags.patch
       - 0018-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.16299.0.patch
       # - 0019-qtbase-Hack-static-extension-onto-libs-for-qtlibinfix-on-Windows.patch
-      - 0020-qtbase-qmake-remove-qtlibinfix-from-libname-before-finding-prl.patch
+      - 0020-qtbase-qmake-remove-qtlibinfix-from-libname-before-finding-prl.patch  # [win]
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine
@@ -203,7 +203,7 @@ test:
     - xcodebuild
     - xcrun
   commands:
-    - if not exist %LIBRARY_BIN%\\Qt5WebEngine.dll exit 1                  # [win]
+    - if not exist %LIBRARY_BIN%\\Qt5WebEngine_conda.dll exit 1            # [win]
     - test -f $PREFIX/lib/libQt5WebEngine.so                               # [linux]
     - test -f $PREFIX/lib/libQt5WebEngine.dylib                            # [osx]
     # sql plugin

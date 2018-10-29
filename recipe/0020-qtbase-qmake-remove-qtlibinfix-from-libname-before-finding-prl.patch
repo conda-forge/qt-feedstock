@@ -1,6 +1,20 @@
---- qt-everywhere-opensource-src-5.9.7/qtbase/qmake/generators/makefile.cpp	2018-10-29 05:36:11.673392800 -0500
-+++ work/qtbase/qmake/generators/makefile.cpp	2018-10-29 06:11:28.894199700 -0500
-@@ -893,7 +893,7 @@
+From 7f65718b3a076896f67fda6dcd1b32f806825b78 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Mon, 29 Oct 2018 12:40:49 +0000
+Subject: [PATCH] qtbase qmake remove qtlibinfix from libname before finding
+ prl
+
+Change-Id: Ic5046e72d373d1ccbbb6b01773bc1b1fda5dd02e
+---
+ qmake/generators/makefile.cpp          | 24 ++++++++++++++++++++++-
+ qmake/generators/win32/winmakefile.cpp | 27 +++++++++++++++++++++++++-
+ 2 files changed, 49 insertions(+), 2 deletions(-)
+
+diff --git a/qmake/generators/makefile.cpp b/qmake/generators/makefile.cpp
+index a1f3352aa3..38205c33a5 100644
+--- a/qmake/generators/makefile.cpp
++++ b/qmake/generators/makefile.cpp
+@@ -893,7 +893,7 @@ MakefileGenerator::processPrlFile(QString &file)
      if (meta_file.isEmpty())
          return false;
      QMakeMetaInfo libinfo(project);
@@ -9,15 +23,35 @@
      if (!libinfo.readLib(meta_file)) {
          fprintf(stderr, "Error processing meta file %s\n", meta_file.toLatin1().constData());
          return false;
-@@ -1084,6 +1084,7 @@
+@@ -1084,6 +1084,27 @@ MakefileGenerator::prlFileName(bool fixify)
      int slsh = ret.lastIndexOf(Option::dir_sep);
      if(slsh != -1)
          ret.remove(0, slsh);
-+    debug_msg(1, "MakefileGenerator::prlFileName :: fixify: %d (ret): %s", fixify, ret.toLatin1().constData());
++    debug_msg(0, "MakefileGenerator::prlFileName :: fixify: %d (ret): %s", fixify, ret.toLatin1().constData());
++#ifdef QT_LIBINFIX
++    QString libinfix = QLatin1String(QT_LIBINFIX);
++#else
++    QString libinfix = project->propertyValue(ProKey("QT_LIBINFIX")).toQString();
++#endif
++
++    if (!libinfix.length())
++    {
++#ifdef QT_LIBINFIX
++    debug_msg(0, "MakefileGenerator::prlFileName :: libinfix nothing? (QT_LIBINFIX)");
++#else
++    debug_msg(0, "MakefileGenerator::prlFileName :: libinfix nothing? (ProKey)");
++#endif
++    }
++
++    // If you have and dots in here then the indexOf('.') goes wrong.
++    if (libinfix.length() && lib.contains(libinfix)) {
++        lib.replace(libinfix, QLatin1String(""));
++    }
++
      if(!ret.endsWith(Option::prl_ext)) {
          int dot = ret.indexOf('.');
          if(dot != -1)
-@@ -1097,6 +1098,7 @@
+@@ -1097,6 +1118,7 @@ MakefileGenerator::prlFileName(bool fixify)
              ret.prepend(project->first("DESTDIR").toQString());
          ret = fileFixify(ret, FileFixifyBackwards);
      }
@@ -25,17 +59,11 @@
      return ret;
  }
  
---- qt-everywhere-opensource-src-5.9.7/qtbase/qmake/generators/win32/winmakefile.cpp	2018-10-29 05:37:03.676652900 -0500
-+++ work/qtbase/qmake/generators/win32/winmakefile.cpp	2018-10-29 05:37:03.707917900 -0500
-@@ -37,6 +37,7 @@
- #include <qstringlist.h>
- #include <qdir.h>
- #include <stdlib.h>
-+//#include <qconfig.h>
- 
- QT_BEGIN_NAMESPACE
- 
-@@ -46,8 +47,14 @@
+diff --git a/qmake/generators/win32/winmakefile.cpp b/qmake/generators/win32/winmakefile.cpp
+index 75bb5d236d..186d0e812b 100644
+--- a/qmake/generators/win32/winmakefile.cpp
++++ b/qmake/generators/win32/winmakefile.cpp
+@@ -46,8 +46,14 @@ Win32MakefileGenerator::Win32MakefileGenerator() : MakefileGenerator()
  
  ProString Win32MakefileGenerator::fixLibFlag(const ProString &lib)
  {
@@ -51,7 +79,7 @@
      if (lib.startsWith("-L"))  // Lib search path. Needed only by -l above.
          return QLatin1String("/LIBPATH:")
                  + escapeFilePath(Option::fixPathToTargetOS(lib.mid(2).toQString(), false));
-@@ -101,6 +108,25 @@
+@@ -101,6 +107,25 @@ Win32MakefileGenerator::findLibraries(bool linkPrl, bool mergeLflags)
              (*it) = "-L" + lp.real();
          } else if (type == LibFlagLib) {
              QString lib = arg.toQString();
@@ -69,7 +97,7 @@
 +                } else if (lib.endsWith(libinfix + QLatin1String("d"))) {
 +                    lib = lib.mid(0, lib.length() - libinfix.length() - 1) + QLatin1String("d");
 +                } else if (lib.endsWith(libinfix)) {
-+                    lib = lib.mid(0, lib.length() - libinfix.length() - 1);
++                    lib = lib.mid(0, lib.length() - libinfix.length());
 +                }
 +                debug_msg(1, "findLibraries (prl): Replacing lib: %s (filename stub) due to libinfix: %s",
 +                          lib.toLatin1().constData(), libinfix.toLatin1().constData());
@@ -77,3 +105,6 @@
              ProString verovr =
                      project->first(ProKey("QMAKE_" + lib.toUpper() + "_VERSION_OVERRIDE"));
              for (QList<QMakeLocalFileName>::Iterator dir_it = dirs.begin();
+-- 
+2.19.1
+

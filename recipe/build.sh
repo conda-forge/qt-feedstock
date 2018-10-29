@@ -230,6 +230,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
+                -qtlibinfix .conda \
                 -sdk macosx10.10
 
 # For quicker turnaround when e.g. checking compilers optimizations

@@ -25,7 +25,7 @@ if exist config.cache del config.cache
 :: but when I tried it it was too buggy; Spyder crashed a
 :: little bit later, though it worked for Carlos.
 set WEBBACKEND=qtwebengine
-set QT_LIBINFIX=.conda
+set QT_LIBINFIX=_conda
 
 where perl.exe
 if %ERRORLEVEL% neq 0 (

@@ -1,7 +1,8 @@
 jobs:
 - job: osx_64
+  timeoutInMinutes: 360
   pool:
-    vmImage: xcode9-macos10.13
+    vmImage: macos10.13
   strategy:
     maxParallel: 8
     matrix:

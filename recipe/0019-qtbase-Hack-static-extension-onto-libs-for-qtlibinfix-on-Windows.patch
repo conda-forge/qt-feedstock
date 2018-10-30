@@ -1,0 +1,55 @@
+--- work/qtbase/mkspecs/features/qt.prf.orig	2018-10-26 19:35:51.313364300 -0500
++++ work/qtbase/mkspecs/features/qt.prf	2018-10-26 19:33:31.643086200 -0500
+@@ -235,11 +235,15 @@
+                 !isEmpty(MODULE_LIBS_ADD): \
+                     LIBS$$var_sfx += -L$$MODULE_LIBS_ADD
+ 
+-                lib = $$MODULE_MODULE$$qtPlatformTargetSuffix()
++                contains(MODULE_CONFIG, staticlib) {
++                    lib = $$MODULE_MODULE$$qtPlatformTargetSuffix().$${QMAKE_EXTENSION_STATICLIB}
++                } else {
++                    lib = $$MODULE_MODULE$$qtPlatformTargetSuffix()
++                }
+                 LIBS$$var_sfx += -l$$lib
+ 
+                 contains(MODULE_CONFIG, staticlib): \
+-                    PRE_TARGETDEPS *= $$MODULE_LIBS/$${QMAKE_PREFIX_STATICLIB}$${lib}.$${QMAKE_EXTENSION_STATICLIB}
++                    PRE_TARGETDEPS *= $$MODULE_LIBS/$${QMAKE_PREFIX_STATICLIB}$${lib}
+ 
+                 !isEmpty(QMAKE_LSB) {
+                     !isEmpty(MODULE_LIBS_ADD): \
+--- work/qtbase/qmake/generators/win32/winmakefile.cpp.orig	2018-10-16 08:37:04.000000000 -0500
++++ work/qtbase/qmake/generators/win32/winmakefile.cpp	2018-10-26 20:35:33.674123500 -0500
+@@ -46,8 +46,14 @@
+ 
+ ProString Win32MakefileGenerator::fixLibFlag(const ProString &lib)
+ {
+-    if (lib.startsWith("-l"))  // Fallback for unresolved -l libs.
++    if (lib.startsWith("-l")) {  // Fallback for unresolved -l libs.
++        // Complete hack in an attempt to allow -qtlibinfix to work
++        // on Windows. The other side of this hack is located in
++        // work/qtbase/mkspecs/features/qt.prf
++        if (lib.endsWith(".lib"))
++            return escapeFilePath(lib.mid(2));
+         return escapeFilePath(lib.mid(2) + QLatin1String(".lib"));
++    }
+     if (lib.startsWith("-L"))  // Lib search path. Needed only by -l above.
+         return QLatin1String("/LIBPATH:")
+                 + escapeFilePath(Option::fixPathToTargetOS(lib.mid(2).toQString(), false));
+@@ -107,6 +107,16 @@
+             (*it) = "-L" + lp.real();
+         } else if (type == LibFlagLib) {
+             QString lib = arg.toQString();
++            QString libinfix = project->propertyValue(ProKey("QT_LIBINFIX")).toQString();
++            debug_msg(1, "findLibraries: lib %s", lib.toLatin1().constData());
++            debug_msg(1, "findLibraries: libinfix %s", libinfix.toLatin1().constData());
++            if (libinfix.length()) {
++                if (lib.endsWith(libinfix + QLatin1String(".lib"))) {
++                    lib = lib.mid(0, lib.length() - libinfix.length() - 4);
++                } else if (lib.endsWith(libinfix)) {
++                    lib = lib.mid(0, lib.length() - libinfix.length());
++                }
++            }
+             ProString verovr =
+                     project->first(ProKey("QMAKE_" + lib.toUpper() + "_VERSION_OVERRIDE"));
+             for (QList<QMakeLocalFileName>::Iterator dir_it = dirs.begin();

@@ -74,3 +74,14 @@ diff -urN work_failed_provide.orig/qtbase/mkspecs/features/mac/sdk.prf work_fail
      isEmpty(sysrooted): next()
  
      $$tool = $$sysrooted $$member(value, 1, -1)
+--- work/qtbase/configure.orig	2018-10-20 01:43:04.000000000 +0100
++++ work/qtbase/configure	2018-10-20 01:43:18.000000000 +0100
+@@ -318,7 +318,7 @@
+ #-------------------------------------------------------------------------------
+ 
+ if [ "$BUILD_ON_MAC" = "yes" ]; then
+-    if ! /usr/bin/xcode-select --print-path >/dev/null 2>&1; then
++    if ! xcode-select --print-path >/dev/null 2>&1; then
+         echo >&2
+         echo "   No Xcode selected. Please install Xcode via the App Store, " >&2
+         echo "   or the command line developer tools via xcode-select --install, " >&2

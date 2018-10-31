@@ -53,6 +53,14 @@ requirements:
     - sqlite
     - libxcb  # [linux]
     - dbus  # [linux]
+    - xorg-libice      # [linux]
+    - xorg-libsm       # [linux]
+    - xorg-libx11      # [linux]
+    - xorg-libxext     # [linux]
+    - xorg-libxrender  # [linux]
+    - xorg-libxt       # [linux]
+    - xorg-inputproto  # [linux]
+    - gtk2  # [linux]
   run:
     - freetype  # [linux]
     - fontconfig  # [linux]
@@ -65,6 +73,13 @@ requirements:
     - sqlite
     - libxcb  # [linux]
     - dbus  # [linux]
+    - xorg-libice      # [linux]
+    - xorg-libsm       # [linux]
+    - xorg-libx11      # [linux]
+    - xorg-libxext     # [linux]
+    - xorg-libxrender  # [linux]
+    - xorg-libxt       # [linux]
+    - gtk2  # [linux]
 
 test:
   requires:

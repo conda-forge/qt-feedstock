@@ -31,9 +31,7 @@ if [ $(uname) == Linux ]; then
         CXXFLAGS="$CXXFLAGS -Wno-expansion-to-defined"
     fi
 
-    # /usr stuff needed to get system X11
-    export LDFLAGS="$LDFLAGS -L/usr/lib64 -Wl,-rpath-link,$PREFIX/lib -Wl,-rpath-link,/usr/lib64"
-    export CPPFLAGS="$CPPFLAGS -I/usr/include"
+    export LDFLAGS="$LDFLAGS -Wl,-rpath-link,$PREFIX/lib"
     export CPPFLAGS="$CPPFLAGS -DXK_dead_currency=0xfe6f -DXK_ISO_Level5_Lock=0xfe13"
     export CPPFLAGS="$CPPFLAGS -DFC_WEIGHT_EXTRABLACK=215 -DFC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK"
     export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"

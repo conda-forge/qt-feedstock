@@ -23,7 +23,7 @@ icu:
 jpeg:
 - '9'
 libpng:
-- 1.6.34
+- 1.6.35
 openssl:
 - 1.0.2
 perl:

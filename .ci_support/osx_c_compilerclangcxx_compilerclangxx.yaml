@@ -15,7 +15,7 @@ icu:
 jpeg:
 - '9'
 libpng:
-- 1.6.34
+- 1.6.35
 macos_machine:
 - x86_64-apple-darwin13.4.0
 macos_min_version:

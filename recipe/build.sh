@@ -137,6 +137,7 @@ fi
 
 if [ $(uname) == Darwin ]; then
     unset OSX_ARCH
+    sed -i.bak "s/QMAKE_MAC_SDK *= macosx/QMAKE_MAC_SDK           = macosx${MACOSX_DEPLOYMENT_TARGET}/g" qtbase/mkspecs/common/macx.conf
     export MACOSX_DEPLOYMENT_TARGET=10.9
 
     ./configure -prefix $PREFIX \
@@ -177,7 +178,7 @@ if [ $(uname) == Darwin ]; then
                 -no-libudev \
                 -no-egl \
                 -no-openssl \
-                -sdk macosx10.9 \
+                -sdk macosx${MACOSX_DEPLOYMENT_TARGET} \
     ####
 
     make -j $CPU_COUNT || exit 1

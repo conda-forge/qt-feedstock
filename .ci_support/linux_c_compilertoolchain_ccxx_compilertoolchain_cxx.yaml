@@ -1,0 +1,68 @@
+build_number_decrement:
+- '1000'
+c_compiler:
+- toolchain_c
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+cxx_compiler:
+- toolchain_cxx
+dbus:
+- '1'
+docker_image:
+- condaforge/linux-anvil
+fontconfig:
+- '2.13'
+freetype:
+- 2.9.1
+gst_plugins_base:
+- '1.12'
+icu:
+- '58'
+jpeg:
+- '9'
+libpng:
+- 1.6.35
+openssl:
+- 1.0.2
+perl:
+- '5.26'
+pin_run_as_build:
+  dbus:
+    max_pin: x
+  fontconfig:
+    max_pin: x
+  freetype:
+    max_pin: x
+  gst-plugins-base:
+    max_pin: x.x
+  icu:
+    max_pin: x
+  jpeg:
+    max_pin: x
+  libpng:
+    max_pin: x.x
+  openssl:
+    max_pin: x.x.x
+  perl:
+    max_pin: x.x.x
+  sqlite:
+    max_pin: x
+  xz:
+    max_pin: x.x
+  zlib:
+    max_pin: x.x
+sqlite:
+- '3'
+xz:
+- '5.2'
+zip_keys:
+- - c_compiler
+  - cxx_compiler
+  - channel_sources
+  - channel_targets
+  - docker_image
+  - build_number_decrement
+zlib:
+- '1.2'

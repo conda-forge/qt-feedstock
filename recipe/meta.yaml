@@ -12,6 +12,7 @@ source:
     - 0006-zlib_dependency-Add-EXTRA_INCLUDEPATH-for-system-zli.patch
     - 0007-CentOS5-Do-not-use-strict_c-when-using-c-11.patch
     - 0008-disable-Ubuntu-overlay-scrollbars-as-they-don-t-play.patch
+    - qt5-pcre.patch  # [linux] - cf. https://github.com/spack/spack/pull/4270
     # qtbase
     - 0004-VS2008-Add-typedefs-for-more-int-_t-and-define-_STDI.patch  # [win]
     - 0009-osx-force-10.9-deployment-target.patch  # [osx]
@@ -22,7 +23,7 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 9
+  number: 1009
   skip: True  # [ win]
   detect_binary_files_with_prefix: true
 
@@ -52,6 +53,14 @@ requirements:
     - sqlite
     - libxcb  # [linux]
     - dbus  # [linux]
+    - xorg-libice      # [linux]
+    - xorg-libsm       # [linux]
+    - xorg-libx11      # [linux]
+    - xorg-libxext     # [linux]
+    - xorg-libxrender  # [linux]
+    - xorg-libxt       # [linux]
+    - xorg-inputproto  # [linux]
+    - gtk2  # [linux]
   run:
     - freetype  # [linux]
     - fontconfig  # [linux]
@@ -64,8 +73,18 @@ requirements:
     - sqlite
     - libxcb  # [linux]
     - dbus  # [linux]
+    - xorg-libice      # [linux]
+    - xorg-libsm       # [linux]
+    - xorg-libx11      # [linux]
+    - xorg-libxext     # [linux]
+    - xorg-libxrender  # [linux]
+    - xorg-libxt       # [linux]
+    - gtk2  # [linux]
 
 test:
+  requires:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
   files:
     - test/hello.pro
     - test/main.cpp
@@ -75,8 +94,6 @@ test:
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}  # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]
-    - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
-    - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
 
 about:
   home: http://qt-project.org

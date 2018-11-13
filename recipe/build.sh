@@ -1,13 +1,77 @@
 #!/bin/bash
 
+set -ex
+
 # Compile
 # -------
 chmod +x configure
 
-if [ $(uname) == Linux ]; then
+# Frustratingly, Qt's configure checks do not honor the standard build
+# environment variables ($CC, $*FLAGS, etc) in a very consistent way. In
+# particular, they are largely ignored during configuration. AFAICT, the best
+# way to get them to apply during both configuration and the primary build is
+# to modify the "mkspec" files used in the build. (You can pass #defines to
+# the configuration script, but you can't pass linker flags like
+# `-Wl,-rpath`.)
+#
+# Aside: our toolchain environments unfortunately mix preprocessor and
+# non-preprocessor flags in both $CFLAGS and $CPPFLAGS.
 
+if [ $(uname) == Linux ]; then
+    compiler_mkspec=qtbase/mkspecs/common/g++-base.conf
+    flag_mkspec=qtbase/mkspecs/linux-g++/qmake.conf
+
+    # The Anaconda gcc7 compiler flags specify -std=c++17 by default, which
+    # activates features that break compilation. Begone!
+    CXXFLAGS=$(echo $CXXFLAGS | sed -E 's@\-std=[^ ]+@@')
+    export CXXFLAGS="$CXXFLAGS -std=c++11"
+
+    # This warning causes a huge amount of spew in the build logs.
+    if [ "$cxx_compiler" = gxx ] ; then
+        CXXFLAGS="$CXXFLAGS -Wno-expansion-to-defined"
+    fi
+
+    export LDFLAGS="$LDFLAGS -Wl,-rpath-link,$PREFIX/lib"
+    export CPPFLAGS="$CPPFLAGS -DXK_dead_currency=0xfe6f -DXK_ISO_Level5_Lock=0xfe13"
+    export CPPFLAGS="$CPPFLAGS -DFC_WEIGHT_EXTRABLACK=215 -DFC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK"
+    export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"
+else
+    compiler_mkspec=qtbase/mkspecs/common/clang.conf
+    flag_mkspec=qtbase/mkspecs/macx-clang/qmake.conf
+
+    export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib"
+    export CXXFLAGS="$CXXFLAGS -std=c++11"
+fi
+
+# If we don't $(basename) here, when $CC contains an absolute path it will
+# point into the *build* environment directory, which won't get replaced when
+# making the package -- breaking the mkspec for downstream consumers.
+sed -i -e "s|^QMAKE_CC.*=.*|QMAKE_CC = $(basename $CC)|" $compiler_mkspec
+sed -i -e "s|^QMAKE_CXX.*=.*|QMAKE_CXX = $(basename $CXX)|" $compiler_mkspec
+
+# The mkspecs only append to QMAKE_*FLAGS, so if we set them at the very top
+# of the main mkspec file, the settings will be honored.
+
+cp $flag_mkspec $flag_mkspec.orig
+cat <<EOF >$flag_mkspec
+QMAKE_CFLAGS = $CFLAGS $CPPFLAGS
+QMAKE_CXXFLAGS = $CXXFLAGS $CPPFLAGS
+QMAKE_LFLAGS = $LDFLAGS
+EOF
+cat $flag_mkspec.orig >>$flag_mkspec
+
+# The main Qt build does eventually honor $LD, but it calls it like a
+# compiler, not like the straight `ld` program as in the conda toolchain
+# variables.
+export LD="$CXX"
+
+# If we leave these variables set, they will override our work during the main
+# build.
+unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+
+if [ $(uname) == Linux ]; then
     # Download QtWebkit
-    curl "http://linorg.usp.br/Qt/community_releases/5.6/${PKG_VERSION}/qtwebkit-opensource-src-${PKG_VERSION}.tar.xz" > qtwebkit.tar.xz
+    curl -L "http://download.qt.io/community_releases/5.6/${PKG_VERSION}/qtwebkit-opensource-src-${PKG_VERSION}.tar.xz" > qtwebkit.tar.xz
     unxz qtwebkit.tar.xz
     tar xf qtwebkit.tar
     mv qtwebkit-opensource-src* qtwebkit
@@ -25,8 +89,6 @@ if [ $(uname) == Linux ]; then
                 -headerdir $PREFIX/include/qt \
                 -archdatadir $PREFIX \
                 -datadir $PREFIX \
-                -L $PREFIX/lib \
-                -I $PREFIX/include \
                 -release \
                 -opensource \
                 -confirm-license \
@@ -57,14 +119,8 @@ if [ $(uname) == Linux ]; then
                 -no-linuxfb \
                 -no-libudev \
                 -no-avx \
-                -no-avx2 \
-                -D _X_INLINE=inline \
-                -D XK_dead_currency=0xfe6f \
-                -D XK_ISO_Level5_Lock=0xfe13 \
-                -D FC_WEIGHT_EXTRABLACK=215 \
-                -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
-                -D GLX_GLXEXT_PROTOTYPES
-# To get a much quicker turnaround you can add this: (remember also to add the backslash after GLX_GLXEXT_PROTOTYPES)
+                -no-avx2
+# To get a much quicker turnaround you can add this: (remember also to add the backslash after `no-avx2`)
 # -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
 # If we must not remove strict_c++ from qtbase/mkspecs/features/qt_common.prf
@@ -80,12 +136,8 @@ if [ $(uname) == Linux ]; then
 fi
 
 if [ $(uname) == Darwin ]; then
-    # Let Qt set its own flags and vars
-    for x in OSX_ARCH CFLAGS CXXFLAGS LDFLAGS
-    do
-        unset $x
-    done
-
+    unset OSX_ARCH
+    sed -i.bak "s/QMAKE_MAC_SDK *= macosx/QMAKE_MAC_SDK           = macosx${MACOSX_DEPLOYMENT_TARGET}/g" qtbase/mkspecs/common/macx.conf
     export MACOSX_DEPLOYMENT_TARGET=10.9
 
     ./configure -prefix $PREFIX \
@@ -94,8 +146,6 @@ if [ $(uname) == Darwin ]; then
                 -headerdir $PREFIX/include/qt \
                 -archdatadir $PREFIX \
                 -datadir $PREFIX \
-                -L $PREFIX/lib \
-                -I $PREFIX/include \
                 -R $PREFIX/lib \
                 -release \
                 -opensource \
@@ -128,7 +178,7 @@ if [ $(uname) == Darwin ]; then
                 -no-libudev \
                 -no-egl \
                 -no-openssl \
-                -sdk macosx10.9 \
+                -sdk macosx${MACOSX_DEPLOYMENT_TARGET} \
     ####
 
     make -j $CPU_COUNT || exit 1

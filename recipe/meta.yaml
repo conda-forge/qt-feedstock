@@ -95,6 +95,8 @@ test:
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}  # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]
+    # opengl
+    - test -f $PREFIX/lib/libQt5OpenGL.so  # [linux]
 
 about:
   home: http://qt-project.org

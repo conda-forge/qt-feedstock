@@ -32,6 +32,7 @@ requirements:
     - perl
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
     - curl  # [win]
     - python   3.6  # [osx]
     - python   2.7  # [linux]

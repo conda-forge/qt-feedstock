@@ -102,10 +102,12 @@ requirements:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
+    - {{ cdt('cups-devel') }}            # [linux]
 
     # For fontconfig + freetype
     - pkg-config                         # [linux]
     - pthread-stubs                      # [linux]
+    - make                               # [unix]
     # Probably only needed for WebEngine
     - python 2.7*
     - ninja
@@ -116,6 +118,7 @@ requirements:
     - m2-gperf                           # [win]
     - m2-bison                           # [win]
     - m2-flex                            # [win]
+    - m2-patch                           # [win]
     - jom                                # [win]
     - perl 5.*
   host:
@@ -147,9 +150,9 @@ requirements:
     - libxcb                             # [linux]
     # We cannot install OpenSSL into the prefix when building qtwebengine
     # on linux as BoringSSL and OpenSSL then conflict with each other.
-    - openssl 1.0.*                      # [win]
+    - openssl                            # [win]
   run:
-    - openssl 1.0.*                      # [not osx]
+    - openssl                            # [not osx]
     - libxcb                             # [linux]
 
 test:
@@ -182,9 +185,11 @@ test:
     - {{ cdt('libxxf86vm') }}            # [linux]
   files:
     - test/hello.pro
-    - test/main.cpp
     - test/main-qtwebengine.cpp
-    - test/qml.cpp
+    - test/main.cpp
+    - test/main.qml
+    - test/qml.qrc
+    - test/qrc_qml.cpp
     - test/qtwebengine.pro
     - xcodebuild
     - xcrun

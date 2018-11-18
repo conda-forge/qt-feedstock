@@ -23,7 +23,7 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 1009
+  number: 1010
   skip: True  # [ win]
   detect_binary_files_with_prefix: true
 
@@ -32,6 +32,12 @@ requirements:
     - perl
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
+    - {{ cdt('mesa-dri-drivers') }}  # [linux]
+    - {{ cdt('libselinux') }}  # [linux]
+    - {{ cdt('libxdamage') }}  # [linux]
+    - {{ cdt('libxfixes') }}  # [linux]
+    - {{ cdt('libxxf86vm') }}  # [linux]
     - curl  # [win]
     - python   3.6  # [osx]
     - python   2.7  # [linux]
@@ -94,6 +100,8 @@ test:
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}  # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]
+    # opengl
+    - test -f $PREFIX/lib/libQt5OpenGL.so  # [linux]
 
 about:
   home: http://qt-project.org

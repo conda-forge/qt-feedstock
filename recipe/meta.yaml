@@ -40,15 +40,15 @@ requirements:
     - {{ cdt('libxxf86vm') }}  # [linux]
     - curl  # [win]
     # Please don't change this value!!
-    # Python 2.7 is required to build WebEngine on macOS
-    # and Webkit on Linux.
+    # Python 2.7 is required to build Webkit on macOS
+    # and Linux.
     - python   2.7  # [unix]
     - xz
   host:
     - 7za  # [win]
-    - bison =3.0.4  # [linux]
-    - flex  # [linux]
-    - gperf  # [linux]
+    - bison =3.0.4  # [unix]
+    - flex  # [unix]
+    - gperf  # [unix]
     - msinttypes  # [win and py27]
     - freetype  # [linux]
     - fontconfig  # [linux]
@@ -100,7 +100,7 @@ test:
     # Webkit/Webengine
     - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1  # [win]
     - test -f $PREFIX/lib/libQt5WebKit.so  # [linux]
-    - test -f $PREFIX/lib/libQt5WebEngine.dylib  # [osx]
+    - test -f $PREFIX/lib/libQt5WebKit.dylib  # [osx]
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}  # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]

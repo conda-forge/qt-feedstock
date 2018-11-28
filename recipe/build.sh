@@ -70,20 +70,22 @@ export LD="$CXX"
 # build.
 unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 
-if [ $(uname) == Linux ]; then
-    # Download QtWebkit
-    curl -L "http://download.qt.io/community_releases/5.6/${PKG_VERSION}/qtwebkit-opensource-src-${PKG_VERSION}.tar.xz" > qtwebkit.tar.xz
-    unxz qtwebkit.tar.xz
-    tar xf qtwebkit.tar
-    mv qtwebkit-opensource-src* qtwebkit
-    patch -p0 < "${RECIPE_DIR}"/0001-qtwebkit-old-ld-compat.patch
-    patch -p0 < "${RECIPE_DIR}"/0002-qtwebkit-ruby-1.8.patch
-    patch -p0 < "${RECIPE_DIR}"/0003-qtwebkit-O_CLOEXEC-workaround.patch
-    patch -p0 < "${RECIPE_DIR}"/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch
-    # From https://bugs.webkit.org/show_bug.cgi?id=70610, http://trac.webkit.org/changeset/172759, https://github.com/WebKit/webkit/commit/4d7f0f
-    patch -p0 < "${RECIPE_DIR}"/0005-qtwebkit-fix-TEXTREL-on-x86-changeset_172759.patch
-    rm qtwebkit.tar
 
+# Download and patch QtWebkit
+curl -L "http://download.qt.io/community_releases/5.6/${PKG_VERSION}/qtwebkit-opensource-src-${PKG_VERSION}.tar.xz" > qtwebkit.tar.xz
+unxz qtwebkit.tar.xz
+tar xf qtwebkit.tar
+mv qtwebkit-opensource-src* qtwebkit
+patch -p0 < "${RECIPE_DIR}"/0001-qtwebkit-old-ld-compat.patch
+patch -p0 < "${RECIPE_DIR}"/0002-qtwebkit-ruby-1.8.patch
+patch -p0 < "${RECIPE_DIR}"/0003-qtwebkit-O_CLOEXEC-workaround.patch
+patch -p0 < "${RECIPE_DIR}"/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch
+# From https://bugs.webkit.org/show_bug.cgi?id=70610, http://trac.webkit.org/changeset/172759, https://github.com/WebKit/webkit/commit/4d7f0f
+patch -p0 < "${RECIPE_DIR}"/0005-qtwebkit-fix-TEXTREL-on-x86-changeset_172759.patch
+rm qtwebkit.tar
+
+
+if [ $(uname) == Linux ]; then
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \
@@ -164,6 +166,7 @@ if [ $(uname) == Darwin ]; then
                 -skip wayland \
                 -skip canvas3d \
                 -skip 3d \
+                -skip webengine \
                 -system-libjpeg \
                 -system-libpng \
                 -system-zlib \
@@ -182,7 +185,7 @@ if [ $(uname) == Darwin ]; then
                 -sdk macosx${MACOSX_DEPLOYMENT_TARGET} \
     ####
 
-    make -j $CPU_COUNT || exit 1
+    DYLD_FALLBACK_LIBRARY_PATH=$PREFIX/lib make -j $CPU_COUNT || exit 1
     make install
 fi
 

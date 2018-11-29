@@ -40,7 +40,7 @@ else
     compiler_mkspec=qtbase/mkspecs/common/clang.conf
     flag_mkspec=qtbase/mkspecs/macx-clang/qmake.conf
 
-    export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc"
+    export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
     export CXXFLAGS="$CXXFLAGS -std=c++11"
 fi
 

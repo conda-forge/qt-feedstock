@@ -61,7 +61,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     mkdir -p "${SRC_DIR}/openssl_hack"
     conda install -c https://repo.continuum.io/pkgs/main \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack" \
-                  openssl
+                  openssl=${openssl}
     export OPENSSL_LIBS="-L${SRC_DIR}/openssl_hack/lib -lssl -lcrypto"
     rm -rf ${PREFIX}/include/openssl
 
@@ -129,7 +129,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -nomake examples \
                 -nomake tests \
                 -verbose \
-                -cups \
                 -skip wayland \
                 -system-libjpeg \
                 -system-libpng \
@@ -139,6 +138,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -qt-pcre \
                 -qt-xcb \
                 -qt-xkbcommon \
+                -xkb-config-root $PREFIX/lib \
                 -dbus \
                 -no-linuxfb \
                 -no-libudev \
@@ -146,6 +146,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -no-avx2 \
                 -optimize-size \
                 -reduce-relocations \
+                -cups \
+                -openssl-linked \
+                -openssl \
                 -Wno-expansion-to-defined \
                 -D _X_INLINE=inline \
                 -D XK_dead_currency=0xfe6f \
@@ -231,6 +234,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
+                -qtlibinfix .conda \
                 -sdk macosx10.10
 
 # For quicker turnaround when e.g. checking compilers optimizations

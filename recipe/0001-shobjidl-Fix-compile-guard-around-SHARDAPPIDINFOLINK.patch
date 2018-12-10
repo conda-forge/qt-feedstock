@@ -1,22 +1,18 @@
-From 84edfafefe10dd2d9a3ab93202050a551f023016 Mon Sep 17 00:00:00 2001
+From db98bd316d4cf04c48122a56243d9f7131dcec46 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
-Date: Wed, 1 Jun 2016 14:34:42 +0100
-Subject: [PATCH] shobjidl: Fix compile-guard around SHARDAPPIDINFOLINK
+Date: Mon, 10 Dec 2018 14:53:09 -0600
+Subject: [PATCH] shobjidl: Fix compile guard around SHARDAPPIDINFOLINK
 
-Both MSVC and mingw-w64 define NTDDI_VERSION and NTDDI_WIN7 and both
-expose the SHARDAPPIDINFOLINK for >= NTDDI_WIN7, so only define it
-when targeting eariler Windows SDKs.
-
-Change-Id: I5bf297bfc5624d98838e48288c5139acf13fc431
+Change-Id: I0009fe43706b0e9d95cf505a71c9ac96b9e9f216
 ---
  src/winextras/winshobjidl_p.h | 6 +-----
  1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/qtwinextras/src/winextras/winshobjidl_p.h b/qtwinextras/src/winextras/winshobjidl_p.h
-index 224150d..c0893f8 100644
+index efd28c6..fba38a8 100644
 --- a/qtwinextras/src/winextras/winshobjidl_p.h
 +++ b/qtwinextras/src/winextras/winshobjidl_p.h
-@@ -229,9 +229,7 @@
+@@ -229,9 +229,7 @@ public:
  
  #endif
  
@@ -27,7 +23,7 @@ index 224150d..c0893f8 100644
  
  typedef struct SHARDAPPIDINFOLINK
  {
-@@ -241,8 +239,6 @@
+@@ -241,8 +239,6 @@ typedef struct SHARDAPPIDINFOLINK
      PCWSTR pszAppID;        // The id of the application that should be associated with this recent doc.
  } SHARDAPPIDINFOLINK;
  
@@ -36,3 +32,6 @@ index 224150d..c0893f8 100644
  #endif
  
  #endif // WINSHOBJIDL_P_H
+-- 
+2.19.1
+

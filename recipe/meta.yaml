@@ -3,20 +3,19 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.11.2" %}
+{% set version = "5.12.0" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/5.11/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz  # [not win]
-    md5: 152a8ade9c11fe33ff5bc95310a1bb64  # [not win]
-  - url: http://download.qt.io/official_releases/qt/5.11/{{ version }}/single/qt-everywhere-src-{{ version }}.zip  # [win]
+  - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz  # [not win]
+    md5: af569de3eb42da4457b0897e5759dc91  # [not win]
+  - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.zip  # [win]
     md5: f6647d66d1c062b0603831290a4c7e4a  # [win]
     patches:
       # qtbase
-      - 0000-Fix-MSVC2017-compilation-with-enabled-relaxed-constexpr-on-32-bit-target.patch
       - 0010-osx-xctest-check.patch
       - 0011-osx-allow-any-xcrun-in-PATH.patch
       - 0015-qtbase-use-better-clang-optimize-size.patch
@@ -24,16 +23,16 @@ source:
       - 0017-qtbase-never-enable-new-dtags.patch
       - 0019-qtbase-link-xcb-shm.patch
       # qtwinextras
-      - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
+      - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
       # qtwebengine
       - 0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - 0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
       - 0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
       - 0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
       - 0006-qtwebengine-run-gn-verbosely.patch
-      - 0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
+      # - 0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
       # qtgamepad
-      - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
+      # - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
       # qtscript
       - 0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 

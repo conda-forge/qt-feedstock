@@ -191,11 +191,11 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     PATH=${PWD}:${PATH}
 
     # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
-    if [[ $CONDA_BUILD_SYSROOT != /opt/MacOSX10.11.sdk ]]; then
+    if [[ $CONDA_BUILD_SYSROOT != /opt/MacOSX10.12.sdk ]]; then
       echo "WARNING: You asked me to use $CONDA_BUILD_SYSROOT as the MacOS SDK"
       echo "         But because of the use of Objective-C Generics we need at"
-      echo "         least MacOSX10.11.sdk"
-      CONDA_BUILD_SYSROOT=/opt/MacOSX10.11.sdk
+      echo "         least MacOSX10.12.sdk"
+      CONDA_BUILD_SYSROOT=/opt/MacOSX10.12.sdk
       if [[ ! -d $CONDA_BUILD_SYSROOT ]]; then
         echo "ERROR: $CONDA_BUILD_SYSROOT is not a directory"
         exit 1
@@ -235,7 +235,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-openssl \
                 -optimize-size \
                 -qtlibinfix .conda \
-                -sdk macosx10.10
+                -sdk macosx10.12
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
@@ -276,8 +276,8 @@ popd > /dev/null
 cp "${RECIPE_DIR}"/qt.conf "${PREFIX}"/bin/
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
-    # We built Qt itself with SDK 10.10, but we shouldn't
-    # force users to also build their Qt apps with SDK 10.10
+    # We built Qt itself with SDK 10.12, but we shouldn't
+    # force users to also build their Qt apps with SDK 10.12
     # https://bugreports.qt.io/browse/QTBUG-41238
     sed -i '' 's/macosx.*$/macosx/g' ${PREFIX}/mkspecs/qdevice.pri
 fi

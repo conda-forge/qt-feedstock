@@ -23,7 +23,7 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 1010
+  number: 1011
   skip: True  # [ win]
   detect_binary_files_with_prefix: true
 
@@ -39,14 +39,16 @@ requirements:
     - {{ cdt('libxfixes') }}  # [linux]
     - {{ cdt('libxxf86vm') }}  # [linux]
     - curl  # [win]
-    - python   3.6  # [osx]
-    - python   2.7  # [linux]
+    # Please don't change this value!!
+    # Python 2.7 is required to build Webkit on macOS
+    # and Linux.
+    - python   2.7  # [unix]
     - xz
   host:
     - 7za  # [win]
-    - bison =3.0.4  # [linux]
-    - flex  # [linux]
-    - gperf  # [linux]
+    - bison =3.0.4  # [unix]
+    - flex  # [unix]
+    - gperf  # [unix]
     - msinttypes  # [win and py27]
     - freetype  # [linux]
     - fontconfig  # [linux]
@@ -95,8 +97,10 @@ test:
     - test/hello.pro
     - test/main.cpp
   commands:
+    # Webkit/Webengine
     - if not exist %LIBRARY_BIN%\\Qt5WebKit.dll exit 1  # [win]
     - test -f $PREFIX/lib/libQt5WebKit.so  # [linux]
+    - test -f $PREFIX/lib/libQt5WebKit.dylib  # [osx]
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}  # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]

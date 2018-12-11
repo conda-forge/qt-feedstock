@@ -34,8 +34,8 @@ case ${1} in
       echo "TODO :: Implement fallback for xcodebuild --show-sdk-path"
       exit 1
     elif [[ ${1} == SDKVersion ]]; then
-      echo "10.10" >> /tmp/xcodebuild-$$.log
-      echo "10.10"
+      echo "10.12" >> /tmp/xcodebuild-$$.log
+      echo "10.12"
       exit 0
     elif [[ ${1} == PlatformPath ]]; then
       echo "Making this one up entirely, you may need a real Xcode" >> /tmp/xcodebuild-$$.log
@@ -43,7 +43,7 @@ case ${1} in
       echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform"
       exit 0
     elif [[ ${1} == ProductVersion ]]; then
-      echo "10.10"
+      echo "10.12"
       exit 0
     fi
     ;;

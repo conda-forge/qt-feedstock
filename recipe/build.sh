@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Clean config for dirty builds
+# -----------------------------
+rm -f .qmake.stash .qmake.cache || true
+
 # Compile
 # -------
 chmod +x configure
@@ -230,7 +234,6 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                -qtlibinfix .conda \
                 -sdk macosx10.10
 
 # For quicker turnaround when e.g. checking compilers optimizations

@@ -14,7 +14,7 @@ if exist config.cache del config.cache
 ::   exit /b 1
 :: )
 
-:: Webegine requires either working OpenGL drivers or
+:: Webengine requires either working OpenGL drivers or
 :: Angle (therefore DirectX >= 11). This works on some
 :: VMs and not others.  Windows 7 VirtualBox instantly
 :: aborts when loading Spyder sSo we've had to disable
@@ -85,7 +85,7 @@ copy %RECIPE_DIR%\tst_compiler.cpp qtbase\tests\auto\other\compiler\
 :: just rebuild configure.exe).
 pushd qtbase
 del /q configure.exe
-set QTSRC=%CD%
+set QTSRC=%CD%\
 pushd qmake
 set make=jom
 set QTVERSION=%PKG_VERSION%
@@ -114,6 +114,11 @@ set tmpl=win32
 echo/>> Makefile
 type Makefile.%tmpl% >> Makefile
 %make%
+:: Attempt to avoid:
+:: warning C4651: '/DQT_LIBINFIX="_conda"' specified for precompiled header but not for current compile
+:: del qmake_pch.h
+del qmake_pch.obj
+del qmake_pch.pch
 popd
 popd
 :SKIP_REBUILD_CONFIGURE_EXE
@@ -169,21 +174,20 @@ echo on
 ::     -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
 jom -U release
-pushd qtbase\src
-jom sub-moc-release
-if %errorlevel% neq 0 exit /b %errorlevel%
-popd
-
+:: Hooray for racey build systems. You may get a failure about a QtWebengine .stamp file being missing. You may not. Who knows?
+jom -U release
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo Finished `jom -U release`
+jom -U install
+:: I expect raciness here too:
 jom -U install
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo Finished `jom -U install`
 pushd qtbase
   jom -U install_mkspecs
+  if %errorlevel% neq 0 exit /b %errorlevel%
+  echo Finished `jom -U install_mkspecs`
 popd
-if %errorlevel% neq 0 exit /b %errorlevel%
-echo Finished `jom -U install_mkspecs`
 
 if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
 echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. Copying it from qtbase\bin\qmake.exe
@@ -193,6 +197,3 @@ copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
 :: To rewrite qt.conf contents per conda environment
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
 if %errorlevel% neq 0 exit /b %errorlevel%
-
-exit 1
-

@@ -58,8 +58,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     export CC=${GCC}
     export CXX=${GXX}
 
-    mkdir -p "${SRC_DIR}/openssl_hack"
-    conda install -c https://repo.continuum.io/pkgs/main \
+    conda create -y --prefix "${SRC_DIR}/openssl_hack" -c https://repo.continuum.io/pkgs/main \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack" \
                   openssl=${openssl}
     export OPENSSL_LIBS="-L${SRC_DIR}/openssl_hack/lib -lssl -lcrypto"
@@ -138,7 +137,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -qt-pcre \
                 -qt-xcb \
                 -qt-xkbcommon \
-                -xkb-config-root $PREFIX/lib \
+                -qt-xkbcommon-x11 \
                 -dbus \
                 -no-linuxfb \
                 -no-libudev \

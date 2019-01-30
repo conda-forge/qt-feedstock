@@ -38,7 +38,7 @@ requirements:
     - {{ cdt('libxdamage') }}  # [linux]
     - {{ cdt('libxfixes') }}  # [linux]
     - {{ cdt('libxxf86vm') }}  # [linux]
-    - curl  # [win]
+    - curl
     # Please don't change this value!!
     # Python 2.7 is required to build Webkit on macOS
     # and Linux.

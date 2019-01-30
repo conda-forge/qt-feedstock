@@ -31,6 +31,7 @@ source:
       - 0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
       - 0006-qtwebengine-run-gn-verbosely.patch
       # - 0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
+      - 0008-qtwebengine-link-gn-to-librt.patch
       # qtgamepad
       # - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
       # qtscript
@@ -144,6 +145,7 @@ requirements:
     - icu
     - jpeg
     - libpng
+    - nss
     - sqlite
     - zlib
     - libxcb                             # [linux]

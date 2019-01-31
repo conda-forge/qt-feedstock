@@ -24,19 +24,6 @@
  }
  
  source_set("zlib") {
---- ./work/qtwebengine/src/3rdparty/chromium/third_party/pdfium/BUILD.gn.orig	2019-01-30 10:04:44.821555835 +0000
-+++ ./work/qtwebengine/src/3rdparty/chromium/third_party/pdfium/BUILD.gn	2019-01-30 10:05:06.815240829 +0000
-@@ -7,6 +7,10 @@
- import("//testing/test.gni")
- import("pdfium.gni")
- 
-+declare_args() {
-+  conda_prefix = ""
-+}
-+
- group("freetype_common") {
-   public_deps = []
-   if (pdf_bundle_freetype) {
 --- ./work/qtwebengine/src/3rdparty/chromium/third_party/pdfium/third_party/BUILD.gn.orig	2019-01-30 15:01:16.272785985 +0000
 +++ ./work/qtwebengine/src/3rdparty/chromium/third_party/pdfium/third_party/BUILD.gn	2019-01-30 15:01:10.137017538 +0000
 @@ -8,6 +8,10 @@

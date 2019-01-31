@@ -15,8 +15,9 @@ index 0332631ec8..6b027edfc9 100644
 @@ -472,7 +472,7 @@
              },
              "sources": [
-                 { "type": "pkgConfig", "args": "xcb >= 1.9" },
+-                { "type": "pkgConfig", "args": "xcb >= 1.9" },
 -                "-lxcb"
++                { "type": "pkgConfig", "args": "xcb >= 1.9 xcb-shm >= 1.9" },
 +                "-lxcb -lxcb-shm"
              ]
          },

@@ -32,6 +32,7 @@ source:
       - 0006-qtwebengine-run-gn-verbosely.patch
       # - 0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
       - 0008-qtwebengine-link-gn-to-librt.patch
+      - 0009-qtwebengine-pass-QT_INSTALL_PREFIX-as-conda_prefix-for-system-zlib.patch
       # qtgamepad
       # - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
       # qtscript
@@ -55,7 +56,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 4
+  number: 0
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge

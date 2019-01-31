@@ -32,8 +32,10 @@ source:
       - 0006-qtwebengine-run-gn-verbosely.patch
       # - 0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
       - 0008-qtwebengine-link-gn-to-librt.patch
-      - 0009-qtwebengine-pass-QT_INSTALL_PREFIX-as-conda_prefix-for-system-zlib.patch
-      - 0010-qtwebengine-pass-QT_INSTALL_PREFIX-as-conda_prefix-for-ui-gl.patch
+      - 0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
+      - 0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
+      - 0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
+      - 0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
       # qtgamepad
       # - 0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
       # qtscript

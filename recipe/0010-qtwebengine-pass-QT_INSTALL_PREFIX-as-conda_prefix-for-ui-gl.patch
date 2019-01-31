@@ -1,0 +1,22 @@
+--- ./work/qtwebengine/src/3rdparty/chromium/ui/gl/features.gni.orig	2019-01-31 08:30:07.294819757 +0000
++++ ./work/qtwebengine/src/3rdparty/chromium/ui/gl/features.gni	2019-01-31 08:30:34.056915655 +0000
+@@ -23,4 +23,8 @@
+       (target_cpu == "x86" || target_cpu == "x64")
+ }
+ 
++declare_args() {
++  conda_prefix = ""
++}
++
+ use_glx = use_x11 || ozone_platform_x11
+--- ./work/qtwebengine/src/3rdparty/chromium/ui/gl/BUILD.gn.orig	2019-01-31 08:31:07.980316983 +0000
++++ ./work/qtwebengine/src/3rdparty/chromium/ui/gl/BUILD.gn	2019-01-31 08:31:34.268246778 +0000
+@@ -36,6 +36,8 @@
+   if (use_egl) {
+     defines += [ "USE_EGL" ]
+   }
++  include_dirs = [ conda_prefix+"/include" ]
++  lib_dirs = [ conda_prefix+"/lib" ]
+ }
+ 
+ component("gl") {

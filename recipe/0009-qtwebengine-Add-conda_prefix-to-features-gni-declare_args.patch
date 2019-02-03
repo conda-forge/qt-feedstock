@@ -20,8 +20,32 @@
    use_gio = is_linux && !is_chromeos && !is_chromecast
  
    use_qt = false
-+
-+  conda_prefix = ""
++#
++#  conda_prefix = ""
  }
  #
  # =============================================
+--- ./work/qtwebengine/src/3rdparty/chromium/.gn.orig	2019-01-31 09:52:02.961972105 -0600
++++ ./work/qtwebengine/src/3rdparty/chromium/.gn	2019-01-31 09:52:26.648977260 -0600
+@@ -67,6 +67,8 @@
+   # Changes some setup for the Crashpad build to set them to build against
+   # Chromium's zlib, base, etc.
+   crashpad_dependencies = "chromium"
++#
++#  conda_prefix = ""
+ }
+ 
+ # These are the targets to check headers for by default. The files in targets
+--- ./work/qtwebengine/src/3rdparty/chromium/build/config/BUILDCONFIG.gn.orig	2019-01-31 10:55:29.239491859 -0600
++++ ./work/qtwebengine/src/3rdparty/chromium/build/config/BUILDCONFIG.gn	2019-01-31 10:57:28.775564393 -0600
+@@ -172,6 +172,10 @@
+ 
+ assert(!(is_debug && is_official_build), "Can't do official debug builds")
+ 
++declare_args() {
++  conda_prefix = ""
++}
++
+ # ==============================================================================
+ # TOOLCHAIN SETUP
+ # ==============================================================================

@@ -136,8 +136,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -plugin-sql-sqlite \
                 -qt-pcre \
                 -qt-xcb \
-                -qt-xkbcommon \
-                -qt-xkbcommon-x11 \
                 -dbus \
                 -no-linuxfb \
                 -no-libudev \
@@ -201,6 +199,8 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
       fi
     fi
 
+    #             -qtlibinfix .conda \
+
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \
@@ -233,7 +233,6 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                -qtlibinfix .conda \
                 -sdk macosx10.12
 
 # For quicker turnaround when e.g. checking compilers optimizations

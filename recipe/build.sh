@@ -14,6 +14,11 @@ do
     unset $x
 done
 
+echo PREFIX=${PREFIX}
+echo BUILD_PREFIX=${BUILD_PREFIX}
+USED_BUILD_PREFIX=${BUILD_PREFIX:-${PREFIX}}
+echo USED_BUILD_PREFIX=${BUILD_PREFIX}
+
 MAKE_JOBS=$CPU_COUNT
 # You can use this to cut down on the number of modules built. Of course the Qt package will not be of
 # much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
@@ -26,6 +31,9 @@ if [[ -d qtwebkit ]]; then
   sed -i.bak -e '/CONFIG/a\
     QMAKE_CXXFLAGS += -Wno-expansion-to-defined' qtwebkit/Tools/qmake/mkspecs/features/unix/default_pre.prf
 fi
+
+# For QDoc
+export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 
 # Problems: https://bugreports.qt.io/browse/QTBUG-61158
 #           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
@@ -50,8 +58,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 
     ln -s ${GXX} g++ || true
     ln -s ${GCC} gcc || true
-    # Needed for -ltcg, it we split build and host again, change to ${BUILD_PREFIX}
-    ln -s ${PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
+    # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}
+    ln -s ${USED_BUILD_PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
     chmod +x g++ gcc gcc-ar
     export PATH=${PWD}:${PATH}
     export LD=${GXX}
@@ -70,7 +78,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # so we cannot just elide them altogether. Instead, as soon as Qt sees one system path it needs to add them all as a group, in the
     # correct order. This is probably fairly tricky so we work around needing to do that by having them all be present all the time.
     #
-    # Futher, any system dirs that appear from the output from pkg-config (QT_XCB_CFLAGS) can cause incorrect emission ordering so we
+    # Further, any system dirs that appear from the output from pkg-config (QT_XCB_CFLAGS) can cause incorrect emission ordering so we
     # must filter those out too which we do with a pkg-config wrapper.
     #
     # References:
@@ -86,7 +94,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       INCDIRS+=(-I ${SYSINCDIR})
     done
     echo "#!/usr/bin/env bash"                                                        > ./pkg-config
-    echo "pc_res=\$(\${PREFIX}/bin/pkg-config \"\$@\")"                              >> ./pkg-config
+    echo "pc_res=\$(\${USED_BUILD_PREFIX}/bin/pkg-config \"\$@\")"                   >> ./pkg-config
     echo "res=\$?"                                                                   >> ./pkg-config
     echo "if [[ \${res} != 0 ]]; then"                                               >> ./pkg-config
     echo "  echo \${pc_res}"                                                         >> ./pkg-config
@@ -136,6 +144,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -plugin-sql-sqlite \
                 -qt-pcre \
                 -qt-xcb \
+                -xkbcommon \
                 -dbus \
                 -no-linuxfb \
                 -no-libudev \
@@ -274,8 +283,18 @@ popd > /dev/null
 cp "${RECIPE_DIR}"/qt.conf "${PREFIX}"/bin/
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
-    # We built Qt itself with SDK 10.12, but we shouldn't
-    # force users to also build their Qt apps with SDK 10.12
+  pushd ${PREFIX}
+    # We built Qt itself with SDK 10.10, but we shouldn't
+    # force users to also build their Qt apps with SDK 10.10
     # https://bugreports.qt.io/browse/QTBUG-41238
-    sed -i '' 's/macosx.*$/macosx/g' ${PREFIX}/mkspecs/qdevice.pri
+    sed -i '' 's/macosx.*$/macosx/g' mkspecs/qdevice.pri
+    # We allow macOS SDK 10.12 while upstream requires 10.13 (as of Qt 5.12.1).
+    sed -i '' 's/QT_MAC_SDK_VERSION_MIN = 10\..*/QT_MAC_SDK_VERSION_MIN = 10\.12/g' mkspecs/common/macx.conf
+    # We may want to replace these with \$\${QMAKE_MAC_SDK_PATH}/ instead?
+    sed -i '' "s|${CONDA_BUILD_SYSROOT}/|/|g" mkspecs/modules/*.pri
+    CMAKE_FILES=$(find lib/cmake -name "Qt*.cmake")
+    for CMAKE_FILE in ${CMAKE_FILES}; do
+      sed -i '' "s|${CONDA_BUILD_SYSROOT}/|\${CMAKE_OSX_SYSROOT}/|g" ${CMAKE_FILE}
+    done
+  popd
 fi

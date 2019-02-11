@@ -1,4 +1,4 @@
-#!/bin/bash
+set -x
 
 # Clean config for dirty builds
 # -----------------------------
@@ -93,16 +93,18 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     for SYSINCDIR in ${SYSINCDIRS}; do
       INCDIRS+=(-I ${SYSINCDIR})
     done
-    echo "#!/usr/bin/env bash"                                                        > ./pkg-config
-    echo "pc_res=\$(\${USED_BUILD_PREFIX}/bin/pkg-config \"\$@\")"                   >> ./pkg-config
-    echo "res=\$?"                                                                   >> ./pkg-config
-    echo "if [[ \${res} != 0 ]]; then"                                               >> ./pkg-config
-    echo "  echo \${pc_res}"                                                         >> ./pkg-config
-    echo "  exit \${res}"                                                            >> ./pkg-config
-    echo "fi"                                                                        >> ./pkg-config
-    echo "echo \${pc_res} | sed 's/[a-zA-Z0-9_-/\.]*sysroot[a-zA-Z0-9_-/\.]*//g'"    >> ./pkg-config
-    echo "exit 0"                                                                    >> ./pkg-config
-    chmod +x ./pkg-config
+    export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
+    # echo "#!/usr/bin/env bash"                                                        > ./pkg-config
+    # echo "pc_res=\$(${USED_BUILD_PREFIX}/bin/pkg-config \"\$@\")"                    >> ./pkg-config
+    # echo "res=\$?"                                                                   >> ./pkg-config
+    # echo "if [[ \${res} != 0 ]]; then"                                               >> ./pkg-config
+    # echo "  echo \${pc_res}"                                                         >> ./pkg-config
+    # echo "  exit \${res}"                                                            >> ./pkg-config
+    # echo "fi"                                                                        >> ./pkg-config
+    # echo "echo \${pc_res} | sed 's|[a-zA-Z0-9_-/\.]*sysroot[a-zA-Z0-9\_-/.]*||g'"    >> ./pkg-config
+    # echo "exit 0"                                                                    >> ./pkg-config
+    # chmod +x ./pkg-config
+    # cat ./pkg-config
     export PATH=${PWD}:${PATH}
     declare -a SKIPS
     if [[ ${MINIMAL_BUILD} == yes ]]; then
@@ -120,14 +122,25 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       SKIPS+=(-skip); SKIPS+=(qt3d)
     fi
 
-    ./configure -prefix $PREFIX \
-                -libdir $PREFIX/lib \
-                -bindir $PREFIX/bin \
-                -headerdir $PREFIX/include/qt \
-                -archdatadir $PREFIX \
-                -datadir $PREFIX \
+    if [[ 1 == 1 ]]; then
+    # ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 is because our compilers don't look in sysroot/usr/lib64
+    # CentOS7 has:
+    # LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/4.8.5/:/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../:/lib/:/usr/lib/
+    # We have:
+    # LIBRARY_PATH=/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/../../../../x86_64-conda_cos6-linux-gnu/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/../../../../x86_64-conda_cos6-linux-gnu/lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib/
+    # .. this is probably my fault.
+    # Had been trying with:
+    #   -sysroot ${BUILD_PREFIX}/${HOST}/sysroot 
+    # .. but it probably requires changing -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 to -L /usr/lib64
+    ./configure -prefix ${PREFIX} \
+                -libdir ${PREFIX}/lib \
+                -bindir ${PREFIX}/bin \
+                -headerdir ${PREFIX}/include/qt \
+                -archdatadir ${PREFIX} \
+                -datadir ${PREFIX} \
                 -I ${SRC_DIR}/openssl_hack/include \
-                -L $PREFIX/lib \
+                -L ${PREFIX}/lib \
+                -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
                 "${INCDIRS[@]}" \
                 -release \
                 -opensource \
@@ -177,6 +190,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       fi
     fi
     LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
+    fi
     make install
 fi
 

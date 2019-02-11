@@ -22,6 +22,8 @@ source:
       - 0016-qtbase-use-better-gcc-optimize-size.patch
       - 0017-qtbase-never-enable-new-dtags.patch
       - 0019-qtbase-link-xcb-shm.patch
+      - 0020-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroot-passe.patch
+      - 0021-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-also-to.patch
       # qtwinextras
       - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
       # qtwebengine
@@ -106,11 +108,11 @@ requirements:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
+    - {{ cdt('libxxf86vm-devel') }}      # [linux]
     - {{ cdt('cups-devel') }}            # [linux]
 
     # For fontconfig + freetype
     - pkg-config                         # [linux]
-    - pthread-stubs                      # [linux]
     - make                               # [unix]
     # Probably only needed for WebEngine
     - python 2.7*
@@ -130,6 +132,8 @@ requirements:
     - llvmdev
     - clangdev
   host:
+    # For pkg-config gl, fontconfig + freetype
+    - pthread-stubs                      # [linux]
     - dbus                               # [linux]
     - fontconfig                         # [linux]
     - freetype                           # [linux]
@@ -137,6 +141,7 @@ requirements:
     - gstreamer                          # [linux]
     - glib                               # [linux]
     - libxml2                            # [linux]
+    - libxkbcommon                       # [linux]
     # For WebEngine, but for compatiblity we want to restrict
     # usage of our own libraries. It seems Chromium prefers
     # expat to libxml2 and we will try to froce it to use the

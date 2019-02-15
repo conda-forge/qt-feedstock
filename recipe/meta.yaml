@@ -23,7 +23,7 @@ source:
     - 0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
 
 build:
-  number: 1013
+  number: 1014
   skip: True  # [ win]
   detect_binary_files_with_prefix: true
 

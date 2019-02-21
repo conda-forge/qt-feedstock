@@ -1,0 +1,20 @@
+c_compiler:
+- vs2008
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+cxx_compiler:
+- vs2008
+perl:
+- '5.26'
+pin_run_as_build:
+  perl:
+    max_pin: x.x.x
+  xz:
+    max_pin: x.x
+xz:
+- '5.2'
+zip_keys:
+- - c_compiler
+  - cxx_compiler

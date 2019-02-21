@@ -41,7 +41,7 @@ source:
     - phonon_osx_exports.patch  # [osx]
 
 build:
-  number: 0
+  number: 1000
 
 requirements:
   build:

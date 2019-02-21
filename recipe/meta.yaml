@@ -41,17 +41,23 @@ source:
     - phonon_osx_exports.patch  # [osx]
 
 build:
-  number: 7  # [linux or win]
-  number: 8  # [osx]
-  skip: True  # [osx or (win and py>35)]
-  features:
-    - vc9  # [win and py27]
-    - vc10  # [win and py34]
-    - vc14  # [win and py>=35]
+  number: 0
 
 requirements:
   build:
-    - python  # [win]
+    - {{ compiler('cxx') }}
+    - {{ compiler('c') }}
+    - {{ cdt('mesa-libgl-devel') }}
+    - {{ cdt('mesa-dri-drivers') }}
+    - {{ cdt('libselinux') }}
+    - {{ cdt('libxdamage') }}
+    - {{ cdt('libxfixes') }}
+    - {{ cdt('libxxf86vm') }}
+    - perl
+    - python  2.7  # [unix]
+    - xz
+
+  host:
     - freetype 2.7|2.7.*  # [unix]
     - fontconfig 2.12.*  # [linux]
     - freeglut  # [linux]
@@ -61,10 +67,17 @@ requirements:
     - zlib 1.2.*
     - libpng >=1.6.28,<1.7
     - jom  # [win]
-    - vc 9  # [win and py27]
-    - vc 10  # [win and py34]
-    - vc 14  # [win and py>=35]
     - icu 58.*
+    - xorg-libice      # [linux]
+    - xorg-libsm       # [linux]
+    - xorg-libx11      # [linux]
+    - xorg-libxext     # [linux]
+    - xorg-libxrender  # [linux]
+    - xorg-libxt       # [linux]
+    - xorg-inputproto  # [linux]
+    - libxcb  # [linux]
+    - dbus  # [linux]
+
   run:
     - freetype 2.7|2.7.*  # [unix]
     - fontconfig 2.12.*  # [linux]
@@ -74,10 +87,15 @@ requirements:
     - jpeg 9*
     - libtiff 4.0.*
     - zlib 1.2.*
-    - vc 9  # [win and py27]
-    - vc 10  # [win and py34]
-    - vc 14  # [win and py>=35]
     - icu 58.*
+    - xorg-libice      # [linux]
+    - xorg-libsm       # [linux]
+    - xorg-libx11      # [linux]
+    - xorg-libxext     # [linux]
+    - xorg-libxrender  # [linux]
+    - xorg-libxt       # [linux]
+    - libxcb  # [linux]
+    - dbus  # [linux]
 
 test:
   files:
@@ -102,3 +120,4 @@ extra:
     - mingwandroid
     - gillins
     - msarahan
+    - marcelotrevisani

@@ -26,6 +26,7 @@ if [ $(uname) == Linux ]; then
                 -system-libtiff \
                 -system-libjpeg \
                 -gtkstyle \
+                -no-dbus \
                 -sm
 
     # Build on RPM based distros fails without setting LD_LIBRARY_PATH
@@ -73,6 +74,7 @@ if [ $(uname) == Darwin ]; then
                 -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \
                 -silent \
+                -no-dbus \
                 -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk \
     ####
 

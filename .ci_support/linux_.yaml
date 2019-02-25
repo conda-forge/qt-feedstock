@@ -4,6 +4,8 @@ channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
+curl:
+- '7.64'
 cxx_compiler:
 - gxx
 dbus:
@@ -23,10 +25,12 @@ jpeg:
 libpng:
 - 1.6.35
 openssl:
-- 1.0.2
+- 1.1.1a
 perl:
 - '5.26'
 pin_run_as_build:
+  curl:
+    max_pin: x
   dbus:
     max_pin: x
   fontconfig:

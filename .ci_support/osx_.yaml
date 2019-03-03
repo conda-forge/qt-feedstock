@@ -18,8 +18,8 @@ macos_machine:
 - x86_64-apple-darwin13.4.0
 macos_min_version:
 - '10.9'
-perl:
-- '5.26'
+openssl:
+- 1.1.1a
 pin_run_as_build:
   icu:
     max_pin: x
@@ -27,17 +27,13 @@ pin_run_as_build:
     max_pin: x
   libpng:
     max_pin: x.x
-  perl:
+  openssl:
     max_pin: x.x.x
   sqlite:
     max_pin: x
-  xz:
-    max_pin: x.x
   zlib:
     max_pin: x.x
 sqlite:
 - '3'
-xz:
-- '5.2'
 zlib:
 - '1.2'

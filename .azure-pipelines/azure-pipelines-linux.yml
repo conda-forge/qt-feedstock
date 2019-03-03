@@ -6,7 +6,7 @@ jobs:
 - job: linux
   pool:
     vmImage: ubuntu-16.04
-  timeoutInMinutes: 240
+  timeoutInMinutes: 360
   strategy:
     maxParallel: 8
     matrix:

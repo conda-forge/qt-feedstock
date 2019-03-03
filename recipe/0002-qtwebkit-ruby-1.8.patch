@@ -1,9 +1,7 @@
-Index: qtwebkit/Source/JavaScriptCore/offlineasm/offsets.rb
-===================================================================
---- qtwebkit/Source/JavaScriptCore/offlineasm/offsets.rb.orig 2012-11-23 14:12:16.000000000 -0600
-+++ qtwebkit/Source/JavaScriptCore/offlineasm/offsets.rb 2013-01-22 19:35:47.000000000 -0600
-@@ -109,7 +109,11 @@
-     File.open(file, "r") {
+--- qtwebkit.orig/Source/JavaScriptCore/offlineasm/offsets.rb	2016-09-09 14:35:32.000000000 +0100
++++ qtwebkit/Source/JavaScriptCore/offlineasm/offsets.rb	2017-08-23 22:44:05.533550474 +0100
+@@ -108,7 +108,11 @@
+     File.open(file, "rb") {
          | inp |
          loop {
 -            byte = inp.getbyte

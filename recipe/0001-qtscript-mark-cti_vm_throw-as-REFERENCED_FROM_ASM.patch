@@ -1,0 +1,26 @@
+--- q/qtscript/src/3rdparty/javascriptcore/JavaScriptCore/jit/JITStubs.h	2018-03-14 15:53:55.630705498 +0000
++++ b/qtscript/src/3rdparty/javascriptcore/JavaScriptCore/jit/JITStubs.h	2018-03-14 15:54:12.825809968 +0000
+@@ -211,6 +211,14 @@
+     #endif
+ #endif
+ 
++#ifndef REFERENCED_FROM_ASM
++#if COMPILER(GCC)
++#define REFERENCED_FROM_ASM __attribute__((used))
++#else
++#define REFERENCED_FROM_ASM
++#endif
++#endif
++
+ #if CPU(X86_64)
+     struct VoidPtrPair {
+         void* first;
+@@ -316,7 +324,7 @@
+     EncodedJSValue JIT_STUB cti_op_to_primitive(STUB_ARGS_DECLARATION);
+     EncodedJSValue JIT_STUB cti_op_typeof(STUB_ARGS_DECLARATION);
+     EncodedJSValue JIT_STUB cti_op_urshift(STUB_ARGS_DECLARATION);
+-    EncodedJSValue JIT_STUB cti_vm_throw(STUB_ARGS_DECLARATION);
++    EncodedJSValue JIT_STUB cti_vm_throw(STUB_ARGS_DECLARATION) REFERENCED_FROM_ASM;
+     EncodedJSValue JIT_STUB cti_to_object(STUB_ARGS_DECLARATION);
+     JSObject* JIT_STUB cti_op_construct_JSConstruct(STUB_ARGS_DECLARATION);
+     JSObject* JIT_STUB cti_op_new_array(STUB_ARGS_DECLARATION);

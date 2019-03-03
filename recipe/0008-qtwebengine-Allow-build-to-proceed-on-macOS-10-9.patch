@@ -1,0 +1,19 @@
+--- a/qtwebengine/mkspecs/features/functions.prf	2018-03-05 06:36:45.000000000 -0800
++++ b/qtwebengine/mkspecs/features/functions.prf	2018-03-05 06:37:37.000000000 -0800
+@@ -47,11 +47,11 @@
+         return(false)
+     }
+     # We require OS X 10.0 (darwin version 14.0.0) or newer
+-    darwin_major_version = $$section(QMAKE_HOST.version, ., 0, 0)
+-    lessThan(darwin_major_version, 14) {
+-      skipBuild("Qt WebEngine requires OS X version 10.10 or newer.")
+-      return(false)
+-    }
++    # darwin_major_version = $$section(QMAKE_HOST.version, ., 0, 0)
++    # lessThan(darwin_major_version, 14) {
++    #   skipBuild("Qt WebEngine requires OS X version 10.10 or newer.")
++    #   return(false)
++    # }
+     !isMinOSXSDKVersion(10, 10): {
+       skipBuild("Qt WebEngine requires an OS X SDK version of 10.10 or newer. Current version is $${WEBENGINE_OSX_SDK_PRODUCT_VERSION}.")
+       return(false)

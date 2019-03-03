@@ -1,0 +1,31 @@
+--- a/qtbase/configure	2018-02-12 14:38:18.283559229 +0000
++++ b/qtbase/configure	2018-02-12 14:39:14.325811274 +0000
+@@ -1695,6 +1695,13 @@
+             UNKNOWN_OPT=yes
+         fi
+         ;;
++    new-dtags)
++        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
++            CFG_ENABLE_NEW_DTAGS="$VAL"
++        else
++            UNKNOWN_OPT=yes
++        fi
++        ;;
+     zlib)
+         [ "$VAL" = "qt" ] && VAL=yes
+         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ] || [ "$VAL" = "system" ]; then
+@@ -3568,10 +3568,12 @@
+ fi
+ 
+ # auto-detect --enable-new-dtags support
+-if linkerSupportsFlag $TEST_COMPILER --enable-new-dtags; then
+-    CFG_ENABLE_NEW_DTAGS=yes
+-else
+-    CFG_ENABLE_NEW_DTAGS=no
++if [ "$CFG_ENABLE_NEW_DTAGS" != "no" ]; then
++    if linkerSupportsFlag $TEST_COMPILER --enable-new-dtags; then
++        CFG_ENABLE_NEW_DTAGS=yes
++    else
++        CFG_ENABLE_NEW_DTAGS=no
++    fi
+ fi

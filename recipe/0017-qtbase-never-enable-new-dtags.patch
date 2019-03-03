@@ -1,0 +1,44 @@
+--- ./qtbase/configure.json.orig	2018-03-19 21:18:34.562087314 +0000
++++ ./qtbase/configure.json	2018-03-19 21:18:47.074151776 +0000
+@@ -306,7 +306,7 @@
+         "enable_new_dtags": {
+             "label": "new dtags support",
+             "type": "linkerSupportsFlag",
+-            "flag": "--enable-new-dtags"
++            "flag": "--disable-new-dtags"
+         },
+         "reduce_exports": {
+             "label": "symbol visibility support",
+--- ./qtbase/mkspecs/common/gcc-base-unix.conf.orig	2018-03-19 22:51:39.249040245 +0000
++++ ./qtbase/mkspecs/common/gcc-base-unix.conf	2018-03-19 22:52:18.172248245 +0000
+@@ -18,7 +18,7 @@
+ QMAKE_LFLAGS_THREAD    +=
+ QMAKE_LFLAGS_RPATH      = -Wl,-rpath,
+ QMAKE_LFLAGS_RPATHLINK  = -Wl,-rpath-link,
+-QMAKE_LFLAGS_NEW_DTAGS  = -Wl,--enable-new-dtags
++QMAKE_LFLAGS_NEW_DTAGS  = -Wl,--disable-new-dtags
+ QMAKE_LFLAGS_USE_GOLD   = -fuse-ld=gold
+ 
+ # -Bsymbolic-functions (ld) support
+--- ./qtwebengine/src/3rdparty/chromium/sandbox/linux/BUILD.gn.orig	2018-03-19 22:51:47.206083014 +0000
++++ ./qtwebengine/src/3rdparty/chromium/sandbox/linux/BUILD.gn	2018-03-19 22:52:47.852407166 +0000
+@@ -293,7 +293,7 @@
+       # other flags that executable_config might have.
+       configs -= [ "//build/config:executable_config" ]
+       if (!use_gold) {
+-        ldflags = [ "-Wl,--disable-new-dtags" ]
++        ldflags = [ "-Wl,--disable-new-dtags" ]
+       }
+     }
+ 
+--- ./qtwebengine/src/3rdparty/chromium/third_party/skia/gyp/tools.gyp.orig	2018-03-19 22:51:56.877135576 +0000
++++ ./qtwebengine/src/3rdparty/chromium/third_party/skia/gyp/tools.gyp	2018-03-19 22:53:05.341500538 +0000
+@@ -624,7 +624,7 @@
+               ['skia_os != "win"',
+                 {
+                   'ldflags': [
+-                    '-Wl,-rpath,\$$ORIGIN,--enable-new-dtags',
++                    '-Wl,-rpath,\$$ORIGIN,--disable-new-dtags',
+                   ],
+                 },
+               ],

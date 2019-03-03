@@ -1,5 +1,7 @@
+CONDA_BUILD_SYSROOT:
+- /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
 MACOSX_DEPLOYMENT_TARGET:
-- '10.9'
+- '10.12'
 c_compiler:
 - clang
 channel_sources:

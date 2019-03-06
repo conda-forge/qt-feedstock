@@ -54,6 +54,7 @@ requirements:
     - {{ cdt('libxfixes') }}  # [linux]
     - {{ cdt('libxxf86vm') }}  # [linux]
     - {{ cdt('libx11-devel') }}  # [linux]
+    - {{ cdt('libxext-devel') }}  # [linux]
     - perl
     - python  2.7  # [unix]
     - xz

@@ -5,6 +5,33 @@
 chmod +x configure
 
 if [ $(uname) == Linux ]; then
+    compiler_mkspec=qtbase/mkspecs/common/g++-base.conf
+    flag_mkspec=qtbase/mkspecs/linux-g++/qmake.conf
+
+    # The Anaconda gcc7 compiler flags specify -std=c++17 by default, which
+    # activates features that break compilation. Begone!
+    CXXFLAGS=$(echo $CXXFLAGS | sed -E 's@\-std=[^ ]+@@')
+    export CXXFLAGS="$CXXFLAGS -std=c++11"
+
+    # This warning causes a huge amount of spew in the build logs.
+    if [ "$cxx_compiler" = gxx ] ; then
+        CXXFLAGS="$CXXFLAGS -Wno-expansion-to-defined"
+    fi
+
+    export LDFLAGS="$LDFLAGS -Wl,-rpath-link,$PREFIX/lib"
+    export LDFLAGS="$LDFLAGS -Wl,-rpath-link,${BUILD_PREFIX}/${HOST}/sysroot"
+    export CPPFLAGS="$CPPFLAGS -DXK_dead_currency=0xfe6f -DXK_ISO_Level5_Lock=0xfe13"
+    export CPPFLAGS="$CPPFLAGS -DFC_WEIGHT_EXTRABLACK=215 -DFC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK"
+    export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"
+else
+    compiler_mkspec=qtbase/mkspecs/common/clang.conf
+    flag_mkspec=qtbase/mkspecs/macx-clang/qmake.conf
+
+    export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
+    export CXXFLAGS="$CXXFLAGS -std=c++11"
+fi
+
+if [ $(uname) == Linux ]; then
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \

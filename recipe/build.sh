@@ -11,7 +11,7 @@ if [ $(uname) == Linux ]; then
     # The Anaconda gcc7 compiler flags specify -std=c++17 by default, which
     # activates features that break compilation. Begone!
     CXXFLAGS=$(echo $CXXFLAGS | sed -E 's@\-std=[^ ]+@@')
-    export CXXFLAGS="$CXXFLAGS -std=c++11"
+    export CXXFLAGS="$CXXFLAGS -std=c++98"
 
     # This warning causes a huge amount of spew in the build logs.
     if [ "$cxx_compiler" = gxx ] ; then
@@ -24,11 +24,11 @@ if [ $(uname) == Linux ]; then
     export CPPFLAGS="$CPPFLAGS -DFC_WEIGHT_EXTRABLACK=215 -DFC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK"
     export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"
 else
-    compiler_mkspec=qtbase/mkspecs/common/clang.conf
-    flag_mkspec=qtbase/mkspecs/macx-clang/qmake.conf
+    compiler_mkspec=mkspecs/common/clang.conf
+    flag_mkspec=mkspecs/macx-clang/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
-    export CXXFLAGS="$CXXFLAGS -std=c++11"
+    export CXXFLAGS="$CXXFLAGS -std=c++98"
 fi
 
 # If we don't $(basename) here, when $CC contains an absolute path it will

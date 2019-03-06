@@ -31,6 +31,33 @@ else
     export CXXFLAGS="$CXXFLAGS -std=c++11"
 fi
 
+# If we don't $(basename) here, when $CC contains an absolute path it will
+# point into the *build* environment directory, which won't get replaced when
+# making the package -- breaking the mkspec for downstream consumers.
+sed -i -e "s|^QMAKE_CC.*=.*|QMAKE_CC = $(basename $CC)|" $compiler_mkspec
+sed -i -e "s|^QMAKE_CXX.*=.*|QMAKE_CXX = $(basename $CXX)|" $compiler_mkspec
+
+# The mkspecs only append to QMAKE_*FLAGS, so if we set them at the very top
+# of the main mkspec file, the settings will be honored.
+
+cp $flag_mkspec $flag_mkspec.orig
+cat <<EOF >$flag_mkspec
+QMAKE_CFLAGS = $CFLAGS $CPPFLAGS
+QMAKE_CXXFLAGS = $CXXFLAGS $CPPFLAGS
+QMAKE_LFLAGS = $LDFLAGS
+EOF
+cat $flag_mkspec.orig >>$flag_mkspec
+
+# The main Qt build does eventually honor $LD, but it calls it like a
+# compiler, not like the straight `ld` program as in the conda toolchain
+# variables.
+export LD="$CXX"
+
+# If we leave these variables set, they will override our work during the main
+# build.
+unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+
+
 if [ $(uname) == Linux ]; then
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \

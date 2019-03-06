@@ -5,8 +5,8 @@
 chmod +x configure
 
 if [ $(uname) == Linux ]; then
-    compiler_mkspec=qtbase/mkspecs/common/g++-base.conf
-    flag_mkspec=qtbase/mkspecs/linux-g++/qmake.conf
+    compiler_mkspec=mkspecs/common/g++-base.conf
+    flag_mkspec=mkspecs/linux-g++/qmake.conf
 
     # The Anaconda gcc7 compiler flags specify -std=c++17 by default, which
     # activates features that break compilation. Begone!

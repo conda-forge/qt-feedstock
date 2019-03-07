@@ -9,6 +9,7 @@ source:
   url: https://download.qt.io/archive/qt/4.8/{{ version }}/qt-everywhere-opensource-src-{{ version }}.tar.gz
   sha256: e2882295097e47fe089f8ac741a95fef47e0a73a3f3cdf21b56990638f626ea0
   patches:
+    - config.cpp.longpath.patch  # [win]
     # Make Qt accept its open source license without user interaction
     - acceptance.patch
     # Make the paths in config.cpp longer so they work with conda-build 2.x

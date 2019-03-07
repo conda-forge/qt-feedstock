@@ -39,7 +39,7 @@ source:
     # see https://bugreports.qt.io/browse/QTBUG-37209
     # fix phonon exports so they can be linked to
     - phonon_osx_exports.patch  # [osx]
-    - moc_fix_includes.patch  # [win]
+    # - moc_fix_includes.patch  # [win]
 
 build:
   number: 1000

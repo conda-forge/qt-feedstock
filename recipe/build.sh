@@ -135,7 +135,7 @@ if [ $(uname) == Darwin ]; then
                 -nomake examples \
                 -nomake tests \
                 -verbose \
-                -sdk macosx${MACOSX_DEPLOYMENT_TARGET} \
+                -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
     ####
 
     make -j $CPU_COUNT

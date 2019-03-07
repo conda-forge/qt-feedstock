@@ -81,6 +81,9 @@ if [ $(uname) == Linux ]; then
                 -system-libjpeg \
                 -gtkstyle \
                 -no-dbus \
+                -nomake examples \
+                -nomake tests \
+                -verbose \
                 -sm
 
     # Build on RPM based distros fails without setting LD_LIBRARY_PATH
@@ -129,7 +132,10 @@ if [ $(uname) == Darwin ]; then
                 -platform unsupported/macx-clang-libc++ \
                 -silent \
                 -no-dbus \
-                -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk \
+                -nomake examples \
+                -nomake tests \
+                -verbose \
+                -sdk macosx${MACOSX_DEPLOYMENT_TARGET} \
     ####
 
     make -j $CPU_COUNT

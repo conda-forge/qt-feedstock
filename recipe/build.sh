@@ -25,7 +25,7 @@ if [ $(uname) == Linux ]; then
     export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"
 else
     compiler_mkspec=mkspecs/common/clang.conf
-    flag_mkspec=mkspecs/macx-clang/qmake.conf
+    flag_mkspec=mkspecs/macx-llvm/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
     export CXXFLAGS="$CXXFLAGS -std=c++98"

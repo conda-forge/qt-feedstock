@@ -33,7 +33,6 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -I %LIBRARY_INC% ^
                        -system-libjpeg 
 
-bin\qmake -r QT_BUILD_PARTS="libs tools"
 
 jom -j%NUMBER_OF_PROCESSORS%
 if errorlevel 1 exit 1

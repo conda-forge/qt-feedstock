@@ -31,7 +31,8 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -I %LIBRARY_INC% ^
                        -system-libjpeg 
 
-
+nmake
+if errorlevel 1 exit 1
 nmake install
 if errorlevel 1 exit 1
 

@@ -22,12 +22,17 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -nomake docs ^
                        -openssl ^
                        -webkit ^
+                       -no-separate-debug-info ^
+                       -no-warnings-are-errors ^
+                       -nomake examples ^
+                       -nomake tests ^
                        -system-zlib ^
                        -system-libpng ^
                        -system-libtiff ^
                        -L %LIBRARY_LIB% ^
                        -I %LIBRARY_INC% ^
-                       -system-libjpeg
+                       -system-libjpeg ^
+                       -mp
 
 bin\qmake -r QT_BUILD_PARTS="libs tools"
 

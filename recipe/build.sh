@@ -25,7 +25,7 @@ if [ $(uname) == Linux ]; then
     export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"
 else
     compiler_mkspec=mkspecs/common/clang.conf
-    flag_mkspec=mkspecs/macx-llvm/qmake.conf
+    flag_mkspec=mkspecs/macx-g++42/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
     export CXXFLAGS="$CXXFLAGS -std=c++98"
@@ -86,7 +86,7 @@ if [ $(uname) == Linux ]; then
     # Build on RPM based distros fails without setting LD_LIBRARY_PATH
     # to the build lib dir
     # See https://bugreports.qt.io/browse/QTBUG-5385
-    LD_LIBRARY_PATH=$SRC_DIR/lib make
+    LD_LIBRARY_PATH=$SRC_DIR/lib make -j ${CPU_COUNT}
     make install
 fi
 

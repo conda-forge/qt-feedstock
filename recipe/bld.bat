@@ -22,8 +22,6 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -nomake docs ^
                        -openssl ^
                        -webkit ^
-                       -no-separate-debug-info ^
-                       -no-warnings-are-errors ^
                        -nomake examples ^
                        -nomake tests ^
                        -system-zlib ^

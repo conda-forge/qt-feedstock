@@ -77,6 +77,7 @@ requirements:
     - xorg-libxrender  # [linux]
     - xorg-libxt       # [linux]
     - xorg-inputproto  # [linux]
+    - expat  # [unix]
 
   run:
     - freetype 2.7|2.7.*  # [unix]
@@ -96,9 +97,14 @@ requirements:
     - xorg-libxt       # [linux]
 
 test:
+  requires:
+    - {{ compiler('cxx') }}
+    - {{ compiler('c') }}
+    
   files:
     - test
   commands:
+  
     - conda inspect linkages -p $PREFIX qt  # [not win]
     - conda inspect objects -p $PREFIX qt  # [osx]
 

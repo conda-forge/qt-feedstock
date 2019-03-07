@@ -1,5 +1,5 @@
 --- src\tools\moc\moc.cpp	2014-04-10 21:37:12.000000000 +0400
-+++ src\tools\moc\moc.cpp	2015-06-03 20:34:11.775340800 +0400
++++ src\tools\moc\moc.cpp	2015-02-11 18:21:29.762935800 +0400
 @@ -48,6 +48,9 @@
  // for normalizeTypeInternal
  #include <private/qmetaobject_p.h>
@@ -10,62 +10,24 @@
  QT_BEGIN_NAMESPACE
  
  // only moc needs this function
-@@ -764,7 +767,7 @@
-     }
- }
- 
--void Moc::generate(FILE *out)
-+void Moc::generate(FILE *out, const QByteArray & output)
- {
-     QByteArray fn = filename;
-     int i = filename.length()-1;
-@@ -778,17 +781,46 @@
-     fprintf(out, "** WARNING! All changes made in this file will be lost!\n"
-             "*****************************************************************************/\n\n");
- 
-+    QFileInfo fi;
-+    fi.setFile(QString::fromLocal8Bit(output));
-+    QString absOutput = fi.absolutePath();
- 
+@@ -782,12 +785,17 @@
      if (!noInclude) {
          if (includePath.size() && !includePath.endsWith('/'))
              includePath += '/';
++        QFileInfo fi;
          for (int i = 0; i < includeFiles.size(); ++i) {
              QByteArray inc = includeFiles.at(i);
-+            fprintf(stderr, "current=%s\nincludePath=%s\ninc=%s\noutput=%s\n",
-+                QDir::current().path().toUtf8().constData(), QString::fromLocal8Bit(includePath).toUtf8().constData(),
-+                QString::fromLocal8Bit(inc).toUtf8().constData(), absOutput.toUtf8().constData());
              if (inc[0] != '<' && inc[0] != '"') {
 -                if (includePath.size() && includePath != "./")
 -                    inc.prepend(includePath);
 -                inc = '\"' + inc + '\"';
-+                if (includePath.size()) {
-+                    fi.setFile(QString::fromLocal8Bit(includePath));
-+                    if (fi.isAbsolute()) {
-+                        fi.setFile(QString::fromLocal8Bit(includePath), QString::fromLocal8Bit(inc));
-+                    }
-+                    else {
-+                        fi.setFile(QString::fromLocal8Bit(includePath), fi.filePath());
-+                        // Visual Studio nmake compatibility: at first relative to output file
-+                        fi.setFile(absOutput, fi.filePath());
-+                        if (!fi.exists()) {
-+                            // relative to current directory
-+                            fi.setFile(QDir::current(), fi.filePath());
-+                        }
-+                    }
++                if (includePath.size() && includePath != "./") {
++                    fi.setFile(QString::fromLocal8Bit(includePath), QString::fromLocal8Bit(inc));
 +                }
 +                else {
-+                    fi.setFile(QString::fromLocal8Bit(inc));
-+                    // Visual Studio nmake compatibility: at first relative to output file
-+                    fi.setFile(absOutput, fi.filePath());
-+                    if (!fi.exists()) {
-+                        // relative to current directory
-+                        fi.setFile(QDir::current(), fi.filePath());
-+                    }
++                    fi.setFile(QDir::current(), QString::fromLocal8Bit(inc));
 +                }
-+                inc = '\"' + fi.canonicalFilePath().toLocal8Bit() + '\"';
++                inc = '\"' + fi.absoluteFilePath().toLocal8Bit() + '\"';
              }
-+            fprintf(stderr, "result=%s\n", QString::fromLocal8Bit(inc).toUtf8().constData());
              fprintf(out, "#include %s\n", inc.constData());
          }
-     }

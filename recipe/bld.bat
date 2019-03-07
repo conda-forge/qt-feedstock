@@ -29,7 +29,8 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -system-libtiff ^
                        -L %LIBRARY_LIB% ^
                        -I %LIBRARY_INC% ^
-                       -system-libjpeg 
+                       -system-libjpeg ^
+                       -platform win32-msvc%VS_YEAR% ^
 
 nmake
 if errorlevel 1 exit 1

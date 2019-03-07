@@ -36,7 +36,7 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
 
 bin\qmake -r QT_BUILD_PARTS="libs tools"
 
-nmake Release
+nmake
 if errorlevel 1 exit 1
 nmake install
 if errorlevel 1 exit 1

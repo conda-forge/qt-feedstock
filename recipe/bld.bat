@@ -36,7 +36,7 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
 
 bin\qmake -r QT_BUILD_PARTS="libs tools"
 
-nmake
+jom -j%NUMBER_OF_PROCESSORS%
 if errorlevel 1 exit 1
 nmake install
 if errorlevel 1 exit 1

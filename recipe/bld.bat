@@ -32,6 +32,7 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -L %LIBRARY_LIB% ^
                        -I %LIBRARY_INC% ^
                        -system-libjpeg ^
+                       -qmake ^
                        -mp
 
 bin\qmake -r QT_BUILD_PARTS="libs tools"

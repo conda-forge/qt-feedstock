@@ -32,8 +32,6 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -system-libjpeg 
 
 
-jom -j%NUMBER_OF_PROCESSORS%
-if errorlevel 1 exit 1
 nmake install
 if errorlevel 1 exit 1
 

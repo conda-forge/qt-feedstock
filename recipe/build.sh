@@ -24,8 +24,8 @@ if [ $(uname) == Linux ]; then
     export CPPFLAGS="$CPPFLAGS -DFC_WEIGHT_EXTRABLACK=215 -DFC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK"
     export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"
 else
-    compiler_mkspec=mkspecs/common/clang.conf
-    flag_mkspec=mkspecs/macx-g++42/qmake.conf
+    compiler_mkspec=mkspecs/unsupported/macx-clang-libc++/clang.conf
+    flag_mkspec=mkspecs/unsupported/macx-clang-libc++/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
     export CXXFLAGS="$CXXFLAGS -std=c++98"
@@ -84,6 +84,7 @@ if [ $(uname) == Linux ]; then
                 -nomake examples \
                 -nomake tests \
                 -verbose \
+                -system-sqlite \
                 -sm
 
     # Build on RPM based distros fails without setting LD_LIBRARY_PATH
@@ -127,6 +128,7 @@ if [ $(uname) == Darwin ]; then
                 -system-libpng \
                 -system-libtiff \
                 -system-libjpeg \
+                -system-sqlite \
                 -no-framework \
                 -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \

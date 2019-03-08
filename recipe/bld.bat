@@ -26,10 +26,10 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -nomake tests ^
                        -system-zlib ^
                        -system-libpng ^
-                       -system-libtiff ^
                        -L %LIBRARY_LIB% ^
                        -I %LIBRARY_INC% ^
                        -system-libjpeg ^
+                       -qt-libtiff ^
                        -platform win32-msvc%VS_YEAR%
 
 

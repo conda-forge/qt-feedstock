@@ -32,7 +32,7 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -system-libjpeg ^
                        -platform win32-msvc%VS_YEAR%
 
-nmake
+jom -j%CPU_COUNT%
 if errorlevel 1 exit 1
 nmake install
 if errorlevel 1 exit 1

@@ -32,6 +32,9 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -system-libjpeg ^
                        -platform win32-msvc%VS_YEAR%
 
+
+bin\qmake -r QT_BUILD_PARTS="libs tools"
+
 jom -j%CPU_COUNT%
 if errorlevel 1 exit 1
 nmake install
@@ -45,6 +48,6 @@ EXIT 1
 :FOUND
 
 mkdir %LIBRARY_PREFIX%\mkspecs\win32-msvc-default
-copy %LIBRARY_PREFIX%\mkspecs\win32-msvc%VSTRING:~0,4%\* %LIBRARY_PREFIX%\mkspecs\win32-msvc-default\
+copy %LIBRARY_PREFIX%\mkspecs\win32-msvc%VS_YEAR%\* %LIBRARY_PREFIX%\mkspecs\win32-msvc-default\
 
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"

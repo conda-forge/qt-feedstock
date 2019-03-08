@@ -30,6 +30,7 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -I %LIBRARY_INC% ^
                        -system-libjpeg ^
                        -qt-libtiff ^
+                       -system-sqlite ^
                        -platform win32-msvc%VS_YEAR%
 
 

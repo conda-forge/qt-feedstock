@@ -24,8 +24,8 @@ if [ $(uname) == Linux ]; then
     export CPPFLAGS="$CPPFLAGS -DFC_WEIGHT_EXTRABLACK=215 -DFC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK"
     export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"
 else
-    compiler_mkspec=mkspecs/common/clang.conf
-    flag_mkspec=mkspecs/unsupported/macx-clang-libc++/qmake.conf
+    compiler_mkspec=mkspecs/common/g++-macs.conf
+    flag_mkspec=mkspecs/macx-g++42/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
     export CXXFLAGS="$CXXFLAGS -std=c++98"
@@ -130,8 +130,6 @@ if [ $(uname) == Darwin ]; then
                 -system-libjpeg \
                 -system-sqlite \
                 -qt-libmng \
-                -qt-sql-mysql \
-                -qt-sql-psql \
                 -no-framework \
                 -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \

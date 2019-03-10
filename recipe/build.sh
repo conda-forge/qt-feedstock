@@ -28,7 +28,7 @@ else
     flag_mkspec=mkspecs/unsupported/macx-clang-libc++/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
-    export CXXFLAGS="$CXXFLAGS -std=c++11"
+    export CXXFLAGS="$CXXFLAGS -std=c++11 -stdlib=libc++"
 fi
 
 # If we don't $(basename) here, when $CC contains an absolute path it will
@@ -138,6 +138,7 @@ if [ $(uname) == Darwin ]; then
                 -nomake tests \
                 -verbose \
                 -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+
     ####
 
     make -j $CPU_COUNT

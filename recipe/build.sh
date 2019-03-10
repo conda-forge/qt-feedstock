@@ -24,7 +24,7 @@ if [ $(uname) == Linux ]; then
     export CPPFLAGS="$CPPFLAGS -DFC_WEIGHT_EXTRABLACK=215 -DFC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK"
     export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"
 else
-    compiler_mkspec=mkspecs/common/g++-macs.conf
+    compiler_mkspec=mkspecs/common/g++-macx.conf
     flag_mkspec=mkspecs/macx-g++42/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"

@@ -116,7 +116,6 @@ if [ $(uname) == Darwin ]; then
                 -datadir $PREFIX \
                 -L $PREFIX/lib \
                 -I $PREFIX/include \
-                -R $PREFIX/lib \
                 -release \
                 -fast \
                 -no-qt3support \

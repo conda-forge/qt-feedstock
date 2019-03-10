@@ -128,7 +128,7 @@ if [ $(uname) == Darwin ]; then
                 -system-libpng \
                 -system-libtiff \
                 -system-libjpeg \
-                -system-sqlite \
+                -qt-sqlite \
                 -no-framework \
                 -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \

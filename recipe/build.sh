@@ -129,6 +129,9 @@ if [ $(uname) == Darwin ]; then
                 -system-libtiff \
                 -system-libjpeg \
                 -system-sqlite \
+                -qt-libmng \
+                -qt-sql-mysql \
+                -qt-sql-psql \
                 -no-framework \
                 -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \

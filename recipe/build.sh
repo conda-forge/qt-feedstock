@@ -28,7 +28,7 @@ else
     flag_mkspec=mkspecs/unsupported/macx-clang/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
-    export CXXFLAGS="$CXXFLAGS -std=c++98"
+    export CXXFLAGS="$CXXFLAGS -std=c++11"
 fi
 
 # If we don't $(basename) here, when $CC contains an absolute path it will
@@ -131,7 +131,7 @@ if [ $(uname) == Darwin ]; then
                 -system-sqlite \
                 -no-framework \
                 -arch $(uname -m) \
-                -platform unsupported/macx-clang-libc++ \
+                -platform unsupported/macx-clang \
                 -silent \
                 -no-dbus \
                 -nomake examples \

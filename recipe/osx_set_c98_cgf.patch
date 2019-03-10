@@ -1,7 +1,6 @@
-diff --git a/mkspecs/unsupported/macx-clang-libc++/qmake.conf b/mkspecs/unsupported/macx-clang-libc++/qmake.conf
-index d012bad3d6..952878c94e 100644
---- a/mkspecs/unsupported/macx-clang-libc++/qmake.conf
-+++ b/mkspecs/unsupported/macx-clang-libc++/qmake.conf
+diff -Naur a/mkspecs/unsupported/macx-clang-libc++/qmake.conf b/mkspecs/unsupported/macx-clang-libc++/qmake.conf
+--- a/mkspecs/unsupported/macx-clang-libc++/qmake.conf	2015-05-07 15:14:42.000000000 +0100
++++ b/mkspecs/unsupported/macx-clang-libc++/qmake.conf	2019-03-10 23:32:43.044262989 +0000
 @@ -5,7 +5,7 @@
  MAKEFILE_GENERATOR = UNIX
  TARGET_PLATFORM = macx
@@ -11,3 +10,12 @@ index d012bad3d6..952878c94e 100644
  QT += core gui
  QMAKE_INCREMENTAL_STYLE = sublib
  
+@@ -13,7 +13,7 @@
+ include(../../common/gcc-base-macx.conf)
+ include(../../common/clang.conf)
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7 # Libc++ is available from 10.7 onwards
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9 # Libc++ is available from 10.7 onwards
+ 
+ QMAKE_CFLAGS += -mmacosx-version-min=$$QMAKE_MACOSX_DEPLOYMENT_TARGET
+ QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=$$QMAKE_MACOSX_DEPLOYMENT_TARGET

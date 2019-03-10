@@ -28,7 +28,7 @@ else
     flag_mkspec=mkspecs/unsupported/macx-clang-libc++/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
-    export CXXFLAGS="$CXXFLAGS -std=c++11 -stdlib=libc++"
+    export CXXFLAGS="$CXXFLAGS -std=c++98 -stdlib=libc++"
 fi
 
 # If we don't $(basename) here, when $CC contains an absolute path it will

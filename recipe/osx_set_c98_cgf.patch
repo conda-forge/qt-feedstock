@@ -1,0 +1,13 @@
+diff --git a/mkspecs/unsupported/macx-clang-libc++/qmake.conf b/mkspecs/unsupported/macx-clang-libc++/qmake.conf
+index d012bad3d6..952878c94e 100644
+--- a/mkspecs/unsupported/macx-clang-libc++/qmake.conf
++++ b/mkspecs/unsupported/macx-clang-libc++/qmake.conf
+@@ -5,7 +5,7 @@
+ MAKEFILE_GENERATOR = UNIX
+ TARGET_PLATFORM = macx
+ TEMPLATE = app
+-CONFIG += qt warn_on release app_bundle incremental global_init_link_order lib_version_first plugin_no_soname link_prl
++CONFIG += qt warn_on release app_bundle incremental global_init_link_order lib_version_first plugin_no_soname link_prl c++98
+ QT += core gui
+ QMAKE_INCREMENTAL_STYLE = sublib
+ 

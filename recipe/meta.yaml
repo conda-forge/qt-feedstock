@@ -45,6 +45,8 @@ source:
     # - moc_fix_includes.patch  # [win]
     # pointer to avoid operations between pointers and numbers
     - null_pointer_comparison.patch  # [osx]
+    # Add patch to use the option strip -x in osx 
+    - mac-strip.patch  # [osx]
 
 build:
   number: 1000

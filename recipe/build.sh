@@ -116,6 +116,7 @@ if [ $(uname) == Darwin ]; then
                 -datadir $PREFIX \
                 -L $PREFIX/lib \
                 -I $PREFIX/include \
+                -R ${PREFIX}/lib \
                 -release \
                 -fast \
                 -no-qt3support \
@@ -129,7 +130,6 @@ if [ $(uname) == Darwin ]; then
                 -system-libtiff \
                 -system-libjpeg \
                 -system-sqlite \
-                -qt-libmng \
                 -no-framework \
                 -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \

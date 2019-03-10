@@ -72,6 +72,7 @@ if [ $(uname) == Linux ]; then
                 -nomake examples \
                 -nomake demos \
                 -nomake docs \
+                -nomake tests \
                 -opensource \
                 -openssl \
                 -webkit \
@@ -79,12 +80,10 @@ if [ $(uname) == Linux ]; then
                 -system-libpng \
                 -system-libtiff \
                 -system-libjpeg \
+                -system-sqlite \
                 -gtkstyle \
                 -no-dbus \
-                -nomake examples \
-                -nomake tests \
                 -verbose \
-                -system-sqlite \
                 -sm
 
     # Build on RPM based distros fails without setting LD_LIBRARY_PATH
@@ -122,6 +121,7 @@ if [ $(uname) == Darwin ]; then
                 -nomake examples \
                 -nomake demos \
                 -nomake docs \
+                -nomake tests \
                 -opensource \
                 -openssl \
                 -system-zlib \
@@ -134,8 +134,6 @@ if [ $(uname) == Darwin ]; then
                 -platform unsupported/macx-clang-libc++ \
                 -silent \
                 -no-dbus \
-                -nomake examples \
-                -nomake tests \
                 -verbose \
                 -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
 

@@ -1,0 +1,21 @@
+diff -Naur a/mkspecs/common/clang.conf b/mkspecs/common/clang.conf
+--- a/mkspecs/common/clang.conf	2015-05-07 15:14:42.000000000 +0100
++++ b/mkspecs/common/clang.conf	2019-03-10 19:44:51.220315143 +0000
+@@ -15,3 +15,5 @@
+ QMAKE_CFLAGS_USE_PRECOMPILE      = -Xclang -include-pch -Xclang ${QMAKE_PCH_OUTPUT}
+ QMAKE_CXXFLAGS_PRECOMPILE        = -x c++-header -c ${QMAKE_PCH_INPUT} -o ${QMAKE_PCH_OUTPUT}
+ QMAKE_CXXFLAGS_USE_PRECOMPILE    = $$QMAKE_CFLAGS_USE_PRECOMPILE
++
++QMAKE_STRIP = strip -x
+diff -Naur a/mkspecs/common/mac.conf b/mkspecs/common/mac.conf
+--- a/mkspecs/common/mac.conf	2015-05-07 15:14:42.000000000 +0100
++++ b/mkspecs/common/mac.conf	2019-03-10 19:45:33.364314982 +0000
+@@ -24,6 +24,8 @@
+ QMAKE_MOC		= $$[QT_INSTALL_BINS]/moc
+ QMAKE_UIC		= $$[QT_INSTALL_BINS]/uic
+ 
++QMAKE_STRIP = strip -x
++
+ QMAKE_AR		= ar cq
+ QMAKE_RANLIB		= ranlib -s
+ 

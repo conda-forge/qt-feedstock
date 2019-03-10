@@ -21,8 +21,8 @@ Current build status
 ====================
 
 [![OSX](https://img.shields.io/travis/conda-forge/qt-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/qt-feedstock)
-[![Windows](https://img.shields.io/appveyor/ci/conda-forge/qt-feedstock/master.svg?label=Windows)](https://ci.appveyor.com/project/conda-forge/qt-feedstock/branch/master)
 ![Linux disabled](https://img.shields.io/badge/linux-disabled-lightgrey.svg)
+![Windows disabled](https://img.shields.io/badge/Windows-disabled-lightgrey.svg)
 
 Current release info
 ====================

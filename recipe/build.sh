@@ -85,7 +85,6 @@ if [ $(uname) == Linux ]; then
                 -gtkstyle \
                 -no-dbus \
                 -verbose \
-                -arch x86_64 \
                 -sm
 
     # Build on RPM based distros fails without setting LD_LIBRARY_PATH
@@ -138,7 +137,8 @@ if [ $(uname) == Darwin ]; then
                 -qt-libmng \
                 -no-dbus \
                 -verbose \
-                -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+                -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk \
+                -arch x86_64 \
 
     ####
 

@@ -28,6 +28,7 @@ else
     flag_mkspec=mkspecs/unsupported/macx-clang-libc++/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
+    CXXFLAGS=$(echo $CXXFLAGS | sed -E 's@\-std=[^ ]+@@')
     export CXXFLAGS="$CXXFLAGS -std=c++98 -stdlib=libc++"
 fi
 

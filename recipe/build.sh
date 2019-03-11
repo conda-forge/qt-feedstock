@@ -136,7 +136,7 @@ if [ $(uname) == Darwin ]; then
                 -qt-libmng \
                 -no-dbus \
                 -verbose \
-                -sdk macosx${MACOSX_DEPLOYMENT_TARGET}
+                -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
 
     ####
 

@@ -85,6 +85,7 @@ if [ $(uname) == Linux ]; then
                 -gtkstyle \
                 -no-dbus \
                 -verbose \
+                -arch x86_64 \
                 -sm
 
     # Build on RPM based distros fails without setting LD_LIBRARY_PATH

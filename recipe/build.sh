@@ -133,6 +133,7 @@ if [ $(uname) == Darwin ]; then
                 -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \
                 -silent \
+                -qt-libmng \
                 -no-dbus \
                 -verbose \
                 -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk

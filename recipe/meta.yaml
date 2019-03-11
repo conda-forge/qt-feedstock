@@ -22,6 +22,8 @@ source:
     # Enabling our test to set the rpath by making Qt aware
     # of how to do this on OSX
     - osx_rpath.qmake.conf.patch  # [osx]
+    # Set osx C++11 config
+    - osx_set_c98_cgf.patch  # [osx]
     # fix use of deprecated OSX API. Taken from Homebrew:
     # https://github.com/Homebrew/legacy-homebrew/issues/40585
     - qpaintengine_mac.patch  # [osx]

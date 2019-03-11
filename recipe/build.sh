@@ -131,17 +131,16 @@ if [ $(uname) == Darwin ]; then
                 -system-libjpeg \
                 -qt-sql-sqlite \
                 -no-framework \
-                -arch $(uname -m) \
                 -platform unsupported/macx-clang-libc++ \
                 -silent \
                 -qt-libmng \
                 -no-dbus \
                 -verbose \
-                -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+                -sdk macosx${MACOSX_DEPLOYMENT_TARGET}
 
     ####
 
-    make -j $CPU_COUNT
+    DYLD_FALLBACK_LIBRARY_PATH=$PREFIX/lib make -j $CPU_COUNT || exit 1
     make install
 
     # copy activation scripts for OSX - set $QMAKESPEC

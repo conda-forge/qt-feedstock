@@ -122,6 +122,7 @@ if [ $(uname) == Darwin ]; then
                 -nomake demos \
                 -nomake docs \
                 -nomake tests \
+                -nomake tools \
                 -opensource \
                 -openssl \
                 -system-zlib \

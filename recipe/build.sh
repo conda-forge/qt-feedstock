@@ -137,8 +137,7 @@ if [ $(uname) == Darwin ]; then
                 -qt-libmng \
                 -no-dbus \
                 -verbose \
-                -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk \
-                -arch x86_64 \
+                -sdk $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
 
     ####
 

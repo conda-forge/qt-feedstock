@@ -25,7 +25,7 @@ if [ $(uname) == Linux ]; then
     export CPPFLAGS="$CPPFLAGS -DGLX_GLXEXT_PROTOTYPES"
 else
     compiler_mkspec=mkspecs/common/clang.conf
-    flag_mkspec=mkspecs/unsupported/macx-clang-libc++/qmake.conf
+    flag_mkspec=mkspecs/unsupported/macx-clang/qmake.conf
 
     export LDFLAGS="$LDFLAGS -Wl,-rpath,$PREFIX/lib -licuuc -licui18n -licudata"
     CXXFLAGS=$(echo $CXXFLAGS | sed -E 's@\-std=[^ ]+@@')
@@ -132,7 +132,7 @@ if [ $(uname) == Darwin ]; then
                 -system-libjpeg \
                 -qt-sql-sqlite \
                 -no-framework \
-                -platform unsupported/macx-clang-libc++ \
+                -platform unsupported/macx-clang \
                 -silent \
                 -qt-libmng \
                 -no-dbus \

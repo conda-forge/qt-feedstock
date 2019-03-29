@@ -52,7 +52,7 @@ build:
   number: 1000
   # skipping linux for now, because it is already being packaged on Linux
   # Just to save some time in our CIs
-  skip: true  # [linux or win]
+  skip: true  # [osx]
 
 requirements:
   build:

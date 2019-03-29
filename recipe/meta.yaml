@@ -49,9 +49,7 @@ source:
     - mac-strip.patch  # [osx]
 
 build:
-  number: 1000
-  # skipping linux for now, because it is already being packaged on Linux
-  # Just to save some time in our CIs
+  number: 9
   skip: true  # [osx]
 
 requirements:
@@ -116,10 +114,6 @@ test:
     
   files:
     - test
-  commands:
-  
-    - conda inspect linkages -p $PREFIX qt  # [not win]
-    - conda inspect objects -p $PREFIX qt  # [osx]
 
 about:
   home: http://qt-project.org

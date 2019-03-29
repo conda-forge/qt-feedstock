@@ -7,3 +7,4 @@ gtk2-devel
 dbus-devel
 libSM-devel
 libICE-devel
+mesa-libGl

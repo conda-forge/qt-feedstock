@@ -22,14 +22,21 @@ echo y | configure.exe -prefix %LIBRARY_PREFIX% ^
                        -nomake docs ^
                        -openssl ^
                        -webkit ^
+                       -nomake examples ^
+                       -nomake tests ^
                        -system-zlib ^
                        -system-libpng ^
-                       -system-libtiff ^
-                       -system-libjpeg
+                       -L %LIBRARY_LIB% ^
+                       -I %LIBRARY_INC% ^
+                       -system-libjpeg ^
+                       -qt-libtiff ^
+                       -system-sqlite ^
+                       -platform win32-msvc%VS_YEAR%
+
 
 bin\qmake -r QT_BUILD_PARTS="libs tools"
 
-jom -j%NUMBER_OF_PROCESSORS%
+jom -j%CPU_COUNT%
 if errorlevel 1 exit 1
 nmake install
 if errorlevel 1 exit 1
@@ -49,11 +56,14 @@ echo @echo 18=2013 >> msvc_versions.bat
 echo @echo 19=2015 >> msvc_versions.bat
 
 for /f "delims=" %%A in ('cl /? 2^>^&1 ^| findstr /C:"Version"') do set "CL_TEXT=%%A"
+
+:: To rewrite qt.conf contents per conda environment
+if errorlevel 1 exit /b 1
 FOR /F "tokens=1,2 delims==" %%i IN ('msvc_versions.bat') DO echo %CL_TEXT% | findstr /C:"Version %%i" > nul && set VSTRING=%%j && goto FOUND
 EXIT 1
 :FOUND
 
 mkdir %LIBRARY_PREFIX%\mkspecs\win32-msvc-default
-copy %LIBRARY_PREFIX%\mkspecs\win32-msvc%VSTRING:~0,4%\* %LIBRARY_PREFIX%\mkspecs\win32-msvc-default\
+copy %LIBRARY_PREFIX%\mkspecs\win32-msvc%VS_YEAR%\* %LIBRARY_PREFIX%\mkspecs\win32-msvc-default\
 
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"

@@ -1,0 +1,33 @@
+--- src\tools\moc\moc.cpp	2014-04-10 21:37:12.000000000 +0400
++++ src\tools\moc\moc.cpp	2015-02-11 18:21:29.762935800 +0400
+@@ -48,6 +48,9 @@
+ // for normalizeTypeInternal
+ #include <private/qmetaobject_p.h>
+ 
++#include <QDir>
++#include <QFileInfo>
++
+ QT_BEGIN_NAMESPACE
+ 
+ // only moc needs this function
+@@ -782,12 +785,17 @@
+     if (!noInclude) {
+         if (includePath.size() && !includePath.endsWith('/'))
+             includePath += '/';
++        QFileInfo fi;
+         for (int i = 0; i < includeFiles.size(); ++i) {
+             QByteArray inc = includeFiles.at(i);
+             if (inc[0] != '<' && inc[0] != '"') {
+-                if (includePath.size() && includePath != "./")
+-                    inc.prepend(includePath);
+-                inc = '\"' + inc + '\"';
++                if (includePath.size() && includePath != "./") {
++                    fi.setFile(QString::fromLocal8Bit(includePath), QString::fromLocal8Bit(inc));
++                }
++                else {
++                    fi.setFile(QDir::current(), QString::fromLocal8Bit(inc));
++                }
++                inc = '\"' + fi.absoluteFilePath().toLocal8Bit() + '\"';
+             }
+             fprintf(out, "#include %s\n", inc.constData());
+         }

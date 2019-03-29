@@ -1,0 +1,31 @@
+c_compiler:
+- gcc
+c_compiler_version:
+- '7'
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+cxx_compiler:
+- gxx
+cxx_compiler_version:
+- '7'
+docker_image:
+- condaforge/linux-anvil-comp7
+expat:
+- '2.2'
+perl:
+- '5.26'
+pin_run_as_build:
+  expat:
+    max_pin: x.x
+  perl:
+    max_pin: x.x.x
+  sqlite:
+    max_pin: x
+  xz:
+    max_pin: x.x
+sqlite:
+- '3'
+xz:
+- '5.2'

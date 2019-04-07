@@ -1,15 +1,17 @@
-CONDA_BUILD_SYSROOT:
-- /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
 MACOSX_DEPLOYMENT_TARGET:
 - '10.12'
 c_compiler:
 - clang
+c_compiler_version:
+- '4'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
 - clangxx
+cxx_compiler_version:
+- '4'
 icu:
 - '58'
 jpeg:

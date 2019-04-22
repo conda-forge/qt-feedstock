@@ -1,0 +1,44 @@
+diff -urN qtwebengine.orig/mkspecs/features/functions.prf qtwebengine/mkspecs/features/functions.prf
+--- qtwebengine.orig/mkspecs/features/functions.prf	2018-02-13 12:04:11.000000000 +0000
++++ qtwebengine/mkspecs/features/functions.prf	2018-02-13 12:17:37.000000000 +0000
+@@ -46,14 +46,14 @@
+         skipBuild("Qt WebEngine on macOS requires Clang.")
+         return(false)
+     }
+-    # We require OS X 10.0 (darwin version 14.0.0) or newer
++    # We require OS X 10.9 (darwin version 13.0.0) or newer
+     darwin_major_version = $$section(QMAKE_HOST.version, ., 0, 0)
+-    lessThan(darwin_major_version, 14) {
+-      skipBuild("Qt WebEngine requires OS X version 10.10 or newer.")
++    lessThan(darwin_major_version, 13) {
++      skipBuild("Qt WebEngine requires OS X version 10.9 or newer.")
+       return(false)
+     }
+-    !isMinOSXSDKVersion(10, 10): {
+-      skipBuild("Qt WebEngine requires an OS X SDK version of 10.10 or newer. Current version is $${WEBENGINE_OSX_SDK_PRODUCT_VERSION}.")
++    !isMinOSXSDKVersion(10, 9): {
++      skipBuild("Qt WebEngine requires an OS X SDK version of 10.9 or newer. Current version is $${WEBENGINE_OSX_SDK_PRODUCT_VERSION}.")
+       return(false)
+     }
+   } else {
+@@ -223,7 +223,7 @@
+     requested_minor = $$2
+     requested_patch = $$3
+     isEmpty(requested_patch): requested_patch = 0
+-    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("/usr/bin/xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
++    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
+     export(WEBENGINE_OSX_SDK_PRODUCT_VERSION)
+     isEmpty(WEBENGINE_OSX_SDK_PRODUCT_VERSION) {
+         skipBuild("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")
+diff -urN qtwebengine.orig/src/3rdparty/chromium/build/mac_toolchain.py qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py
+--- qtwebengine.orig/src/3rdparty/chromium/build/mac_toolchain.py	2018-02-13 12:05:21.000000000 +0000
++++ qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py	2018-02-13 12:11:09.000000000 +0000
+@@ -128,7 +128,7 @@
+   try:
+     build_dir = os.path.join(TOOLCHAIN_BUILD_DIR, 'Contents/Developer')
+     subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', build_dir])
+-    subprocess.check_call(['sudo', '/usr/bin/xcodebuild', '-license', 'accept'])
++    subprocess.check_call(['sudo', 'xcodebuild', '-license', 'accept'])
+   finally:
+     subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', old_path])
+ 

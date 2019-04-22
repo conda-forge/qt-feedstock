@@ -1,5 +1,5 @@
 QT       += core
-QT       -= gui
+QT       += charts
 TARGET = hello
 CONFIG   += console
 CONFIG   -= app_bundle

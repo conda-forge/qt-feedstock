@@ -59,7 +59,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     export CXX=${GXX}
 
     mkdir -p "${SRC_DIR}/openssl_hack"
-    conda install -c https://repo.continuum.io/pkgs/main \
+    conda install -c conda-forge \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack" \
                   openssl=${openssl}
     export OPENSSL_LIBS="-L${SRC_DIR}/openssl_hack/lib -lssl -lcrypto"

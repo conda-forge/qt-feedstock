@@ -1,16 +1,13 @@
-{% set version = "5.9.7" %}
+{% set major_minor = "5.9" %}
+{% set version = major_minor + ".7" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-#  - git_url: git://code.qt.io/qt/qt5.git
-#    git_tag: v5.9.7
-  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz  # [not win]
-    md5: 70e617aeb1f9bbf84a12b8cf09b01ece  # [not win]
-  - url: http://download.qt.io/official_releases/qt/5.9/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.zip  # [win]
-    md5: 98102a8e9eefa2f05ecaa9a349c414d4  # [win]
+  - url: http://download.qt.io/official_releases/qt/{{ major_minor }}/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
+    sha256: 1c3852aa48b5a1310108382fb8f6185560cefc3802e81ecc099f4e62ee38516c
     patches:
       # qtbase
       - patches/0000-qtbase-QSslSocket-OpenSSL-1.1-backend.patch
@@ -44,7 +41,7 @@ source:
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 
-  - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
+  - url: http://download.qt.io/community_releases/{{ major_minor }}/{{ major_minor }}.0-final/qtwebkit-opensource-src-{{ major_minor }}.0.tar.xz            # [qtwebkit == 'true']
     sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']
     folder: qtwebkit                                                                                              # [qtwebkit == 'true']
     patches:                                                                                                      # [qtwebkit == 'true']
@@ -64,7 +61,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 1
+  number: 0
   skip: True  # [(win and vc != 14) or ppc64le]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
@@ -148,7 +145,7 @@ requirements:
     # - libopus                            # [unix]
     # - libvpx                             # [unix]
     # - ffmpeg                             # [unix]
-    - expat                              # [linux]
+    - expat                                # [linux]
     - icu
     - jpeg
     - libpng
@@ -161,6 +158,7 @@ requirements:
   run:
     - openssl 1.1.*                      # [not osx]
     - libxcb                             # [linux]
+    - icu
 
 test:
   requires:

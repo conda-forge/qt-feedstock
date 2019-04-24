@@ -1,0 +1,11 @@
+--- qtbase/src/testlib/testlib.pro
++++ qtbase/src/testlib/testlib.pro
+@@ -81,7 +81,7 @@
+     }
+ 
+     # XCTest support (disabled for now)
+-    false:!lessThan(QMAKE_XCODE_VERSION, "6.0") {
++    false:!lessThan(QMAKE_XCODE_VERSION, "6.0"):!lessThan(QMAKE_DEPLOYMENT_TARGET, "10.10") {
+         OBJECTIVE_SOURCES += qxctestlogger.mm
+         HEADERS += qxctestlogger_p.h
+ 

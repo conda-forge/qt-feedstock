@@ -1,0 +1,11 @@
+--- work/qtbase/mkspecs/features/mac/sdk.prf.orig	2018-02-13 22:57:59.000000000 +0000
++++ work/qtbase/mkspecs/features/mac/sdk.prf	2018-02-13 22:59:44.000000000 +0000
+@@ -21,7 +21,7 @@
+         QMAKE_MAC_SDK.$${sdk}.$${info} = $$system("xcrun --sdk $$sdk $$info 2>/dev/null")
+         # --show-sdk-platform-path won't work for Command Line Tools; this is fine
+         # only used by the XCTest backend to testlib
+-        isEmpty(QMAKE_MAC_SDK.$${sdk}.$${info}):if(!isEmpty(QMAKE_XCODEBUILD_PATH)|!equals(info, "--show-sdk-platform-path")): \
++        isEmpty(QMAKE_MAC_SDK.$${sdk}.$${info}):if(!isEmpty(QMAKE_XCODEBUILD_PATH):!equals(info, "--show-sdk-platform-path")): \
+             error("Could not resolve SDK $$info for \'$$sdk\'")
+         cache(QMAKE_MAC_SDK.$${sdk}.$${info}, set stash, QMAKE_MAC_SDK.$${sdk}.$${info})
+     }

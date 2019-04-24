@@ -1,0 +1,36 @@
+diff -urN qtbase.orig/mkspecs/macx-clang/qmake.conf qtbase/mkspecs/macx-clang/qmake.conf
+--- qtbase.orig/mkspecs/macx-clang/qmake.conf	2018-02-13 11:08:52.000000000 +0000
++++ qtbase/mkspecs/macx-clang/qmake.conf	2018-02-13 11:10:31.000000000 +0000
+@@ -2,7 +2,7 @@
+ # qmake configuration for Clang on OS X
+ #
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.10
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ QMAKE_APPLE_DEVICE_ARCHS = x86_64
+ 
+diff -urN qtbase.orig/mkspecs/macx-g++/qmake.conf qtbase/mkspecs/macx-g++/qmake.conf
+--- qtbase.orig/mkspecs/macx-g++/qmake.conf	2018-02-13 11:08:52.000000000 +0000
++++ qtbase/mkspecs/macx-g++/qmake.conf	2018-02-13 11:10:51.000000000 +0000
+@@ -10,7 +10,7 @@
+ CONFIG                 += app_bundle incremental global_init_link_order lib_version_first
+ QMAKE_INCREMENTAL_STYLE = sublib
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.10
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ QMAKE_APPLE_DEVICE_ARCHS = x86_64
+ 
+diff -urN qtbase.orig/mkspecs/macx-icc/qmake.conf qtbase/mkspecs/macx-icc/qmake.conf
+--- qtbase.orig/mkspecs/macx-icc/qmake.conf	2018-02-13 11:08:52.000000000 +0000
++++ qtbase/mkspecs/macx-icc/qmake.conf	2018-02-13 11:10:42.000000000 +0000
+@@ -95,7 +95,7 @@
+ QMAKE_CFLAGS_HIDESYMS   += -fvisibility=hidden
+ QMAKE_CXXFLAGS_HIDESYMS += $$QMAKE_CFLAGS_HIDESYMS -fvisibility-inlines-hidden
+ 
+-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.10
++QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+ 
+ QMAKE_APPLE_DEVICE_ARCHS = x86_64
+ 

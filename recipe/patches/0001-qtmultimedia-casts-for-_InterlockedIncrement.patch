@@ -1,0 +1,17 @@
+--- work/qtmultimedia/src/plugins/directshow/camera/dscamerasession.cpp.orig	2017-09-20 07:07:03.446258400 -0700
++++ work/qtmultimedia/src/plugins/directshow/camera/dscamerasession.cpp	2017-09-20 07:08:45.102717500 -0700
+@@ -92,12 +92,12 @@
+ 
+     STDMETHODIMP_(ULONG) AddRef()
+     {
+-        return InterlockedIncrement(&m_ref);
++        return InterlockedIncrement(reinterpret_cast<volatile long *>(&m_ref));
+     }
+ 
+     STDMETHODIMP_(ULONG) Release()
+     {
+-        ULONG ref = InterlockedDecrement(&m_ref);
++        ULONG ref = InterlockedDecrement(reinterpret_cast<volatile long *>(&m_ref));
+         if (ref == 0)
+             delete this;
+         return ref;

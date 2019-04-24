@@ -1,0 +1,35 @@
+diff -urN qtwebengine.orig/mkspecs/features/functions.prf qtwebengine/mkspecs/features/functions.prf
+--- qtwebengine.orig/mkspecs/features/functions.prf	2018-02-13 12:04:11.000000000 +0000
++++ qtwebengine/mkspecs/features/functions.prf	2018-02-13 12:17:37.000000000 +0000
+@@ -223,7 +223,7 @@
+     requested_minor = $$2
+     requested_patch = $$3
+     isEmpty(requested_patch): requested_patch = 0
+-    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("/usr/bin/xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
++    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
+     export(WEBENGINE_OSX_SDK_PRODUCT_VERSION)
+     isEmpty(WEBENGINE_OSX_SDK_PRODUCT_VERSION) {
+         skipBuild("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")
+diff -urN qtwebengine.orig/src/3rdparty/chromium/build/mac_toolchain.py qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py
+--- qtwebengine.orig/src/3rdparty/chromium/build/mac_toolchain.py	2018-02-13 12:05:21.000000000 +0000
++++ qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py	2018-02-13 12:11:09.000000000 +0000
+@@ -128,7 +128,7 @@
+   try:
+     build_dir = os.path.join(TOOLCHAIN_BUILD_DIR, 'Contents/Developer')
+     subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', build_dir])
+-    subprocess.check_call(['sudo', '/usr/bin/xcodebuild', '-license', 'accept'])
++    subprocess.check_call(['sudo', 'xcodebuild', '-license', 'accept'])
+   finally:
+     subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', old_path])
+ 
+--- qtwebengine.orig/src/core/config/mac_osx.pri	2018-02-28 17:24:37.000000000 +0000
++++ qtwebengine/src/core/config/mac_osx.pri	2018-02-28 17:25:04.000000000 +0000
+@@ -5,7 +5,7 @@
+ # otherwise query for it.
+ QMAKE_MAC_SDK_VERSION = $$eval(QMAKE_MAC_SDK.$${QMAKE_MAC_SDK}.SDKVersion)
+ isEmpty(QMAKE_MAC_SDK_VERSION) {
+-     QMAKE_MAC_SDK_VERSION = $$system("/usr/bin/xcodebuild -sdk $${QMAKE_MAC_SDK} -version SDKVersion 2>/dev/null")
++     QMAKE_MAC_SDK_VERSION = $$system("xcodebuild -sdk $${QMAKE_MAC_SDK} -version SDKVersion 2>/dev/null")
+      isEmpty(QMAKE_MAC_SDK_VERSION): error("Could not resolve SDK version for \'$${QMAKE_MAC_SDK}\'")
+ }
+ 

@@ -1,0 +1,11 @@
+--- a/qtwebengine/src/core/gn_run.pro	2018-03-03 16:38:16.978906080 +0000
++++ b/qtwebengine/src/core/gn_run.pro	2018-03-03 16:38:29.013053867 +0000
+@@ -45,7 +45,7 @@
+     gn_src_root = $$system_quote($$system_path($$QTWEBENGINE_ROOT/$$getChromiumSrcDir()))
+     gn_build_root = $$system_quote($$system_path($$OUT_PWD/$$getConfigDir()))
+     gn_python = "--script-executable=$$pythonPathForSystem()"
+-    gn_run = $$gn_binary gen $$gn_build_root $$gn_python --args=$$gn_args --root=$$gn_src_root
++    gn_run = $$gn_binary gen $$gn_build_root $$gn_python --args=$$gn_args --root=$$gn_src_root -v
+ 
+     message("Running: $$gn_run ")
+     !system($$gn_run) {

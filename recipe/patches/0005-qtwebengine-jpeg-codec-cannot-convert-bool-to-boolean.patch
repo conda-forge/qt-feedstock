@@ -1,0 +1,91 @@
+--- a/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp	2018-03-03 16:22:09.354028397 +0000
++++ b/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp	2018-03-03 16:24:54.348053417 +0000
+@@ -57,12 +57,12 @@
+ };
+ extern "C" {
+ static boolean _src_fill_buffer(j_decompress_ptr cinfo) {
+-  return 0;
++  return FALSE;
+ }
+ };
+ extern "C" {
+ static boolean _src_resync(j_decompress_ptr cinfo, int desired) {
+-  return 0;
++  return FALSE;
+ }
+ };
+ extern "C" {
+@@ -126,7 +126,7 @@
+     jpeg_destroy_decompress(&cinfo);
+     return false;
+   }
+-  int ret = jpeg_read_header(&cinfo, true);
++  int ret = jpeg_read_header(&cinfo, TRUE);
+   if (ret != JPEG_HEADER_OK) {
+     jpeg_destroy_decompress(&cinfo);
+     return false;
+@@ -210,7 +210,7 @@
+   }
+   cinfo.image_width = m_OrigWidth;
+   cinfo.image_height = m_OrigHeight;
+-  int ret = jpeg_read_header(&cinfo, true);
++  int ret = jpeg_read_header(&cinfo, TRUE);
+   if (ret != JPEG_HEADER_OK)
+     return false;
+ 
+@@ -433,7 +433,7 @@
+   if (setjmp(ctx->m_JumpMark) == -1)
+     return 1;
+ 
+-  int ret = jpeg_read_header(&ctx->m_Info, true);
++  int ret = jpeg_read_header(&ctx->m_Info, TRUE);
+   if (ret == JPEG_SUSPENDED)
+     return 2;
+   if (ret != JPEG_HEADER_OK)
+--- a/qtwebengine/src/3rdparty/chromium/ui/gfx/codec/jpeg_codec.cc	2018-03-03 20:23:29.903557099 +0000
++++ b/qtwebengine/src/3rdparty/chromium/ui/gfx/codec/jpeg_codec.cc	2018-03-03 20:24:19.319167344 +0000
+@@ -121,7 +121,7 @@
+   // tell libjpeg where to write the next data
+   cinfo->dest->next_output_byte = &(*state->out)[state->image_buffer_used];
+   cinfo->dest->free_in_buffer = state->out->size() - state->image_buffer_used;
+-  return 1;
++  return TRUE;
+ }
+ 
+ // Cleans up the JpegEncoderState to prepare for returning in the final form.
+@@ -262,7 +262,7 @@
+   cinfo.data_precision = 8;
+ 
+   jpeg_set_defaults(&cinfo);
+-  jpeg_set_quality(&cinfo, quality, 1);  // quality here is 0-100
++  jpeg_set_quality(&cinfo, quality, TRUE);  // quality here is 0-100
+ 
+   // set up the destination manager
+   jpeg_destination_mgr destmgr;
+@@ -274,7 +274,7 @@
+   JpegEncoderState state(output);
+   cinfo.client_data = &state;
+ 
+-  jpeg_start_compress(&cinfo, 1);
++  jpeg_start_compress(&cinfo, TRUE);
+ 
+   // feed it the rows, doing necessary conversions for the color format
+ #ifdef JCS_EXTENSIONS
+@@ -360,7 +360,7 @@
+ //   set to a positive value if TRUE is returned. A FALSE return should only
+ //   be used when I/O suspension is desired."
+ boolean FillInputBuffer(j_decompress_ptr cinfo) {
+-  return false;
++  return FALSE;
+ }
+ 
+ // Skip data in the buffer. Since we have all the data at once, this operation
+@@ -488,7 +488,7 @@
+   cinfo.client_data = &state;
+ 
+   // fill the file metadata into our buffer
+-  if (jpeg_read_header(&cinfo, true) != JPEG_HEADER_OK)
++  if (jpeg_read_header(&cinfo, TRUE) != JPEG_HEADER_OK)
+     return false;
+ 
+   // we want to always get RGB data out

@@ -73,7 +73,7 @@ build:
     - /usr/lib/libcups.2.dylib  # [osx]
     - /usr/lib/libresolv.9.dylib  # [osx]
     - /usr/lib/libsandbox.1.dylib  # [osx]
-    - /System/Library/Frameworks/CoreLocation.framework/**  # [osx]
+    - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
   features:
     - vc{{ vc }} # [win]
 

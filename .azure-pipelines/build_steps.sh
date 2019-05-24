@@ -30,7 +30,7 @@ run_conda_forge_build_setup
 # "recipe/yum_requirements.txt" file. After updating that file,
 # run "conda smithy rerender" and this line will be updated
 # automatically.
-/usr/bin/sudo -n yum install -y chrpath ruby
+/usr/bin/sudo -n yum install -y mesa-libGL libX11-devel libXt-devel libXext-devel chrpath libXrender-devel gtk2-devel dbus-devel libSM-devel libICE-devel xorg-x11-server-Xvfb ruby
 
 
 # make the build number clobber

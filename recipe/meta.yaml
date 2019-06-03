@@ -127,10 +127,6 @@ requirements:
     - m2-patch                           # [win]
     - jom                                # [win]
     - perl 5.*
-    # For QDoc
-    # http://doc.qt.io/Qt-5/qdoc-guide-clang.html
-    - llvmdev
-    - clangdev
   host:
     # For pkg-config gl, fontconfig + freetype
     - pthread-stubs                      # [linux]
@@ -165,6 +161,10 @@ requirements:
     # We cannot install OpenSSL into the prefix when building qtwebengine
     # on linux as BoringSSL and OpenSSL then conflict with each other.
     - openssl                            # [win]
+    # For QDoc
+    # http://doc.qt.io/Qt-5/qdoc-guide-clang.html
+    - llvmdev
+    - clangdev
   run:
     - openssl                            # [not osx]
     - libxcb                             # [linux]

@@ -125,6 +125,10 @@ requirements:
     - m2-patch                           # [win]
     - jom                                # [win]
     - perl 5.*
+    # Add readline here, so that newest readline is used.
+    # Otherwise build and host might end up with two different versions
+    # If they do, merge_build_host will fail.
+    - readline                           # [linux]
   host:
     - dbus                               # [linux]
     - fontconfig                         # [linux]

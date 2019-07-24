@@ -76,6 +76,10 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     export OPENSSL_LIBS="-L${SRC_DIR}/openssl_hack/lib -lssl -lcrypto"
     rm -rf ${PREFIX}/include/openssl
 
+    # isuruf: qtwebengine comes bundled with chromium which bundles icu. chromium has a non-default build option to use ICU from system,
+    # but I don't know how to pass it from qt's build system. So, change the default in chromium to use ICU from system
+    sed -i "s/use_system_icu = false/use_system_icu = true/g" qtwebengine/src/3rdparty/chromium/third_party/icu/BUILD.gn
+
     # Qt has some braindamaged behaviour around handling compiler system include and lib paths. Basically, if it finds any include dir
     # that is a system include dir then it prefixes it with -isystem. Problem is, passing -isystem <blah> causes GCC to forget all the
     # other system include paths. The reason that Qt needs to know about these paths is probably due to moc needing to know about them

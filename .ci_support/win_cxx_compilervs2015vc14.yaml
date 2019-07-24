@@ -5,7 +5,7 @@ channel_targets:
 cxx_compiler:
 - vs2015
 icu:
-- '58'
+- '64.2'
 jpeg:
 - '9'
 libpng:

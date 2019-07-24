@@ -61,7 +61,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 2
+  number: 3
   skip: True  # [(win and vc != 14) or ppc64le]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
@@ -125,6 +125,10 @@ requirements:
     - m2-patch                           # [win]
     - jom                                # [win]
     - perl 5.*
+    # Add readline here, so that newest readline is used.
+    # Otherwise build and host might end up with two different versions
+    # If they do, merge_build_host will fail.
+    - readline                           # [linux]
   host:
     - dbus                               # [linux]
     - fontconfig                         # [linux]
@@ -209,6 +213,7 @@ test:
 about:
   home: http://qt-project.org
   license: LGPL-3.0
+  license_file: LICENSE.LGPLv3
   summary: 'Qt is a cross-platform application and UI framework.'
   description: |
     Qt helps you create connected devices, UIs & applications that run

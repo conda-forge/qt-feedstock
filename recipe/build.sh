@@ -1,5 +1,3 @@
-set -x
-
 # Clean config for dirty builds
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true
@@ -87,24 +85,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # https://github.com/qt/qtbase/commit/0b144bc76a368ecc6c5c1121a1b51e888a0621ac
     # https://codereview.qt-project.org/#/c/157817/
     #
-    declare -a INCDIRS
-    INCDIRS=(-I ${PREFIX}/include)
-    SYSINCDIRS=$(echo "" | ${CXX} -xc++ -E -v - 2>&1 | awk '/#include <...> search starts here:/{flag=1;next}/End of search list./{flag=0}flag')
-    for SYSINCDIR in ${SYSINCDIRS}; do
-      INCDIRS+=(-I ${SYSINCDIR})
-    done
+    sed -i "s/-isystem//g" "qtbase/mkspecs/common/gcc-base.conf"
     export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
-    # echo "#!/usr/bin/env bash"                                                        > ./pkg-config
-    # echo "pc_res=\$(${USED_BUILD_PREFIX}/bin/pkg-config \"\$@\")"                    >> ./pkg-config
-    # echo "res=\$?"                                                                   >> ./pkg-config
-    # echo "if [[ \${res} != 0 ]]; then"                                               >> ./pkg-config
-    # echo "  echo \${pc_res}"                                                         >> ./pkg-config
-    # echo "  exit \${res}"                                                            >> ./pkg-config
-    # echo "fi"                                                                        >> ./pkg-config
-    # echo "echo \${pc_res} | sed 's|[a-zA-Z0-9_-/\.]*sysroot[a-zA-Z0-9\_-/.]*||g'"    >> ./pkg-config
-    # echo "exit 0"                                                                    >> ./pkg-config
-    # chmod +x ./pkg-config
-    # cat ./pkg-config
+
     export PATH=${PWD}:${PATH}
     declare -a SKIPS
     if [[ ${MINIMAL_BUILD} == yes ]]; then
@@ -120,6 +103,24 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       SKIPS+=(-skip); SKIPS+=(qttools)
       SKIPS+=(-skip); SKIPS+=(qtlocation)
       SKIPS+=(-skip); SKIPS+=(qt3d)
+    fi
+    declare -a COS6_MISSING_DEFINES
+    if [[ ${HOST} == *cos6* ]]; then
+      COS6_MISSING_DEFINES+=(-DSYN_DROPPED=3)
+      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY1=0x2c0)
+      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY2=0x2c1)
+      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY3=0x2c2)
+      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY4=0x2c3)
+      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY17=0x2d0)
+      COS6_MISSING_DEFINES+=(-DINPUT_PROP_POINTER=0x00)
+      COS6_MISSING_DEFINES+=(-DINPUT_PROP_DIRECT=0x01)
+      COS6_MISSING_DEFINES+=(-DINPUT_PROP_BUTTONPAD=0x02 )
+      COS6_MISSING_DEFINES+=(-DINPUT_PROP_SEMI_MT=0x03 )
+      COS6_MISSING_DEFINES+=(-DINPUT_PROP_MAX=0x1f)
+      COS6_MISSING_DEFINES+=(-DINPUT_PROP_CNT=0x20 )
+      COS6_MISSING_DEFINES+=(-DABS_MT_SLOT=0x2f )
+      COS6_MISSING_DEFINES+=(-DABS_MT_PRESSURE=0x3a)
+      COS6_MISSING_DEFINES+=(-DABS_MT_DISTANCE=0x3b)
     fi
 
     if [[ 1 == 1 ]]; then
@@ -139,9 +140,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -archdatadir ${PREFIX} \
                 -datadir ${PREFIX} \
                 -I ${SRC_DIR}/openssl_hack/include \
+                -I ${PREFIX}/include \
                 -L ${PREFIX}/lib \
                 -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
-                "${INCDIRS[@]}" \
                 -release \
                 -opensource \
                 -confirm-license \
@@ -176,20 +177,20 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
                 -D GLX_GLXEXT_PROTOTYPES \
-                "${SKIPS[@]}"
+                "${SKIPS[@]}" "${COS6_MISSING_DEFINES[@]}"
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
 #                -ltcg \
 #                --disable-new-dtags \
 
     if [[ ${MINIMAL_BUILD} != yes ]]; then
-      LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
+      CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
       if find . -name "libQt5WebEngine*so" -exec false {} +; then
         echo "Did not build qtwebengine, exiting"
         exit 1
       fi
     fi
-    LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
+    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
     fi
     make install
 fi
@@ -312,3 +313,4 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     done
   popd
 fi
+

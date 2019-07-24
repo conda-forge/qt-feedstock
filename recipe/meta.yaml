@@ -39,6 +39,7 @@ source:
       - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
       - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
       - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
+      - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 

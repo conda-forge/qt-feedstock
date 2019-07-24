@@ -104,26 +104,36 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       SKIPS+=(-skip); SKIPS+=(qtlocation)
       SKIPS+=(-skip); SKIPS+=(qt3d)
     fi
-    declare -a COS6_MISSING_DEFINES
+    declare -A COS6_MISSING_DEFINES
     if [[ ${HOST} == *cos6* ]]; then
-      COS6_MISSING_DEFINES+=(-DSYN_DROPPED=3)
-      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY1=0x2c0)
-      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY2=0x2c1)
-      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY3=0x2c2)
-      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY4=0x2c3)
-      COS6_MISSING_DEFINES+=(-DBTN_TRIGGER_HAPPY17=0x2d0)
-      COS6_MISSING_DEFINES+=(-DINPUT_PROP_POINTER=0x00)
-      COS6_MISSING_DEFINES+=(-DINPUT_PROP_DIRECT=0x01)
-      COS6_MISSING_DEFINES+=(-DINPUT_PROP_BUTTONPAD=0x02 )
-      COS6_MISSING_DEFINES+=(-DINPUT_PROP_SEMI_MT=0x03 )
-      COS6_MISSING_DEFINES+=(-DINPUT_PROP_MAX=0x1f)
-      COS6_MISSING_DEFINES+=(-DINPUT_PROP_CNT=0x20 )
-      COS6_MISSING_DEFINES+=(-DABS_MT_SLOT=0x2f )
-      COS6_MISSING_DEFINES+=(-DABS_MT_PRESSURE=0x3a)
-      COS6_MISSING_DEFINES+=(-DABS_MT_DISTANCE=0x3b)
+      COS6_MISSING_DEFINES["SYN_DROPPED"]="3"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY1"]="0x2c0"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY2"]="0x2c1"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY3"]="0x2c2"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY4"]="0x2c3"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY17"]="0x2d0"
+      COS6_MISSING_DEFINES["INPUT_PROP_POINTER"]="0x00"
+      COS6_MISSING_DEFINES["INPUT_PROP_DIRECT"]="0x01"
+      COS6_MISSING_DEFINES["INPUT_PROP_BUTTONPAD"]="0x02"
+      COS6_MISSING_DEFINES["INPUT_PROP_SEMI_MT"]="0x03"
+      COS6_MISSING_DEFINES["INPUT_PROP_MAX"]="0x1f"
+      COS6_MISSING_DEFINES["INPUT_PROP_CNT"]="0x20"
+      COS6_MISSING_DEFINES["ABS_MT_SLOT"]="0x2f"
+      COS6_MISSING_DEFINES["ABS_MT_PRESSURE"]="0x3a"
+      COS6_MISSING_DEFINES["ABS_MT_DISTANCE"]="0x3b"
+
+      # MAJOR HACK ahead!!!!!!
+      # The above macros are missing in cos6 and there are a few files that I have to patch to make it work
+      # Tried giving this as macros to ./configure, but the configure script doesn't pass them to ninja when building chromium.
+      for key in ${!COS6_MISSING_DEFINES[@]}; do
+        mv ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h.bak
+        cp ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h.bak ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
+        echo "#ifndef ${key}"                                 >> ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
+        echo "#define ${key} ${COS6_MISSING_DEFINES[${key}]}" >> ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
+        echo "#endif" >> ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
+      done
     fi
 
-    if [[ 1 == 1 ]]; then
     # ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 is because our compilers don't look in sysroot/usr/lib64
     # CentOS7 has:
     # LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/4.8.5/:/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../:/lib/:/usr/lib/
@@ -177,7 +187,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
                 -D GLX_GLXEXT_PROTOTYPES \
-                "${SKIPS[@]}" "${COS6_MISSING_DEFINES[@]}"
+                "${SKIPS[@]}"
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
 #                -ltcg \
@@ -191,7 +201,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       fi
     fi
     CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
-    fi
     make install
 fi
 

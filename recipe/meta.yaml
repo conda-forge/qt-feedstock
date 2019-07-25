@@ -1,67 +1,56 @@
-{% set major_minor = "5.9" %}
-{% set version = major_minor + ".7" %}
+{% set major_minor = "5.13" %}
+{% set version = major_minor + ".0" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/{{ major_minor }}/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
-    sha256: 1c3852aa48b5a1310108382fb8f6185560cefc3802e81ecc099f4e62ee38516c
+  - url: http://download.qt.io/official_releases/qt/{{ major_minor }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
+    sha256: 2cba31e410e169bd5cdae159f839640e672532a4687ea0f265f686421e0e86d6
     patches:
       # qtbase
-      - patches/0000-qtbase-QSslSocket-OpenSSL-1.1-backend.patch
+      # - patches/0000-qtbase-QSslSocket-OpenSSL-1.1-backend.patch
       - patches/0010-osx-xctest-check.patch
-      - patches/0011-osx-allow-any-xcrun-in-PATH.patch
-      # - patches/0012-qtbase-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-all-mac.patch
-      # - patches/0013-Restore-macOS-10.9-support.patch
-      # - patches/0013-NSEnumerator-is-a-non-parameterized-class.patch
-      - patches/0014-Fix-command-line-tools-build.patch
-      - patches/0015-qtbase-use-better-clang-optimize-size.patch
+      # - patches/0011-osx-allow-any-xcrun-in-PATH.patch
+      # - patches/0014-Fix-command-line-tools-build.patch
+      # - patches/0015-qtbase-use-better-clang-optimize-size.patch
       - patches/0016-qtbase-use-better-gcc-optimize-size.patch
-      - patches/0017-qtbase-never-enable-new-dtags.patch
-      - patches/0018-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.16299.0.patch
-      # - patches/0019-qtbase-Hack-static-extension-onto-libs-for-qtlibinfix-on-Windows.patch
+      # - patches/0017-qtbase-never-enable-new-dtags.patch
+      # - patches/0018-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.16299.0.patch
       - patches/0020-qtbase-qmake-remove-qtlibinfix-from-libname-before-finding-prl.patch  # [win]
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
       # qtwebengine
-      - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
+      # - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      # - patches/0003-qtwebengine-mac_sdk_min-to-10.9.patch
       - patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
-      - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
+      # - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
       - patches/0006-qtwebengine-run-gn-verbosely.patch
       # https://github.com/google/boringssl/commit/17cf2cb1d226b0ba2401304242df7ddd3b6f1ff2
       # https://www.imperialviolet.org/2016/06/26/nonnull.html
-      - patches/0007-qtwebengine-boringssl-Work-around-language-and-compiler-bug-in-memcpy-etc.patch
-      - patches/0008-qtwebengine-Allow-build-to-proceed-on-macOS-10-9.patch
+      # - patches/0007-qtwebengine-boringssl-Work-around-language-and-compiler-bug-in-memcpy-etc.patch
+      # - patches/0008-qtwebengine-Allow-build-to-proceed-on-macOS-10-9.patch
       # qtgamepad
       - patches/0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 
-  - url: http://download.qt.io/community_releases/{{ major_minor }}/{{ major_minor }}.0-final/qtwebkit-opensource-src-{{ major_minor }}.0.tar.xz            # [qtwebkit == 'true']
-    sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']
-    folder: qtwebkit                                                                                              # [qtwebkit == 'true']
-    patches:                                                                                                      # [qtwebkit == 'true']
-      - patches/0001-qtwebkit-old-ld-compat.patch                                                                         # [qtwebkit == 'true']
-      - patches/0002-qtwebkit-ruby-1.8.patch                                                                              # [qtwebkit == 'true']
-      # Not needed since updating to CentOS6?
-      # - patches/0003-qtwebkit-O_CLOEXEC-workaround.patch                                                                # [qtwebkit == 'true']
-      - patches/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [qtwebkit == 'true']
-      - patches/0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
+  # - url: http://download.qt.io/community_releases/{{ major_minor }}/{{ major_minor }}.0-final/qtwebkit-opensource-src-{{ major_minor }}.0.tar.xz  # [qtwebkit == 'true']
+  #   sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04  # [qtwebkit == 'true']
+  #   folder: qtwebkit  # [qtwebkit == 'true']
+  #   patches:  # [qtwebkit == 'true']
+  #     - patches/0001-qtwebkit-old-ld-compat.patch  # [qtwebkit == 'true']
+  #     - patches/0002-qtwebkit-ruby-1.8.patch  # [qtwebkit == 'true']
+  #     - patches/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch  # [qtwebkit == 'true']
+  #     - patches/0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch  # [qtwebkit == 'true']
 
-  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-32-mesa_12_0_rc2.7z      # [win32]
-    sha256: 656015ab03a6686854b920a0a0bf77b4e46525ee8d5396bf04a49ef80a53427d                                      # [win32]
-    folder: opengl32sw                                                                                            # [win32]
-
-  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-64-mesa_12_0_rc2.7z      # [win64]
-    sha256: 2a0d2f92c60e0962ef5f6039d3793424c6f39e49ba27ac04a5b21ca4ae012e15                                      # [win64]
-    folder: opengl32sw                                                                                            # [win64]
+  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-64-mesa_12_0_rc2.7z  # [win64]
+    sha256: 2a0d2f92c60e0962ef5f6039d3793424c6f39e49ba27ac04a5b21ca4ae012e15  # [win64]
+    folder: opengl32sw  # [win64]
 
 build:
-  number: 3
+  number: 0
   skip: True  # [(win and vc != 14) or ppc64le]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
@@ -77,85 +66,71 @@ build:
 
 requirements:
   build:
-    - {{ compiler('cxx') }}              # [not win]
-    - {{ compiler('c') }}                # [not win]
-    - vs2017_win-64                      # [win64]
-    - vs2017_win-32                      # [win32]
+    - {{ compiler('cxx') }}  # [not win]
+    - {{ compiler('c') }}  # [not win]
+    - vs2017_win-64  # [win64]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
-    - {{ cdt('libx11-devel') }}          # [linux]
-    - {{ cdt('libxext-devel') }}         # [linux]
-    - {{ cdt('libxrender-devel') }}      # [linux]
-    - {{ cdt('mesa-libgl-devel') }}      # [linux]
-    - {{ cdt('mesa-libegl-devel') }}     # [linux]
-    - {{ cdt('mesa-dri-drivers') }}      # [linux]
-    - {{ cdt('libxau-devel') }}          # [linux]
-    - {{ cdt('alsa-lib-devel') }}        # [linux]
-    - {{ cdt('gtk2-devel') }}            # [linux]
-    - {{ cdt('gtkmm24-devel') }}         # [linux]
-    - {{ cdt('libdrm-devel') }}          # [linux]
-    - {{ cdt('libxcomposite-devel') }}   # [linux]
-    - {{ cdt('libxcursor-devel') }}      # [linux]
-    - {{ cdt('libxi-devel') }}           # [linux]
-    - {{ cdt('libxrandr-devel') }}       # [linux]
-    - {{ cdt('pciutils-devel') }}        # [linux]
-    - {{ cdt('libxscrnsaver-devel') }}   # [linux]
-    - {{ cdt('libxtst-devel') }}         # [linux]
-    - {{ cdt('libselinux-devel') }}      # [linux]
-    - {{ cdt('libxdamage') }}            # [linux]
-    - {{ cdt('libxdamage-devel') }}      # [linux]
-    - {{ cdt('libxfixes') }}             # [linux]
-    - {{ cdt('libxfixes-devel') }}       # [linux]
-    - {{ cdt('libxxf86vm') }}            # [linux]
-    - {{ cdt('cups-devel') }}            # [linux]
+    - {{ cdt('libx11-devel') }}  # [linux]
+    - {{ cdt('libxext-devel') }}  # [linux]
+    - {{ cdt('libxrender-devel') }}  # [linux]
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
+    - {{ cdt('mesa-libegl-devel') }}  # [linux]
+    - {{ cdt('mesa-dri-drivers') }}  # [linux]
+    - {{ cdt('libxau-devel') }}  # [linux]
+    - {{ cdt('alsa-lib-devel') }}  # [linux]
+    - {{ cdt('gtk2-devel') }}  # [linux]
+    - {{ cdt('gtkmm24-devel') }}  # [linux]
+    - {{ cdt('libdrm-devel') }}  # [linux]
+    - {{ cdt('libxcomposite-devel') }}  # [linux]
+    - {{ cdt('libxcursor-devel') }}  # [linux]
+    - {{ cdt('libxi-devel') }}  # [linux]
+    - {{ cdt('libxrandr-devel') }}  # [linux]
+    - {{ cdt('pciutils-devel') }}  # [linux]
+    - {{ cdt('libxscrnsaver-devel') }}  # [linux]
+    - {{ cdt('libxtst-devel') }}  # [linux]
+    - {{ cdt('libselinux-devel') }}  # [linux]
+    - {{ cdt('libxdamage') }}  # [linux]
+    - {{ cdt('libxdamage-devel') }}  # [linux]
+    - {{ cdt('libxfixes') }}  # [linux]
+    - {{ cdt('libxfixes-devel') }}  # [linux]
+    - {{ cdt('libxxf86vm') }}  # [linux]
+    - {{ cdt('cups-devel') }}  # [linux]
 
     # For fontconfig + freetype
-    - pkg-config                         # [linux]
-    - pthread-stubs                      # [linux]
-    - make                               # [unix]
+    - pkg-config  # [linux]
+    - pthread-stubs  # [linux]
+    - make  # [not win]
     # Probably only needed for WebEngine
     - python 2.7*
     - ninja
-    - ruby                               # [linux]
-    - bison                              # [linux]
-    - flex                               # [linux]
-    - gperf                              # [linux]
-    - m2-gperf                           # [win]
-    - m2-bison                           # [win]
-    - m2-flex                            # [win]
-    - m2-patch                           # [win]
-    - jom                                # [win]
+    - ruby  # [linux]
+    - bison  # [linux]
+    - flex  # [linux]
+    - gperf  # [linux]
+    - m2-gperf  # [win]
+    - m2-bison  # [win]
+    - m2-flex  # [win]
+    - m2-patch  # [win]
+    - jom  # [win]
     - perl 5.*
     # Add readline here, so that newest readline is used.
     # Otherwise build and host might end up with two different versions
     # If they do, merge_build_host will fail.
-    - readline                           # [linux]
+    - readline  # [linux]
   host:
-    - dbus                               # [linux]
-    - fontconfig                         # [linux]
-    - freetype                           # [linux]
-    - gst-plugins-base                   # [linux]
-    - gstreamer                          # [linux]
-    - glib                               # [linux]
-    - libxml2                            # [linux]
-    # For WebEngine, but for compatiblity we want to restrict
-    # usage of our own libraries. It seems Chromium prefers
-    # expat to libxml2 and we will try to froce it to use the
-    # bundled one.
-    # Other than that (and esp. for Google developed libs) we
-    # avoid our own packagess. FFMPEG was not detected anyway,
-    # and neither was libvpx (AFAICT).
-    # - libxml2                            # [unix]
-    # - libxslt                            # [unix]
-    # - libopus                            # [unix]
-    # - libvpx                             # [unix]
-    # - ffmpeg                             # [unix]
-    - expat                                # [linux]
+    - dbus  # [linux]
+    - fontconfig  # [linux]
+    - freetype  # [linux]
+    - gst-plugins-base  # [linux]
+    - gstreamer  # [linux]
+    - glib  # [linux]
+    - libxml2  # [linux]
     - icu
     - jpeg
     - libpng
     - sqlite
     - zlib
-    - libxcb                             # [linux]
+    - libxcb  # [linux]
     # We cannot install OpenSSL into the prefix when building qtwebengine
     # on linux as BoringSSL and OpenSSL then conflict with each other.
     - openssl 1.1.*                      # [win]
@@ -168,30 +143,30 @@ test:
   requires:
     - {{ compiler('cxx') }}
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
-    - {{ cdt('libx11-devel') }}          # [linux]
-    - {{ cdt('libxext-devel') }}         # [linux]
-    - {{ cdt('libxrender-devel') }}      # [linux]
-    - {{ cdt('mesa-libgl-devel') }}      # [linux]
-    - {{ cdt('mesa-libegl-devel') }}     # [linux]
-    - {{ cdt('mesa-dri-drivers') }}      # [linux]
-    - {{ cdt('libxau-devel') }}          # [linux]
-    - {{ cdt('alsa-lib-devel') }}        # [linux]
-    - {{ cdt('gtk2-devel') }}            # [linux]
-    - {{ cdt('gtkmm24-devel') }}         # [linux]
-    - {{ cdt('libdrm-devel') }}          # [linux]
-    - {{ cdt('libxcomposite-devel') }}   # [linux]
-    - {{ cdt('libxcursor-devel') }}      # [linux]
-    - {{ cdt('libxi-devel') }}           # [linux]
-    - {{ cdt('libxrandr-devel') }}       # [linux]
-    - {{ cdt('pciutils-devel') }}        # [linux]
-    - {{ cdt('libxscrnsaver-devel') }}   # [linux]
-    - {{ cdt('libxtst-devel') }}         # [linux]
-    - {{ cdt('libselinux-devel') }}      # [linux]
-    - {{ cdt('libxdamage') }}            # [linux]
-    - {{ cdt('libxdamage-devel') }}      # [linux]
-    - {{ cdt('libxfixes') }}             # [linux]
-    - {{ cdt('libxfixes-devel') }}       # [linux]
-    - {{ cdt('libxxf86vm') }}            # [linux]
+    - {{ cdt('libx11-devel') }}  # [linux]
+    - {{ cdt('libxext-devel') }}  # [linux]
+    - {{ cdt('libxrender-devel') }}  # [linux]
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
+    - {{ cdt('mesa-libegl-devel') }}  # [linux]
+    - {{ cdt('mesa-dri-drivers') }}  # [linux]
+    - {{ cdt('libxau-devel') }}  # [linux]
+    - {{ cdt('alsa-lib-devel') }}  # [linux]
+    - {{ cdt('gtk2-devel') }}  # [linux]
+    - {{ cdt('gtkmm24-devel') }}  # [linux]
+    - {{ cdt('libdrm-devel') }}  # [linux]
+    - {{ cdt('libxcomposite-devel') }}  # [linux]
+    - {{ cdt('libxcursor-devel') }}  # [linux]
+    - {{ cdt('libxi-devel') }}  # [linux]
+    - {{ cdt('libxrandr-devel') }}  # [linux]
+    - {{ cdt('pciutils-devel') }}  # [linux]
+    - {{ cdt('libxscrnsaver-devel') }}  # [linux]
+    - {{ cdt('libxtst-devel') }}  # [linux]
+    - {{ cdt('libselinux-devel') }}  # [linux]
+    - {{ cdt('libxdamage') }}  # [linux]
+    - {{ cdt('libxdamage-devel') }}  # [linux]
+    - {{ cdt('libxfixes') }}  # [linux]
+    - {{ cdt('libxfixes-devel') }}  # [linux]
+    - {{ cdt('libxxf86vm') }}  # [linux]
   files:
     - test/hello.pro
     - test/main-qtwebengine.cpp
@@ -203,18 +178,17 @@ test:
     - xcodebuild
     - xcrun
   commands:
-    - if not exist %LIBRARY_BIN%\\Qt5WebEngine_conda.dll exit 1            # [win]
-    - test -f $PREFIX/lib/libQt5WebEngine.so                               # [linux]
-    - test -f $PREFIX/lib/libQt5WebEngine.dylib                            # [osx]
+    - if not exist %LIBRARY_BIN%\\Qt5WebEngine_conda.dll exit 1  # [win]
+    - test -f $PREFIX/lib/libQt5WebEngine{{ SHLIB_EXT }}  # [not win]
     # sql plugin
-    - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]
+    - test -f $PREFIX/plugins/sqldrivers/libqsqlite{{ SHLIB_EXT }}  # [not win]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]
 
 about:
   home: http://qt-project.org
   license: LGPL-3.0
   license_file: LICENSE.LGPLv3
-  summary: 'Qt is a cross-platform application and UI framework.'
+  summary: 'Qt is a cross-platform application and UI framework'
   description: |
     Qt helps you create connected devices, UIs & applications that run
     anywhere on any device, on any operating system at any time.

@@ -38,9 +38,9 @@ if [[ -d qtwebkit ]]; then
 fi
 
 # Problems: https://bugreports.qt.io/browse/QTBUG-61158
-#           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
+#           (same thing happens for libyuv, it does not pickup the -I${PREFIX}/include)
 # Something to do with BUILD.gn files and/or ninja
-# To find the files that do not include $PREFIX/include:
+# To find the files that do not include ${PREFIX}/include:
 # pushd /opt/conda/conda-bld/qt_1520013782031/work/qtwebengine/src
 # grep -R include_dirs . | grep ninja | grep -v _h_env_ | cut -d':' -f 1 | sort | uniq
 # To find the files that do:
@@ -128,14 +128,14 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       SKIPS+=(-skip); SKIPS+=(qt3d)
     fi
 
-    ./configure -prefix $PREFIX \
-                -libdir $PREFIX/lib \
-                -bindir $PREFIX/bin \
-                -headerdir $PREFIX/include/qt \
-                -archdatadir $PREFIX \
-                -datadir $PREFIX \
+    ./configure -prefix ${PREFIX} \
+                -libdir ${PREFIX}/lib \
+                -bindir ${PREFIX}/bin \
+                -headerdir ${PREFIX}/include/qt \
+                -archdatadir ${PREFIX} \
+                -datadir ${PREFIX} \
                 -I ${SRC_DIR}/openssl_hack/include \
-                -L $PREFIX/lib \
+                -L ${PREFIX}/lib \
                 "${INCDIRS[@]}" \
                 -release \
                 -opensource \
@@ -151,9 +151,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -system-sqlite \
                 -plugin-sql-sqlite \
                 -qt-pcre \
-                -qt-xcb \
-                -qt-xkbcommon \
-                -xkb-config-root /usr/share/X11/xkb \
+                -xcb \
+                -xkbcommon \
                 -dbus \
                 -no-linuxfb \
                 -no-libudev \
@@ -179,13 +178,13 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 #                --disable-new-dtags \
 
     if [[ ${MINIMAL_BUILD} != yes ]]; then
-      LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
+      LD_LIBRARY_PATH=${PREFIX}/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
       if find . -name "libQt5WebEngine*so" -exec false {} +; then
         echo "Did not build qtwebengine, exiting"
         exit 1
       fi
     fi
-    LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
+    LD_LIBRARY_PATH=${PREFIX}/lib make -j${MAKE_JOBS} || exit 1
     make install
 fi
 
@@ -205,15 +204,15 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     export LD=${CXX}
     PATH=${PWD}:${PATH}
 
-    ./configure -prefix $PREFIX \
-                -libdir $PREFIX/lib \
-                -bindir $PREFIX/bin \
-                -headerdir $PREFIX/include/qt \
-                -archdatadir $PREFIX \
-                -datadir $PREFIX \
-                -L $PREFIX/lib \
-                -I $PREFIX/include \
-                -R $PREFIX/lib \
+    ./configure -prefix ${PREFIX} \
+                -libdir ${PREFIX}/lib \
+                -bindir ${PREFIX}/bin \
+                -headerdir ${PREFIX}/include/qt \
+                -archdatadir ${PREFIX} \
+                -datadir ${PREFIX} \
+                -L ${PREFIX}/lib \
+                -I ${PREFIX}/include \
+                -R ${PREFIX}/lib \
                 -release \
                 -opensource \
                 -confirm-license \

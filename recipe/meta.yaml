@@ -190,7 +190,7 @@ test:
     - {{ cdt('gtkmm24-devel') }}         # [linux]
     - {{ cdt('libdrm-devel') }}          # [linux]
     - {{ cdt('libxcomposite-devel') }}   # [linux]
-    - {{ cdt('libxcursor-devel') }}	 # [linux]
+    - {{ cdt('libxcursor-devel') }}      # [linux]
     - {{ cdt('libxi-devel') }}           # [linux]
     - {{ cdt('libxrandr-devel') }}       # [linux]
     - {{ cdt('pciutils-devel') }}        # [linux]

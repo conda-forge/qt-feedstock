@@ -65,7 +65,7 @@ build:
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
-  # merge_build_host: true  # [linux]
+  merge_build_host: true  # [linux]
   run_exports:
     - {{ pin_subpackage('qt', max_pin='x.x') }}
   missing_dso_whitelist:  # [osx]
@@ -168,6 +168,7 @@ requirements:
   run:
     - openssl                            # [not osx]
     - libxcb                             # [linux]
+    - {{ pin_compatible("nss") }}
 
 test:
   requires:

@@ -156,8 +156,8 @@ requirements:
     - icu
     - jpeg
     - libpng
-    - nspr
-    - nss
+    - nspr                               # [unix]
+    - nss                                # [unix]
     - sqlite
     - zlib
     - libxcb                             # [linux]
@@ -171,8 +171,8 @@ requirements:
   run:
     - openssl                            # [not osx]
     - libxcb                             # [linux]
-    - {{ pin_compatible("nss") }}
-    - {{ pin_compatible("nspr") }}
+    - {{ pin_compatible("nss") }}        # [unix]
+    - {{ pin_compatible("nspr") }}       # [unix]
 
 test:
   requires:

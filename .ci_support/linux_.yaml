@@ -1,0 +1,65 @@
+c_compiler:
+- gcc
+c_compiler_version:
+- '7'
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+cxx_compiler:
+- gxx
+cxx_compiler_version:
+- '7'
+dbus:
+- '1'
+docker_image:
+- condaforge/linux-anvil-comp7
+expat:
+- '2.2'
+fontconfig:
+- '2.13'
+freetype:
+- 2.9.1
+glib:
+- '2.58'
+gst_plugins_base:
+- 1.14.4
+gstreamer:
+- 1.14.4
+icu:
+- '64.2'
+jpeg:
+- '9'
+libpng:
+- 1.6.35
+libxml2:
+- '2.9'
+openssl:
+- 1.1.1a
+pin_run_as_build:
+  dbus:
+    max_pin: x
+  expat:
+    max_pin: x.x
+  fontconfig:
+    max_pin: x
+  freetype:
+    max_pin: x
+  icu:
+    max_pin: x
+  jpeg:
+    max_pin: x
+  libpng:
+    max_pin: x.x
+  libxml2:
+    max_pin: x.x
+  openssl:
+    max_pin: x.x.x
+  sqlite:
+    max_pin: x
+  zlib:
+    max_pin: x.x
+sqlite:
+- '3'
+zlib:
+- '1.2'

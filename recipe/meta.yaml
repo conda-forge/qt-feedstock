@@ -74,8 +74,6 @@ build:
     - /usr/lib/libresolv.9.dylib  # [osx]
     - /usr/lib/libsandbox.1.dylib  # [osx]
     - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
-  features:
-    - vc{{ vc }} # [win]
 
 requirements:
   build:
@@ -127,6 +125,10 @@ requirements:
     - m2-patch                           # [win]
     - jom                                # [win]
     - perl 5.*
+    # Add readline here, so that newest readline is used.
+    # Otherwise build and host might end up with two different versions
+    # If they do, merge_build_host will fail.
+    - readline                           # [linux]
   host:
     # For pkg-config gl, fontconfig + freetype
     - pthread-stubs                      # [linux]
@@ -219,6 +221,7 @@ test:
 about:
   home: http://qt-project.org
   license: LGPL-3.0
+  license_file: LICENSE.LGPLv3
   summary: 'Qt is a cross-platform application and UI framework.'
   description: |
     Qt helps you create connected devices, UIs & applications that run

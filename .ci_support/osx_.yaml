@@ -1,0 +1,43 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.12'
+c_compiler:
+- clang
+c_compiler_version:
+- '4'
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+cxx_compiler:
+- clangxx
+cxx_compiler_version:
+- '4'
+icu:
+- '64.2'
+jpeg:
+- '9'
+libpng:
+- 1.6.35
+macos_machine:
+- x86_64-apple-darwin13.4.0
+macos_min_version:
+- '10.9'
+openssl:
+- 1.1.1a
+pin_run_as_build:
+  icu:
+    max_pin: x
+  jpeg:
+    max_pin: x
+  libpng:
+    max_pin: x.x
+  openssl:
+    max_pin: x.x.x
+  sqlite:
+    max_pin: x
+  zlib:
+    max_pin: x.x
+sqlite:
+- '3'
+zlib:
+- '1.2'

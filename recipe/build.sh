@@ -221,7 +221,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     PATH=${PWD}:${PATH}
 
     # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
-    if [[ $CONDA_BUILD_SYSROOT != /opt/MacOSX10.12.sdk ]]; then
+    if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX10.12.sdk" ]]; then
       echo "WARNING: You asked me to use $CONDA_BUILD_SYSROOT as the MacOS SDK"
       echo "         But because of the use of Objective-C Generics we need at"
       echo "         least MacOSX10.12.sdk"

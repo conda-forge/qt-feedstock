@@ -114,7 +114,7 @@ echo SOURCE_PATH = %QTSRC% >> Makefile
 echo INC_PATH = %QTSRC%\include >> Makefile
 set tmpl=win32
 echo/>> Makefile
-type %QTSRC%\qtbase\qmake\Makefile.%tmpl% >> Makefile
+type %QTSRC%\qmake\Makefile.%tmpl% >> Makefile
 %make%
 :: Attempt to avoid:
 :: warning C4651: '/DQT_LIBINFIX="_conda"' specified for precompiled header but not for current compile
@@ -178,6 +178,8 @@ echo on
 type qtbase\Makefile
 echo "qtbase\qmake\Makefile"
 type qtbase\qmake\Makefile
+echo "qtbase\qmake\Makefile.win32"
+type qtbase\qmake\Makefile.win32
 jom -U release
 :: Hooray for racey build systems. You may get a failure about a QtWebengine .stamp file being missing. You may not. Who knows?
 jom -U release

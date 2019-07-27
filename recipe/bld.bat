@@ -175,11 +175,14 @@ echo on
 ::     -skip %WEBBACKEND% -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtwinextras -skip qtsvg -skip qtsensors ^
 ::     -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
-jom -U all
+type qtbase\Makefile
+echo "qtbase\qmake\Makefile"
+type qtbase\qmake\Makefile
+jom -U release
 :: Hooray for racey build systems. You may get a failure about a QtWebengine .stamp file being missing. You may not. Who knows?
-jom -U all
+jom -U release
 if %errorlevel% neq 0 exit /b %errorlevel%
-echo Finished `jom -U all`
+echo Finished `jom -U release`
 jom -U install
 :: I expect raciness here too:
 jom -U install

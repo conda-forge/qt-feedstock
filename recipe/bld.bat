@@ -114,7 +114,7 @@ echo SOURCE_PATH = %QTSRC% >> Makefile
 echo INC_PATH = %QTSRC%\include >> Makefile
 set tmpl=win32
 echo/>> Makefile
-type Makefile.%tmpl% >> Makefile
+type %QTSRC%\qtbase\qmake\Makefile.%tmpl% >> Makefile
 %make%
 :: Attempt to avoid:
 :: warning C4651: '/DQT_LIBINFIX="_conda"' specified for precompiled header but not for current compile

@@ -51,6 +51,8 @@ if "%WEBBACKEND%" == "qtwebengine" (
   rmdir /s /q qtwebengine
 )
 
+set "PATH=%LIBRARY_BIN%;%PATH%"
+
 set OPENGLVER=dynamic
 
 :: Patch does not apply cleanly.  Copy file.

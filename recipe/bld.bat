@@ -86,7 +86,7 @@ copy %RECIPE_DIR%\tst_compiler.cpp qtbase\tests\auto\other\compiler\
 pushd qtbase
 del /q configure.exe
 set QTSRC=%CD%\
-pushd tools\configure
+pushd qmake
 set make=jom
 set QTVERSION=%PKG_VERSION%
 for /f "tokens=1,2,3,4 delims=.= " %%i in ('echo Qt.%QTVERSION%') do (
@@ -114,7 +114,7 @@ echo SOURCE_PATH = %QTSRC% >> Makefile
 echo INC_PATH = %QTSRC%\include >> Makefile
 set tmpl=win32
 echo/>> Makefile
-type %QTSRC%\qmake\Makefile.%tmpl% >> Makefile
+type Makefile.%tmpl% >> Makefile
 %make%
 :: Attempt to avoid:
 :: warning C4651: '/DQT_LIBINFIX="_conda"' specified for precompiled header but not for current compile

@@ -46,22 +46,7 @@ if not exist %LIBRARY_BIN%\opengl32sw.dll exit /b 1
 
 :: WebEngine (Chromium) specific definitions.  Only build this with VS 2015 (no support for python < 3.5)
 if "%WEBBACKEND%" == "qtwebengine" (
-  set "WSDK8=C:\\Program\ Files\ (x86)\\Windows\ Kits\\8.1"
-  set "WDK=C:\\WinDDK\\7600.16385.1"
-  set "INCLUDE=%WSDK8%\Include;%WDK%\inc;%INCLUDE%"
-  if "%ARCH%"=="32" (
-    set "PATH=%WSDK8%\bin\x86;%WDK$%\bin\x86;%PATH%"
-    set "LIB=%LIB%;%WSDK8%\Lib\winv6.3\um\x86"
-  ) else (
-    set "PATH=%WSDK8%\bin\x64;%WDK$%\bin\amd64;%PATH%"
-    set "LIB=%LIB%;%WSDK8%\Lib\winv6.3\um\x64"
-  )
-  set "GYP_DEFINES=windows_sdk_path='%WSDK8%'"
-  set GYP_MSVS_VERSION=2015
-  set GYP_GENERATORS=ninja
-  set GYP_PARALLEL=1
-  set "WDK_DIR=%WDK%"
-  set "WindowsSDKDir=%WSDK8%"
+  echo "Building qtwebengine"
 ) else (
   rmdir /s /q qtwebengine
 )

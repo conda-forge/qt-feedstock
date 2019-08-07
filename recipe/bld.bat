@@ -175,11 +175,6 @@ echo on
 ::     -skip %WEBBACKEND% -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtwinextras -skip qtsvg -skip qtsensors ^
 ::     -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
-type qtbase\Makefile
-echo "qtbase\qmake\Makefile"
-type qtbase\qmake\Makefile
-echo "qtbase\qmake\Makefile.win32"
-type qtbase\qmake\Makefile.win32
 jom -U release
 :: Hooray for racey build systems. You may get a failure about a QtWebengine .stamp file being missing. You may not. Who knows?
 jom -U release
@@ -202,5 +197,6 @@ copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
 :ok_qmake_exists
 
 :: To rewrite qt.conf contents per conda environment
+if not exist %PREFIX%\Scripts mkdir %PREFIX%\Scripts
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
 if %errorlevel% neq 0 exit /b %errorlevel%

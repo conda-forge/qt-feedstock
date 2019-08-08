@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Clean config for dirty builds
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true
@@ -9,7 +7,7 @@ rm -f .qmake.stash .qmake.cache || true
 chmod +x configure
 
 # Remove the full path from CXX etc. If we don't do this
-# then the full path at build time gets put into 
+# then the full path at build time gets put into
 # mkspecs/qmodule.pri and qmake attempts to use this.
 export AR=$(basename ${AR})
 export RANLIB=$(basename ${RANLIB})
@@ -24,6 +22,11 @@ do
     unset $x
 done
 
+echo PREFIX=${PREFIX}
+echo BUILD_PREFIX=${BUILD_PREFIX}
+USED_BUILD_PREFIX=${BUILD_PREFIX:-${PREFIX}}
+echo USED_BUILD_PREFIX=${BUILD_PREFIX}
+
 MAKE_JOBS=$CPU_COUNT
 # You can use this to cut down on the number of modules built. Of course the Qt package will not be of
 # much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
@@ -36,6 +39,9 @@ if [[ -d qtwebkit ]]; then
   sed -i.bak -e '/CONFIG/a\
     QMAKE_CXXFLAGS += -Wno-expansion-to-defined' qtwebkit/Tools/qmake/mkspecs/features/unix/default_pre.prf
 fi
+
+# For QDoc
+export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 
 # Problems: https://bugreports.qt.io/browse/QTBUG-61158
 #           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
@@ -60,25 +66,19 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 
     ln -s ${GXX} g++ || true
     ln -s ${GCC} gcc || true
-    # Needed for -ltcg, it we split build and host again, change to ${BUILD_PREFIX}
-    ln -s ${PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
+    # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}
+    ln -s ${USED_BUILD_PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
     chmod +x g++ gcc gcc-ar
     export PATH=${PWD}:${PATH}
     export LD=${GXX}
     export CC=${GCC}
     export CXX=${GXX}
 
-    # Horrible hack! We should not `conda install` in build.sh!!!
-    mkdir -p "${SRC_DIR}/openssl_hack"
-    conda install --channel conda-forge \
+    conda create -y --prefix "${SRC_DIR}/openssl_hack" -c https://repo.continuum.io/pkgs/main \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack" \
                   openssl=${openssl}
     export OPENSSL_LIBS="-L${SRC_DIR}/openssl_hack/lib -lssl -lcrypto"
     rm -rf ${PREFIX}/include/openssl
-
-    # isuruf: qtwebengine comes bundled with chromium which bundles icu. chromium has a non-default build option to use ICU from system,
-    # but I don't know how to pass it from qt's build system. So, change the default in chromium to use ICU from system
-    sed -i "s/use_system_icu = false/use_system_icu = true/g" qtwebengine/src/3rdparty/chromium/third_party/icu/BUILD.gn
 
     # Qt has some braindamaged behaviour around handling compiler system include and lib paths. Basically, if it finds any include dir
     # that is a system include dir then it prefixes it with -isystem. Problem is, passing -isystem <blah> causes GCC to forget all the
@@ -86,7 +86,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # so we cannot just elide them altogether. Instead, as soon as Qt sees one system path it needs to add them all as a group, in the
     # correct order. This is probably fairly tricky so we work around needing to do that by having them all be present all the time.
     #
-    # Futher, any system dirs that appear from the output from pkg-config (QT_XCB_CFLAGS) can cause incorrect emission ordering so we
+    # Further, any system dirs that appear from the output from pkg-config (QT_XCB_CFLAGS) can cause incorrect emission ordering so we
     # must filter those out too which we do with a pkg-config wrapper.
     #
     # References:
@@ -95,22 +95,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # https://github.com/qt/qtbase/commit/0b144bc76a368ecc6c5c1121a1b51e888a0621ac
     # https://codereview.qt-project.org/#/c/157817/
     #
-    declare -a INCDIRS
-    INCDIRS=(-I ${PREFIX}/include)
-    SYSINCDIRS=$(echo "" | ${CXX} -xc++ -E -v - 2>&1 | awk '/#include <...> search starts here:/{flag=1;next}/End of search list./{flag=0}flag')
-    for SYSINCDIR in ${SYSINCDIRS}; do
-      INCDIRS+=(-I ${SYSINCDIR})
-    done
-    echo "#!/usr/bin/env bash"                                                        > ./pkg-config
-    echo "pc_res=\$(\${PREFIX}/bin/pkg-config \"\$@\")"                              >> ./pkg-config
-    echo "res=\$?"                                                                   >> ./pkg-config
-    echo "if [[ \${res} != 0 ]]; then"                                               >> ./pkg-config
-    echo "  echo \${pc_res}"                                                         >> ./pkg-config
-    echo "  exit \${res}"                                                            >> ./pkg-config
-    echo "fi"                                                                        >> ./pkg-config
-    echo "echo \${pc_res} | sed 's/[a-zA-Z0-9_-/\.]*sysroot[a-zA-Z0-9_-/\.]*//g'"    >> ./pkg-config
-    echo "exit 0"                                                                    >> ./pkg-config
-    chmod +x ./pkg-config
+    sed -i "s/-isystem//g" "qtbase/mkspecs/common/gcc-base.conf"
+    export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
+
     export PATH=${PWD}:${PATH}
     declare -a SKIPS
     if [[ ${MINIMAL_BUILD} == yes ]]; then
@@ -127,16 +114,55 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       SKIPS+=(-skip); SKIPS+=(qtlocation)
       SKIPS+=(-skip); SKIPS+=(qt3d)
     fi
+    declare -A COS6_MISSING_DEFINES
+    if [[ ${HOST} == *cos6* ]]; then
+      COS6_MISSING_DEFINES["SYN_DROPPED"]="3"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY1"]="0x2c0"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY2"]="0x2c1"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY3"]="0x2c2"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY4"]="0x2c3"
+      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY17"]="0x2d0"
+      COS6_MISSING_DEFINES["INPUT_PROP_POINTER"]="0x00"
+      COS6_MISSING_DEFINES["INPUT_PROP_DIRECT"]="0x01"
+      COS6_MISSING_DEFINES["INPUT_PROP_BUTTONPAD"]="0x02"
+      COS6_MISSING_DEFINES["INPUT_PROP_SEMI_MT"]="0x03"
+      COS6_MISSING_DEFINES["INPUT_PROP_MAX"]="0x1f"
+      COS6_MISSING_DEFINES["INPUT_PROP_CNT"]="0x20"
+      COS6_MISSING_DEFINES["ABS_MT_SLOT"]="0x2f"
+      COS6_MISSING_DEFINES["ABS_MT_PRESSURE"]="0x3a"
+      COS6_MISSING_DEFINES["ABS_MT_DISTANCE"]="0x3b"
 
-    ./configure -prefix $PREFIX \
-                -libdir $PREFIX/lib \
-                -bindir $PREFIX/bin \
-                -headerdir $PREFIX/include/qt \
-                -archdatadir $PREFIX \
-                -datadir $PREFIX \
+      # MAJOR HACK ahead!!!!!!
+      # The above macros are missing in cos6 and there are a few files that I have to patch to make it work
+      # Tried giving this as macros to ./configure, but the configure script doesn't pass them to ninja when building chromium.
+      for key in ${!COS6_MISSING_DEFINES[@]}; do
+        mv ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h.bak
+        cp ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h.bak ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
+        echo "#ifndef ${key}"                                 >> ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
+        echo "#define ${key} ${COS6_MISSING_DEFINES[${key}]}" >> ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
+        echo "#endif" >> ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
+      done
+    fi
+
+    # ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 is because our compilers don't look in sysroot/usr/lib64
+    # CentOS7 has:
+    # LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/4.8.5/:/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../:/lib/:/usr/lib/
+    # We have:
+    # LIBRARY_PATH=/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/../../../../x86_64-conda_cos6-linux-gnu/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/../../../../x86_64-conda_cos6-linux-gnu/lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib/
+    # .. this is probably my fault.
+    # Had been trying with:
+    #   -sysroot ${BUILD_PREFIX}/${HOST}/sysroot 
+    # .. but it probably requires changing -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 to -L /usr/lib64
+    ./configure -prefix ${PREFIX} \
+                -libdir ${PREFIX}/lib \
+                -bindir ${PREFIX}/bin \
+                -headerdir ${PREFIX}/include/qt \
+                -archdatadir ${PREFIX} \
+                -datadir ${PREFIX} \
                 -I ${SRC_DIR}/openssl_hack/include \
-                -L $PREFIX/lib \
-                "${INCDIRS[@]}" \
+                -I ${PREFIX}/include \
+                -L ${PREFIX}/lib \
+                -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
                 -release \
                 -opensource \
                 -confirm-license \
@@ -152,8 +178,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -plugin-sql-sqlite \
                 -qt-pcre \
                 -qt-xcb \
-                -qt-xkbcommon \
-                -xkb-config-root /usr/share/X11/xkb \
+                -xkbcommon \
                 -dbus \
                 -no-linuxfb \
                 -no-libudev \
@@ -179,13 +204,13 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 #                --disable-new-dtags \
 
     if [[ ${MINIMAL_BUILD} != yes ]]; then
-      LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
+      CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
       if find . -name "libQt5WebEngine*so" -exec false {} +; then
         echo "Did not build qtwebengine, exiting"
         exit 1
       fi
     fi
-    LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
+    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
     make install
 fi
 
@@ -204,6 +229,20 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     # Qt passes clang flags to LD (e.g. -stdlib=c++)
     export LD=${CXX}
     PATH=${PWD}:${PATH}
+
+    # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
+    if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX10.12.sdk" ]]; then
+      echo "WARNING: You asked me to use $CONDA_BUILD_SYSROOT as the MacOS SDK"
+      echo "         But because of the use of Objective-C Generics we need at"
+      echo "         least MacOSX10.12.sdk"
+      CONDA_BUILD_SYSROOT=/opt/MacOSX10.12.sdk
+      if [[ ! -d $CONDA_BUILD_SYSROOT ]]; then
+        echo "ERROR: $CONDA_BUILD_SYSROOT is not a directory"
+        exit 1
+      fi
+    fi
+
+    #             -qtlibinfix .conda \
 
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
@@ -237,7 +276,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                -sdk macosx10.10
+                -sdk macosx10.12
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
@@ -278,8 +317,19 @@ popd > /dev/null
 cp "${RECIPE_DIR}"/qt.conf "${PREFIX}"/bin/
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
+  pushd ${PREFIX}
     # We built Qt itself with SDK 10.10, but we shouldn't
     # force users to also build their Qt apps with SDK 10.10
     # https://bugreports.qt.io/browse/QTBUG-41238
-    sed -i '' 's/macosx.*$/macosx/g' ${PREFIX}/mkspecs/qdevice.pri
+    sed -i '' 's/macosx.*$/macosx/g' mkspecs/qdevice.pri
+    # We allow macOS SDK 10.12 while upstream requires 10.13 (as of Qt 5.12.1).
+    sed -i '' 's/QT_MAC_SDK_VERSION_MIN = 10\..*/QT_MAC_SDK_VERSION_MIN = 10\.12/g' mkspecs/common/macx.conf
+    # We may want to replace these with \$\${QMAKE_MAC_SDK_PATH}/ instead?
+    sed -i '' "s|${CONDA_BUILD_SYSROOT}/|/|g" mkspecs/modules/*.pri
+    CMAKE_FILES=$(find lib/cmake -name "Qt*.cmake")
+    for CMAKE_FILE in ${CMAKE_FILES}; do
+      sed -i '' "s|${CONDA_BUILD_SYSROOT}/|\${CMAKE_OSX_SYSROOT}/|g" ${CMAKE_FILE}
+    done
+  popd
 fi
+

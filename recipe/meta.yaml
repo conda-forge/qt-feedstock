@@ -1,54 +1,54 @@
-{% set major_minor = "5.9" %}
-{% set version = major_minor + ".7" %}
+# Note, you cannot build this with macOS SDK < 10.12, despite there being a few patches
+# to add back support. QtWebengine scuppers us with:
+#   error: unknown type name 'SecKeyAlgorithm'
+# .. these 10.11 support patches should be removed anyway as they could break some things.
+# .. such as pop-up Window mouse-events.
+{% set version = "5.12.1" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/{{ major_minor }}/{{ version }}/single/qt-everywhere-opensource-src-{{ version }}.tar.xz
-    sha256: 1c3852aa48b5a1310108382fb8f6185560cefc3802e81ecc099f4e62ee38516c
+  - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz  # [not win]
+    md5: 6a37466c8c40e87d4a19c3f286ec2542  # [not win]
+  - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.zip  # [win]
+    md5: 4649d4e51ca836fbde08565582353140  # [win]
     patches:
       # qtbase
-      - patches/0000-qtbase-QSslSocket-OpenSSL-1.1-backend.patch
       - patches/0010-osx-xctest-check.patch
       - patches/0011-osx-allow-any-xcrun-in-PATH.patch
-      # - patches/0012-qtbase-Set-QMAKE_MACOSX_DEPLOYMENT_TARGET-in-all-mac.patch
-      # - patches/0013-Restore-macOS-10.9-support.patch
-      # - patches/0013-NSEnumerator-is-a-non-parameterized-class.patch
-      - patches/0014-Fix-command-line-tools-build.patch
       - patches/0015-qtbase-use-better-clang-optimize-size.patch
       - patches/0016-qtbase-use-better-gcc-optimize-size.patch
       - patches/0017-qtbase-never-enable-new-dtags.patch
-      - patches/0018-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.16299.0.patch
-      # - patches/0019-qtbase-Hack-static-extension-onto-libs-for-qtlibinfix-on-Windows.patch
-      - patches/0020-qtbase-qmake-remove-qtlibinfix-from-libname-before-finding-prl.patch  # [win]
+      - patches/0019-qtbase-link-xcb-shm.patch
+      - patches/0020-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroot-passe.patch
+      #- patches/0021-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-also-to.patch
       # qtwinextras
-      - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch  # [win]
+      - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
       # qtwebengine
       - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      # - patches/0003-qtwebengine-mac_sdk_min-to-10.9.patch
       - patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
       - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
       - patches/0006-qtwebengine-run-gn-verbosely.patch
-      # https://github.com/google/boringssl/commit/17cf2cb1d226b0ba2401304242df7ddd3b6f1ff2
-      # https://www.imperialviolet.org/2016/06/26/nonnull.html
-      - patches/0007-qtwebengine-boringssl-Work-around-language-and-compiler-bug-in-memcpy-etc.patch
-      - patches/0008-qtwebengine-Allow-build-to-proceed-on-macOS-10-9.patch
-      # qtgamepad
-      - patches/0001-qtgamepad-maybe-define-BTN_TRIGGER_HAPPY1-to-4.patch
+      # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
+      - patches/0008-qtwebengine-link-gn-to-librt.patch
+      - patches/0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
+      - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
+      - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
+      - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
+      - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
+      - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 
-  - url: http://download.qt.io/community_releases/{{ major_minor }}/{{ major_minor }}.0-final/qtwebkit-opensource-src-{{ major_minor }}.0.tar.xz            # [qtwebkit == 'true']
+  - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
     sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']
     folder: qtwebkit                                                                                              # [qtwebkit == 'true']
     patches:                                                                                                      # [qtwebkit == 'true']
       - patches/0001-qtwebkit-old-ld-compat.patch                                                                         # [qtwebkit == 'true']
       - patches/0002-qtwebkit-ruby-1.8.patch                                                                              # [qtwebkit == 'true']
-      # Not needed since updating to CentOS6?
-      # - patches/0003-qtwebkit-O_CLOEXEC-workaround.patch                                                                # [qtwebkit == 'true']
       - patches/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [qtwebkit == 'true']
       - patches/0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
 
@@ -61,8 +61,8 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 3
-  skip: True  # [(win and vc != 14) or ppc64le]
+  number: 0
+  skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
   merge_build_host: true  # [linux]
@@ -73,7 +73,7 @@ build:
     - /usr/lib/libcups.2.dylib  # [osx]
     - /usr/lib/libresolv.9.dylib  # [osx]
     - /usr/lib/libsandbox.1.dylib  # [osx]
-    - /System/Library/Frameworks/CoreLocation.framework/**  # [osx]
+    - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
 
 requirements:
   build:
@@ -106,11 +106,11 @@ requirements:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
+    - {{ cdt('libxxf86vm-devel') }}      # [linux]
     - {{ cdt('cups-devel') }}            # [linux]
 
     # For fontconfig + freetype
     - pkg-config                         # [linux]
-    - pthread-stubs                      # [linux]
     - make                               # [unix]
     # Probably only needed for WebEngine
     - python 2.7*
@@ -130,6 +130,8 @@ requirements:
     # If they do, merge_build_host will fail.
     - readline                           # [linux]
   host:
+    # For pkg-config gl, fontconfig + freetype
+    - pthread-stubs                      # [linux]
     - dbus                               # [linux]
     - fontconfig                         # [linux]
     - freetype                           # [linux]
@@ -137,6 +139,7 @@ requirements:
     - gstreamer                          # [linux]
     - glib                               # [linux]
     - libxml2                            # [linux]
+    - libxkbcommon                       # [linux]
     # For WebEngine, but for compatiblity we want to restrict
     # usage of our own libraries. It seems Chromium prefers
     # expat to libxml2 and we will try to froce it to use the
@@ -149,20 +152,30 @@ requirements:
     # - libopus                            # [unix]
     # - libvpx                             # [unix]
     # - ffmpeg                             # [unix]
-    - expat                                # [linux]
+    - expat                              # [linux]
     - icu
     - jpeg
     - libpng
+    - nspr                               # [unix]
+    - nss                                # [unix]
     - sqlite
     - zlib
     - libxcb                             # [linux]
     # We cannot install OpenSSL into the prefix when building qtwebengine
     # on linux as BoringSSL and OpenSSL then conflict with each other.
-    - openssl 1.1.*                      # [win]
+    - openssl                            # [win]
+    # For QDoc
+    # http://doc.qt.io/Qt-5/qdoc-guide-clang.html
+    # Only libclang is needed, but needs the full package for detection.
+    - llvmdev
+    - clangdev
+    - libclang
   run:
-    - openssl 1.1.*                      # [not osx]
+    - openssl                            # [not osx]
     - libxcb                             # [linux]
-    - icu
+    - {{ pin_compatible("nss") }}        # [unix]
+    - {{ pin_compatible("nspr") }}       # [unix]
+    - {{ pin_compatible("libclang") }}
 
 test:
   requires:
@@ -203,7 +216,7 @@ test:
     - xcodebuild
     - xcrun
   commands:
-    - if not exist %LIBRARY_BIN%\\Qt5WebEngine_conda.dll exit 1            # [win]
+    - if not exist %LIBRARY_BIN%\\Qt5WebEngine.dll exit 1                  # [win]
     - test -f $PREFIX/lib/libQt5WebEngine.so                               # [linux]
     - test -f $PREFIX/lib/libQt5WebEngine.dylib                            # [osx]
     # sql plugin

@@ -1,7 +1,19 @@
-diff -urN qtwebengine.orig/mkspecs/features/functions.prf qtwebengine/mkspecs/features/functions.prf
---- qtwebengine.orig/mkspecs/features/functions.prf	2018-02-13 12:04:11.000000000 +0000
-+++ qtwebengine/mkspecs/features/functions.prf	2018-02-13 12:17:37.000000000 +0000
-@@ -223,7 +223,7 @@
+From 3cb2819e6dcbb973414c11e6863cd4ea03bd66f9 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Mon, 10 Dec 2018 15:01:00 -0600
+Subject: [PATCH] qtwebengine: allow any xcblah in PATH
+
+Change-Id: Ib38ab9c66e3f60e84a366693995d83fc3160880a
+---
+ mkspecs/features/platform.prf | 2 +-
+ src/core/config/mac_osx.pri   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/qtwebengine/mkspecs/features/platform.prf b/qtwebengine/mkspecs/features/platform.prf
+index 35eb6b89..de8b5338 100644
+--- a/qtwebengine/mkspecs/features/platform.prf
++++ b/qtwebengine/mkspecs/features/platform.prf
+@@ -111,7 +111,7 @@ defineTest(isMinOSXSDKVersion) {
      requested_minor = $$2
      requested_patch = $$3
      isEmpty(requested_patch): requested_patch = 0
@@ -10,21 +22,11 @@ diff -urN qtwebengine.orig/mkspecs/features/functions.prf qtwebengine/mkspecs/fe
      export(WEBENGINE_OSX_SDK_PRODUCT_VERSION)
      isEmpty(WEBENGINE_OSX_SDK_PRODUCT_VERSION) {
          skipBuild("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")
-diff -urN qtwebengine.orig/src/3rdparty/chromium/build/mac_toolchain.py qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py
---- qtwebengine.orig/src/3rdparty/chromium/build/mac_toolchain.py	2018-02-13 12:05:21.000000000 +0000
-+++ qtwebengine/src/3rdparty/chromium/build/mac_toolchain.py	2018-02-13 12:11:09.000000000 +0000
-@@ -128,7 +128,7 @@
-   try:
-     build_dir = os.path.join(TOOLCHAIN_BUILD_DIR, 'Contents/Developer')
-     subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', build_dir])
--    subprocess.check_call(['sudo', '/usr/bin/xcodebuild', '-license', 'accept'])
-+    subprocess.check_call(['sudo', 'xcodebuild', '-license', 'accept'])
-   finally:
-     subprocess.check_call(['sudo', '/usr/bin/xcode-select', '-s', old_path])
- 
---- qtwebengine.orig/src/core/config/mac_osx.pri	2018-02-28 17:24:37.000000000 +0000
-+++ qtwebengine/src/core/config/mac_osx.pri	2018-02-28 17:25:04.000000000 +0000
-@@ -5,7 +5,7 @@
+diff --git a/qtwebengine/src/core/config/mac_osx.pri b/qtwebengine/src/core/config/mac_osx.pri
+index 4426901c..52f89df3 100644
+--- a/qtwebengine/src/core/config/mac_osx.pri
++++ b/qtwebengine/src/core/config/mac_osx.pri
+@@ -5,7 +5,7 @@ load(functions)
  # otherwise query for it.
  QMAKE_MAC_SDK_VERSION = $$eval(QMAKE_MAC_SDK.$${QMAKE_MAC_SDK}.SDKVersion)
  isEmpty(QMAKE_MAC_SDK_VERSION) {
@@ -33,3 +35,6 @@ diff -urN qtwebengine.orig/src/3rdparty/chromium/build/mac_toolchain.py qtwebeng
       isEmpty(QMAKE_MAC_SDK_VERSION): error("Could not resolve SDK version for \'$${QMAKE_MAC_SDK}\'")
  }
  
+-- 
+2.19.1
+

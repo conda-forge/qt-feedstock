@@ -1,0 +1,27 @@
+From 8005d91c1f098c87bf9c1e27a867a802b6e76b0f Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Mon, 10 Dec 2018 14:51:15 -0600
+Subject: [PATCH] qtbase: link xcb-shm
+
+Change-Id: I49300967cd92ed280a9a0c685e98a45c633118b6
+---
+ src/gui/configure.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/qtbase/src/gui/configure.json b/qtbase/src/gui/configure.json
+index 0332631ec8..6b027edfc9 100644
+--- a/qtbase/src/gui/configure.json
++++ b/qtbase/src/gui/configure.json
+@@ -472,7 +472,7 @@
+             },
+             "sources": [
+-                { "type": "pkgConfig", "args": "xcb >= 1.9" },
+-                "-lxcb"
++                { "type": "pkgConfig", "args": "xcb >= 1.9 xcb-shm >= 1.9" },
++                "-lxcb -lxcb-shm"
+             ]
+         },
+         "xcb_syslibs": {
+-- 
+2.19.1
+

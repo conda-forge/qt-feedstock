@@ -146,6 +146,7 @@ call configure ^
      -system-libjpeg ^
      -system-libpng ^
      -system-sqlite ^
+     -system-tiff ^
      -system-zlib ^
      -plugin-sql-sqlite ^
      -qtlibinfix %QT_LIBINFIX% ^

@@ -175,6 +175,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -system-libpng \
                 -system-zlib \
                 -system-sqlite \
+                -system-tiff \
                 -plugin-sql-sqlite \
                 -qt-pcre \
                 -qt-xcb \

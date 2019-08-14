@@ -1,0 +1,490 @@
+From a6df9c84a667e89bcdf215c7ac21b943b07991bd Mon Sep 17 00:00:00 2001
+From: Friedemann Kleint <Friedemann.Kleint@qt.io>
+Date: Thu, 17 Jan 2019 13:46:02 +0100
+Subject: [PATCH] Fix include directives
+
+Always prepend the module and use headers directly.
+Qt for Python requires the modules to be present.
+
+Task-number: PYSIDE-862
+Fixes: QTBUG-72675
+Change-Id: I94e38fbab0f041370ca9d67ca13c78f0d33816b7
+Reviewed-by: Brett Stottlemyer <bstottle@ford.com>
+---
+ src/remoteobjects/qconnection_local_backend_p.h             |  4 ++--
+ src/remoteobjects/qconnection_qnx_global_p.h                |  2 +-
+ src/remoteobjects/qconnection_qnx_qiodevices.h              |  2 +-
+ src/remoteobjects/qconnection_qnx_qiodevices_p.h            |  4 ++--
+ src/remoteobjects/qconnection_qnx_server_p.h                |  6 +++---
+ src/remoteobjects/qconnection_tcpip_backend.cpp             |  2 +-
+ src/remoteobjects/qconnection_tcpip_backend_p.h             |  4 ++--
+ src/remoteobjects/qconnectionfactories_p.h                  |  8 ++++----
+ src/remoteobjects/qremoteobjectabstractitemmodeladapter.cpp |  2 +-
+ src/remoteobjects/qremoteobjectabstractitemmodeladapter_p.h |  2 +-
+ src/remoteobjects/qremoteobjectabstractitemmodelreplica.cpp |  6 +++---
+ src/remoteobjects/qremoteobjectdynamicreplica.cpp           |  2 +-
+ src/remoteobjects/qremoteobjectnode.cpp                     |  2 +-
+ src/remoteobjects/qremoteobjectnode_p.h                     |  4 ++--
+ src/remoteobjects/qremoteobjectpacket.cpp                   |  2 +-
+ src/remoteobjects/qremoteobjectpacket_p.h                   | 12 ++++++------
+ src/remoteobjects/qremoteobjectpendingcall.cpp              |  2 +-
+ src/remoteobjects/qremoteobjectpendingcall.h                |  2 +-
+ src/remoteobjects/qremoteobjectpendingcall_p.h              |  2 +-
+ src/remoteobjects/qremoteobjectregistry.cpp                 |  4 ++--
+ src/remoteobjects/qremoteobjectregistrysource.cpp           |  2 +-
+ src/remoteobjects/qremoteobjectreplica.cpp                  | 10 +++++-----
+ src/remoteobjects/qremoteobjectreplica_p.h                  | 10 +++++-----
+ src/remoteobjects/qremoteobjectsettingsstore.cpp            |  2 +-
+ src/remoteobjects/qremoteobjectsource.cpp                   |  6 +++---
+ src/remoteobjects/qremoteobjectsource_p.h                   |  9 ++++-----
+ src/remoteobjects/qremoteobjectsourceio.cpp                 |  2 +-
+ src/remoteobjects/qremoteobjectsourceio_p.h                 |  4 ++--
+ src/remoteobjects/qtremoteobjectglobal.cpp                  |  5 ++---
+ 29 files changed, 61 insertions(+), 63 deletions(-)
+
+diff --git a/src/remoteobjects/qconnection_local_backend_p.h b/src/remoteobjects/qconnection_local_backend_p.h
+index 2ebba6e8..2f18df64 100644
+--- a/src/remoteobjects/qconnection_local_backend_p.h
++++ b/src/remoteobjects/qconnection_local_backend_p.h
+@@ -53,8 +53,8 @@
+ 
+ #include "qconnectionfactories_p.h"
+ 
+-#include <QLocalServer>
+-#include <QLocalSocket>
++#include <QtNetwork/qlocalserver.h>
++#include <QtNetwork/qlocalsocket.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qconnection_qnx_global_p.h b/src/remoteobjects/qconnection_qnx_global_p.h
+index 3010b8de..cf108ee8 100644
+--- a/src/remoteobjects/qconnection_qnx_global_p.h
++++ b/src/remoteobjects/qconnection_qnx_global_p.h
+@@ -57,7 +57,7 @@
+ #include <unistd.h> // provides SETIOV
+ #include <sys/netmgr.h>  //FOR ND_LOCAL_NODE
+ #include <errno.h>
+-#include <QThread>
++#include <QtCore/qthread.h>
+ #ifdef USE_HAM
+ # include <ha/ham.h>
+ #endif
+diff --git a/src/remoteobjects/qconnection_qnx_qiodevices.h b/src/remoteobjects/qconnection_qnx_qiodevices.h
+index 7a59a72b..fc28ba30 100644
+--- a/src/remoteobjects/qconnection_qnx_qiodevices.h
++++ b/src/remoteobjects/qconnection_qnx_qiodevices.h
+@@ -40,7 +40,7 @@
+ #ifndef QQNXNATIVEIO_H
+ #define QQNXNATIVEIO_H
+ 
+-#include <QAbstractSocket>
++#include <QtNetwork/qabstractsocket.h>
+ #include <QtRemoteObjects/qtremoteobjectglobal.h>
+ 
+ QT_BEGIN_NAMESPACE
+diff --git a/src/remoteobjects/qconnection_qnx_qiodevices_p.h b/src/remoteobjects/qconnection_qnx_qiodevices_p.h
+index 5c3d28af..207eb180 100644
+--- a/src/remoteobjects/qconnection_qnx_qiodevices_p.h
++++ b/src/remoteobjects/qconnection_qnx_qiodevices_p.h
+@@ -54,8 +54,8 @@
+ #include "qconnection_qnx_qiodevices.h"
+ #include "qconnection_qnx_global_p.h"
+ 
+-#include <QReadWriteLock>
+-#include <QScopedPointer>
++#include <QtCore/qreadwritelock.h>
++#include <QtCore/qscopedpointer.h>
+ 
+ #include "private/qiodevice_p.h"
+ #include "private/qringbuffer_p.h"
+diff --git a/src/remoteobjects/qconnection_qnx_server_p.h b/src/remoteobjects/qconnection_qnx_server_p.h
+index 5913d3d8..dc0cb1df 100644
+--- a/src/remoteobjects/qconnection_qnx_server_p.h
++++ b/src/remoteobjects/qconnection_qnx_server_p.h
+@@ -55,9 +55,9 @@
+ #include "qconnection_qnx_server.h"
+ #include "qconnection_qnx_global_p.h"
+ 
+-#include <QAtomicInt>
+-#include <QMutex>
+-#include <QSharedPointer>
++#include <QtCore/qatomic.h>
++#include <QtCore/qmutex.h>
++#include <QtCore/qsharedpointer.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qconnection_tcpip_backend.cpp b/src/remoteobjects/qconnection_tcpip_backend.cpp
+index 54f5fb36..41f9742a 100644
+--- a/src/remoteobjects/qconnection_tcpip_backend.cpp
++++ b/src/remoteobjects/qconnection_tcpip_backend.cpp
+@@ -39,7 +39,7 @@
+ 
+ #include "qconnection_tcpip_backend_p.h"
+ 
+-#include <QHostInfo>
++#include <QtNetwork/qhostinfo.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qconnection_tcpip_backend_p.h b/src/remoteobjects/qconnection_tcpip_backend_p.h
+index 75617331..fd3873e2 100644
+--- a/src/remoteobjects/qconnection_tcpip_backend_p.h
++++ b/src/remoteobjects/qconnection_tcpip_backend_p.h
+@@ -53,8 +53,8 @@
+ 
+ #include "qconnectionfactories_p.h"
+ 
+-#include <QTcpServer>
+-#include <QTcpSocket>
++#include <QtNetwork/qtcpserver.h>
++#include <QtNetwork/qtcpsocket.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qconnectionfactories_p.h b/src/remoteobjects/qconnectionfactories_p.h
+index 3d718954..f0384ec3 100644
+--- a/src/remoteobjects/qconnectionfactories_p.h
++++ b/src/remoteobjects/qconnectionfactories_p.h
+@@ -51,10 +51,10 @@
+ // We mean it.
+ //
+ 
+-#include <QAbstractSocket>
+-#include <QDataStream>
+-#include <QIODevice>
+-#include <QPointer>
++#include <QtNetwork/qabstractsocket.h>
++#include <QtCore/qdatastream.h>
++#include <QtCore/qiodevice.h>
++#include <QtCore/qpointer.h>
+ 
+ #include <QtRemoteObjects/qtremoteobjectglobal.h>
+ 
+diff --git a/src/remoteobjects/qremoteobjectabstractitemmodeladapter.cpp b/src/remoteobjects/qremoteobjectabstractitemmodeladapter.cpp
+index b78602e6..861a9aa6 100644
+--- a/src/remoteobjects/qremoteobjectabstractitemmodeladapter.cpp
++++ b/src/remoteobjects/qremoteobjectabstractitemmodeladapter.cpp
+@@ -39,7 +39,7 @@
+ 
+ #include "qremoteobjectabstractitemmodeladapter_p.h"
+ 
+-#include <QItemSelectionModel>
++#include <QtCore/qitemselectionmodel.h>
+ 
+ // consider evaluating performance difference with item data
+ inline QVariantList collectData(const QModelIndex &index, const QAbstractItemModel *model, const QVector<int> &roles)
+diff --git a/src/remoteobjects/qremoteobjectabstractitemmodeladapter_p.h b/src/remoteobjects/qremoteobjectabstractitemmodeladapter_p.h
+index 4c9a9727..8eff2c5f 100644
+--- a/src/remoteobjects/qremoteobjectabstractitemmodeladapter_p.h
++++ b/src/remoteobjects/qremoteobjectabstractitemmodeladapter_p.h
+@@ -54,7 +54,7 @@
+ #include "qremoteobjectabstractitemmodeltypes.h"
+ #include "qremoteobjectsource.h"
+ 
+-#include <QSize>
++#include <QtCore/qsize.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectabstractitemmodelreplica.cpp b/src/remoteobjects/qremoteobjectabstractitemmodelreplica.cpp
+index a2c93769..6e643e28 100644
+--- a/src/remoteobjects/qremoteobjectabstractitemmodelreplica.cpp
++++ b/src/remoteobjects/qremoteobjectabstractitemmodelreplica.cpp
+@@ -42,9 +42,9 @@
+ 
+ #include "qremoteobjectnode.h"
+ 
+-#include <QDebug>
+-#include <QRect>
+-#include <QPoint>
++#include <QtCore/qdebug.h>
++#include <QtCore/qrect.h>
++#include <QtCore/qpoint.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectdynamicreplica.cpp b/src/remoteobjects/qremoteobjectdynamicreplica.cpp
+index bb1feba7..de22ff3e 100644
+--- a/src/remoteobjects/qremoteobjectdynamicreplica.cpp
++++ b/src/remoteobjects/qremoteobjectdynamicreplica.cpp
+@@ -40,7 +40,7 @@
+ #include "qremoteobjectdynamicreplica.h"
+ #include "qremoteobjectreplica_p.h"
+ 
+-#include <QMetaProperty>
++#include <QtCore/qmetaobject.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectnode.cpp b/src/remoteobjects/qremoteobjectnode.cpp
+index 038d68e0..46d9fc14 100644
+--- a/src/remoteobjects/qremoteobjectnode.cpp
++++ b/src/remoteobjects/qremoteobjectnode.cpp
+@@ -50,7 +50,7 @@
+ #include "qremoteobjectsource_p.h"
+ #include "qremoteobjectabstractitemmodelreplica_p.h"
+ #include "qremoteobjectabstractitemmodeladapter_p.h"
+-#include <QAbstractItemModel>
++#include <QtCore/qabstractitemmodel.h>
+ #include <memory>
+ 
+ QT_BEGIN_NAMESPACE
+diff --git a/src/remoteobjects/qremoteobjectnode_p.h b/src/remoteobjects/qremoteobjectnode_p.h
+index 2f30fc11..17642b6e 100644
+--- a/src/remoteobjects/qremoteobjectnode_p.h
++++ b/src/remoteobjects/qremoteobjectnode_p.h
+@@ -56,8 +56,8 @@
+ #include "qremoteobjectreplica.h"
+ #include "qremoteobjectnode.h"
+ 
+-#include <QBasicTimer>
+-#include <QMutex>
++#include <QtCore/qbasictimer.h>
++#include <QtCore/qmutex.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectpacket.cpp b/src/remoteobjects/qremoteobjectpacket.cpp
+index a7518242..f160df40 100644
+--- a/src/remoteobjects/qremoteobjectpacket.cpp
++++ b/src/remoteobjects/qremoteobjectpacket.cpp
+@@ -39,7 +39,7 @@
+ 
+ #include "qremoteobjectpacket_p.h"
+ 
+-#include <QAbstractItemModel>
++#include <QtCore/qabstractitemmodel.h>
+ 
+ #include "qremoteobjectpendingcall.h"
+ #include "qremoteobjectsource.h"
+diff --git a/src/remoteobjects/qremoteobjectpacket_p.h b/src/remoteobjects/qremoteobjectpacket_p.h
+index 4a73cb83..549cb681 100644
+--- a/src/remoteobjects/qremoteobjectpacket_p.h
++++ b/src/remoteobjects/qremoteobjectpacket_p.h
+@@ -55,12 +55,12 @@
+ #include "qremoteobjectsource.h"
+ #include "qconnectionfactories_p.h"
+ 
+-#include <QtCore/QHash>
+-#include <QtCore/QMap>
+-#include <QtCore/QPair>
+-#include <QtCore/QUrl>
+-#include <QtCore/QVariant>
+-#include <QtCore/QLoggingCategory>
++#include <QtCore/qhash.h>
++#include <QtCore/qmap.h>
++#include <QtCore/qpair.h>
++#include <QtCore/qurl.h>
++#include <QtCore/qvariant.h>
++#include <QtCore/qloggingcategory.h>
+ 
+ #include <cstdlib>
+ 
+diff --git a/src/remoteobjects/qremoteobjectpendingcall.cpp b/src/remoteobjects/qremoteobjectpendingcall.cpp
+index 94decf03..5393f129 100644
+--- a/src/remoteobjects/qremoteobjectpendingcall.cpp
++++ b/src/remoteobjects/qremoteobjectpendingcall.cpp
+@@ -42,7 +42,7 @@
+ 
+ #include "qremoteobjectreplica_p.h"
+ 
+-#include <QCoreApplication>
++#include <QtCore/qcoreapplication.h>
+ 
+ #include <private/qobject_p.h>
+ 
+diff --git a/src/remoteobjects/qremoteobjectpendingcall.h b/src/remoteobjects/qremoteobjectpendingcall.h
+index 41a18a7c..322b031e 100644
+--- a/src/remoteobjects/qremoteobjectpendingcall.h
++++ b/src/remoteobjects/qremoteobjectpendingcall.h
+@@ -42,7 +42,7 @@
+ 
+ #include <QtRemoteObjects/qtremoteobjectglobal.h>
+ 
+-#include <QVariant>
++#include <QtCore/qvariant.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectpendingcall_p.h b/src/remoteobjects/qremoteobjectpendingcall_p.h
+index 9a19d9be..97b37fd6 100644
+--- a/src/remoteobjects/qremoteobjectpendingcall_p.h
++++ b/src/remoteobjects/qremoteobjectpendingcall_p.h
+@@ -53,7 +53,7 @@
+ 
+ #include "qremoteobjectpendingcall.h"
+ 
+-#include <QMutex>
++#include <QtCore/qmutex.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectregistry.cpp b/src/remoteobjects/qremoteobjectregistry.cpp
+index 890c7e00..71856a2a 100644
+--- a/src/remoteobjects/qremoteobjectregistry.cpp
++++ b/src/remoteobjects/qremoteobjectregistry.cpp
+@@ -41,8 +41,8 @@
+ #include "qremoteobjectreplica_p.h"
+ 
+ #include <private/qobject_p.h>
+-#include <QSet>
+-#include <QDataStream>
++#include <QtCore/qset.h>
++#include <QtCore/qdatastream.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectregistrysource.cpp b/src/remoteobjects/qremoteobjectregistrysource.cpp
+index 0aed2a0e..1e1a2f4e 100644
+--- a/src/remoteobjects/qremoteobjectregistrysource.cpp
++++ b/src/remoteobjects/qremoteobjectregistrysource.cpp
+@@ -38,7 +38,7 @@
+ ****************************************************************************/
+ 
+ #include "qremoteobjectregistrysource_p.h"
+-#include <QDataStream>
++#include <QtCore/qdatastream.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectreplica.cpp b/src/remoteobjects/qremoteobjectreplica.cpp
+index d0bad9a1..031b6b74 100644
+--- a/src/remoteobjects/qremoteobjectreplica.cpp
++++ b/src/remoteobjects/qremoteobjectreplica.cpp
+@@ -47,11 +47,11 @@
+ #include "qconnectionfactories_p.h"
+ #include "qremoteobjectsource_p.h"
+ 
+-#include <QCoreApplication>
+-#include <QDataStream>
+-#include <QElapsedTimer>
+-#include <QVariant>
+-#include <QThread>
++#include <QtCore/qcoreapplication.h>
++#include <QtCore/qdatastream.h>
++#include <QtCore/qelapsedtimer.h>
++#include <QtCore/qvariant.h>
++#include <QtCore/qthread.h>
+ 
+ #include <limits>
+ 
+diff --git a/src/remoteobjects/qremoteobjectreplica_p.h b/src/remoteobjects/qremoteobjectreplica_p.h
+index 471964c2..e724daec 100644
+--- a/src/remoteobjects/qremoteobjectreplica_p.h
++++ b/src/remoteobjects/qremoteobjectreplica_p.h
+@@ -57,11 +57,11 @@
+ 
+ #include "qremoteobjectpacket_p.h"
+ 
+-#include <QPointer>
+-#include <QVector>
+-#include <QDataStream>
+-#include <qcompilerdetection.h>
+-#include <QTimer>
++#include <QtCore/qpointer.h>
++#include <QtCore/qvector.h>
++#include <QtCore/qdatastream.h>
++#include <QtCore/qcompilerdetection.h>
++#include <QtCore/qtimer.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectsettingsstore.cpp b/src/remoteobjects/qremoteobjectsettingsstore.cpp
+index 97e6cdcb..83e29def 100644
+--- a/src/remoteobjects/qremoteobjectsettingsstore.cpp
++++ b/src/remoteobjects/qremoteobjectsettingsstore.cpp
+@@ -42,7 +42,7 @@
+ #include "qremoteobjectnode_p.h"
+ 
+ #include <QtCore/private/qobject_p.h>
+-#include <QSettings>
++#include <QtCore/qsettings.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectsource.cpp b/src/remoteobjects/qremoteobjectsource.cpp
+index 5cbc1959..cae5f316 100644
+--- a/src/remoteobjects/qremoteobjectsource.cpp
++++ b/src/remoteobjects/qremoteobjectsource.cpp
+@@ -45,9 +45,9 @@
+ #include "qremoteobjectsourceio_p.h"
+ #include "qremoteobjectabstractitemmodeladapter_p.h"
+ 
+-#include <QMetaProperty>
+-#include <QVarLengthArray>
+-#include <QAbstractItemModel>
++#include <QtCore/qmetaobject.h>
++#include <QtCore/qvarlengtharray.h>
++#include <QtCore/qabstractitemmodel.h>
+ 
+ #include <algorithm>
+ #include <iterator>
+diff --git a/src/remoteobjects/qremoteobjectsource_p.h b/src/remoteobjects/qremoteobjectsource_p.h
+index 2961e5c7..e5087f7f 100644
+--- a/src/remoteobjects/qremoteobjectsource_p.h
++++ b/src/remoteobjects/qremoteobjectsource_p.h
+@@ -51,11 +51,10 @@
+ // We mean it.
+ //
+ 
+-#include <QObject>
+-#include <QMetaObject>
+-#include <QMetaProperty>
+-#include <QVector>
+-#include <QPointer>
++#include <QtCore/qobject.h>
++#include <QtCore/qmetaobject.h>
++#include <QtCore/qvector.h>
++#include <QtCore/qpointer.h>
+ #include "qremoteobjectsource.h"
+ #include "qremoteobjectpacket_p.h"
+ 
+diff --git a/src/remoteobjects/qremoteobjectsourceio.cpp b/src/remoteobjects/qremoteobjectsourceio.cpp
+index c5bf36e8..0b9cfc1f 100644
+--- a/src/remoteobjects/qremoteobjectsourceio.cpp
++++ b/src/remoteobjects/qremoteobjectsourceio.cpp
+@@ -44,7 +44,7 @@
+ #include "qremoteobjectnode_p.h"
+ #include "qtremoteobjectglobal.h"
+ 
+-#include <QStringList>
++#include <QtCore/qstringlist.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qremoteobjectsourceio_p.h b/src/remoteobjects/qremoteobjectsourceio_p.h
+index 59f98886..15c50043 100644
+--- a/src/remoteobjects/qremoteobjectsourceio_p.h
++++ b/src/remoteobjects/qremoteobjectsourceio_p.h
+@@ -55,8 +55,8 @@
+ #include "qtremoteobjectglobal.h"
+ #include "qremoteobjectpacket_p.h"
+ 
+-#include <QIODevice>
+-#include <QScopedPointer>
++#include <QtCore/qiodevice.h>
++#include <QtCore/qscopedpointer.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/remoteobjects/qtremoteobjectglobal.cpp b/src/remoteobjects/qtremoteobjectglobal.cpp
+index 513a01ce..dc39fe67 100644
+--- a/src/remoteobjects/qtremoteobjectglobal.cpp
++++ b/src/remoteobjects/qtremoteobjectglobal.cpp
+@@ -39,9 +39,8 @@
+ 
+ #include "qtremoteobjectglobal.h"
+ 
+-#include <QDataStream>
+-#include <QMetaObject>
+-#include <QMetaProperty>
++#include <QtCore/qdatastream.h>
++#include <QtCore/qmetaobject.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+-- 
+2.16.3
+

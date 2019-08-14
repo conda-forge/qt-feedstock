@@ -1,3 +1,7 @@
+
+find . -name qconnection_local_backend_p.h
+exit 1
+
 # Clean config for dirty builds
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true

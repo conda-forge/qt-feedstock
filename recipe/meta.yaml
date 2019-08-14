@@ -43,7 +43,7 @@ source:
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
       # qtremoteobjects
-      - patches/0001-qtremoteobjects-fix-include-directives.patch
+      #- patches/0001-qtremoteobjects-fix-include-directives.patch
 
   - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
     sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']

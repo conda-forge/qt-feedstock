@@ -11,19 +11,21 @@ package:
 
 source:
   - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    sha256: 85da5e0ee498759990180d5b8192efaa6060a313c5018b772f57d446bdd425e1
+    md5: dda95b0239d13c5276834177af3a8588
     patches:
+
       # qtbase
-      - patches/0010-osx-xctest-check.patch
-      #- patches/0011-osx-allow-any-xcrun-in-PATH.patch
-      - patches/0015-qtbase-use-better-clang-optimize-size.patch
-      - patches/0016-qtbase-use-better-gcc-optimize-size.patch
-      - patches/0017-qtbase-never-enable-new-dtags.patch
-      - patches/0019-qtbase-link-xcb-shm.patch
-      - patches/0020-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroot-passe.patch
-      #- patches/0021-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-also-to.patch
+      - patches/0001-qtbase-osx-xctest-check.patch
+      - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
+      - patches/0003-qtbase-use-better-clang-optimize-size.patch
+      - patches/0004-qtbase-never-enable-new-dtags.patch
+      - patches/0005-qtbase-link-xcb-shm.patch
+      - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
+      # - patches/9999-qtbase-use-better-gcc-optimize-size.patch
+
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
+
       # qtwebengine
       - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
@@ -38,6 +40,7 @@ source:
       - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
       - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
       - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
+
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 

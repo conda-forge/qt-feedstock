@@ -15,7 +15,7 @@ source:
     patches:
       # qtbase
       - patches/0010-osx-xctest-check.patch
-      - patches/0011-osx-allow-any-xcrun-in-PATH.patch
+      #- patches/0011-osx-allow-any-xcrun-in-PATH.patch
       - patches/0015-qtbase-use-better-clang-optimize-size.patch
       - patches/0016-qtbase-use-better-gcc-optimize-size.patch
       - patches/0017-qtbase-never-enable-new-dtags.patch

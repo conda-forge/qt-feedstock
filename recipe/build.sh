@@ -1,5 +1,7 @@
 set -x
 
+env
+
 # Clean config for dirty builds
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true
@@ -256,7 +258,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     PATH=${PWD}:${PATH}
 
     # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
-    if [[ ${OSX_SDK_VER_MAJOR} --lt 11 ]] && [[ ${OSX_SDK_VER_MINOR} --lt 11 ]]; then
+    if [ ${OSX_SDK_VER_MAJOR} -lt 11 ] && [ ${OSX_SDK_VER_MINOR} -lt 11 ]; then
       echo "ERROR: You asked me to use $CONDA_BUILD_SYSROOT as MacOS SDK (maj: ${SDK_VER_MAJOR} min: ${SDK_VER_MINOR})"
       echo "         But because of the use of Objective-C Generics we need at \least MacOSX10.11.sdk"
       exit 1

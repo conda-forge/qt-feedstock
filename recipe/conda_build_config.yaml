@@ -1,2 +1,4 @@
+CONDA_BUILD_SYSROOT:       # [osx]
+  - /opt/MacOSX10.12.sdk   # [osx]
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
   - '10.12'                # [osx]

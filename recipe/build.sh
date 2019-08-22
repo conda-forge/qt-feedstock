@@ -1,3 +1,5 @@
+set -x
+
 # Clean config for dirty builds
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true
@@ -214,7 +216,30 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     make install
 fi
 
+function parse_macos_sdk_ver
+{
+  local _SYSROOT=${1}; shift
+  local _SDK_VER_VAR=${1} ; shift
+  local _SDK_VER_MAJOR_VAR=${1} ; shift
+  local _SDK_VER_MINOR_VAR=${1} ; shift
+  re='[^0-9]*([0-9\.]+)\.\.*'
+  if [[ "${_SYSROOT}" =~ $re ]]; then
+    local _SDK_VER=${BASH_REMATCH[1]}
+    re='([0-9]*)\.([0-9]*).*'
+    if [[ "${_SDK_VER}" =~ $re ]]; then
+      local _SDK_VER_MAJOR=${BASH_REMATCH[1]}
+      local _SDK_VER_MINOR=${BASH_REMATCH[2]}
+    fi
+  fi
+  eval "${_SDK_VER_VAR}=${_SDK_VER}"
+  eval "${_SDK_VER_MAJOR_VAR}=${_SDK_VER_MAJOR}"
+  eval "${_SDK_VER_MINOR_VAR}=${_SDK_VER_MINOR}"
+}
+
 if [[ ${HOST} =~ .*darwin.* ]]; then
+
+    parse_macos_sdk_ver ${CONDA_BUILD_SYSROOT} OSX_SDK_VER OSX_SDK_VER_MAJOR OSX_SDK_VER_MINOR
+    printf "INFO :: Parsed ${CONDA_BUILD_SYSROOT} as:\n  OSX_SDK_VER=$OSX_SDK_VER OSX_SDK_VER_MAJOR=$SDK_VER_MAJOR OSX_SDK_VER_MINOR=$SDK_VER_MINOR"
 
     # Avoid Xcode
     cp "${RECIPE_DIR}"/xcrun .
@@ -231,15 +256,10 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     PATH=${PWD}:${PATH}
 
     # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
-    if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX10.12.sdk" ]]; then
-      echo "WARNING: You asked me to use $CONDA_BUILD_SYSROOT as the MacOS SDK"
-      echo "         But because of the use of Objective-C Generics we need at"
-      echo "         least MacOSX10.12.sdk"
-      CONDA_BUILD_SYSROOT=/opt/MacOSX10.12.sdk
-      if [[ ! -d $CONDA_BUILD_SYSROOT ]]; then
-        echo "ERROR: $CONDA_BUILD_SYSROOT is not a directory"
-        exit 1
-      fi
+    if [[ ${OSX_SDK_VER_MAJOR} --lt 11 ]] && [[ ${OSX_SDK_VER_MINOR} --lt 11 ]]; then
+      echo "ERROR: You asked me to use $CONDA_BUILD_SYSROOT as MacOS SDK (maj: ${SDK_VER_MAJOR} min: ${SDK_VER_MINOR})"
+      echo "         But because of the use of Objective-C Generics we need at \least MacOSX10.11.sdk"
+      exit 1
     fi
 
     #             -qtlibinfix .conda \
@@ -276,7 +296,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                -sdk macosx10.12
+                -sdk macosx${OSX_SDK_VER}
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
@@ -323,7 +343,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     # https://bugreports.qt.io/browse/QTBUG-41238
     sed -i '' 's/macosx.*$/macosx/g' mkspecs/qdevice.pri
     # We allow macOS SDK 10.12 while upstream requires 10.13 (as of Qt 5.12.1).
-    sed -i '' 's/QT_MAC_SDK_VERSION_MIN = 10\..*/QT_MAC_SDK_VERSION_MIN = 10\.12/g' mkspecs/common/macx.conf
+    sed -i '' "s/QT_MAC_SDK_VERSION_MIN = 10\..*/QT_MAC_SDK_VERSION_MIN = ${OSX_SDK_VER_MAJOR}\.${OSX_SDK_VER_MINOR}/g" mkspecs/common/macx.conf
     # We may want to replace these with \$\${QMAKE_MAC_SDK_PATH}/ instead?
     sed -i '' "s|${CONDA_BUILD_SYSROOT}/|/|g" mkspecs/modules/*.pri
     CMAKE_FILES=$(find lib/cmake -name "Qt*.cmake")

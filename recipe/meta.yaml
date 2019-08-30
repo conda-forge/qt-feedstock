@@ -4,26 +4,40 @@
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
 {% set version = "5.12.4" %}
+{% set build_number = "0" %}
+{% set dev_nature = os.environ.get('CONDA_BUILD_DEBUG_PACKAGE', '') %}
+{% if dev_nature != '' %}
+  {% set dev_nature = "_dev" %}
+  {% set patches = "patches/git" %}
+{% else %}
+  {% set patches = "patches" %}
+{% endif %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
+  {% if dev_nature == "_dev" %}
+  - git_url: git://code.qt.io/qt/qt5.git
+    git_tag: {{ version }}
+  {% else %}
   - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
     md5: dda95b0239d13c5276834177af3a8588
+  {% endif %}
+
     patches:
 
       # qtbase
-      - patches/0001-qtbase-osx-xctest-check.patch
-      - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
-      - patches/0003-qtbase-use-better-clang-optimize-size.patch
-      - patches/0004-qtbase-never-enable-new-dtags.patch
-      - patches/0005-qtbase-link-xcb-shm.patch
-      - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
-      - patches/0007-qtbase-Disable-kTLSProtocol13-for-macOS-10.12.patch
-      - patches/0008-qtbase-Define-kIOSurfaceSuccess-if-it-is-not-defined.patch
-      # - patches/9999-qtbase-use-better-gcc-optimize-size.patch
+      - {{ patches }}/0001-qtbase-osx-xctest-check.patch
+      - {{ patches }}/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
+      - {{ patches }}/0003-qtbase-use-better-clang-optimize-size.patch
+      - {{ patches }}/0004-qtbase-never-enable-new-dtags.patch
+      - {{ patches }}/0005-qtbase-link-xcb-shm.patch
+      - {{ patches }}/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
+      - {{ patches }}/0007-qtbase-Disable-kTLSProtocol13-for-macOS-10.12.patch
+      - {{ patches }}/0008-qtbase-Define-kIOSurfaceSuccess-if-it-is-not-defined.patch
+      # - {{ patches }}/9999-qtbase-use-better-gcc-optimize-size.patch
 
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
@@ -64,7 +78,8 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 0
+  number: {{ build_number }}
+  string: {{ build_number }}{{ dev_nature }}
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge

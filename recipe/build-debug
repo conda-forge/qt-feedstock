@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+pushd $(dirname ${BASH_SOURCE[0]})
+
+if [[ $(uname) =~ M.* ]]; then
+  OPT=/c/opt
+else
+  OPT=/opt
+fi
+
+RECIPES=${OPT}/Shared.local/r
+
+if [[ -d ${OPT}/Shared/r ]]; then
+  RECIPES=${OPT}/Shared/r
+fi
+
+CONDA_BUILD_DEBUG_PACKAGE=1 \
+  bash ~/gd.cio/bin/cblf  \
+    .  \
+    -m ${RECIPES}/a/conda_build_config.yaml  \
+    -m ${RECIPES}/c.wip/qt-feedstock/recipe/conda_build_config.yaml  \
+    -c rdonnelly -c defaults -c conda-forge  \
+    --croot /c/qt5b --no-build-id  \
+    --python=3.7

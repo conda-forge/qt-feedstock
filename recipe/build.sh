@@ -333,3 +333,11 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
   popd
 fi
 
+LICENSE_DIR="$PREFIX/share/qt/3rd_party_licenses"
+for f in $(find * -iname "*LICENSE*" -or -iname "*COPYING*" -or -iname "*COPYRIGHT*" -or -iname "NOTICE"); do
+  mkdir -p "$LICENSE_DIR/$(dirname $f)"
+  cp -rf $f "$LICENSE_DIR/$f"
+  rm -rf "$LICENSE_DIR/qtbase/examples/widgets/dialogs/licensewizard"
+  rm -rf "$LICENSE_DIR/qtwebengine/src/3rdparty/chromium/tools/checklicenses"
+  rm -rf "$LICENSE_DIR/qtwebengine/src/3rdparty/chromium/third_party/skia/tools/copyright"
+done

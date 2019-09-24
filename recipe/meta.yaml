@@ -3,29 +3,31 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.12.1" %}
+{% set version = "5.12.5" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz  # [not win]
-    md5: 6a37466c8c40e87d4a19c3f286ec2542  # [not win]
-  - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.zip  # [win]
-    md5: 4649d4e51ca836fbde08565582353140  # [win]
+  - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
+    md5: d8c9ed842d39f1a5f31a7ab31e4e886c
     patches:
+
       # qtbase
-      - patches/0010-osx-xctest-check.patch
-      - patches/0011-osx-allow-any-xcrun-in-PATH.patch
-      - patches/0015-qtbase-use-better-clang-optimize-size.patch
-      - patches/0016-qtbase-use-better-gcc-optimize-size.patch
-      - patches/0017-qtbase-never-enable-new-dtags.patch
-      - patches/0019-qtbase-link-xcb-shm.patch
-      - patches/0020-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroot-passe.patch
-      #- patches/0021-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-also-to.patch
+      - patches/0001-qtbase-osx-xctest-check.patch
+      - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
+      - patches/0003-qtbase-use-better-clang-optimize-size.patch
+      - patches/0004-qtbase-never-enable-new-dtags.patch
+      - patches/0005-qtbase-link-xcb-shm.patch
+      - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
+      - patches/0007-qtbase-Disable-kTLSProtocol13-for-macOS-10.12.patch
+      - patches/0008-qtbase-Define-kIOSurfaceSuccess-if-it-is-not-defined.patch
+      # - patches/9999-qtbase-use-better-gcc-optimize-size.patch
+
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
+
       # qtwebengine
       - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
@@ -40,6 +42,7 @@ source:
       - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
       - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
       - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
+
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 
@@ -170,6 +173,9 @@ requirements:
     - llvmdev
     - clangdev
     - libclang
+    - llvmdev   8.*  # [osx]
+    - clangdev  8.*  # [osx]
+    - libclang  8.*  # [osx]
   run:
     - openssl                            # [not osx]
     - libxcb                             # [linux]

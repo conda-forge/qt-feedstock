@@ -10,7 +10,7 @@ package:
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/5.12/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
+  - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
     md5: d8c9ed842d39f1a5f31a7ab31e4e886c
     patches:
 

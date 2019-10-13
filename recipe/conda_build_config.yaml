@@ -1,2 +1,8 @@
-MACOSX_DEPLOYMENT_TARGET:  # [osx]
-  - '10.12'                # [osx]
+CONDA_BUILD_SYSROOT:
+  - /opt/MacOSX10.12.sdk
+macos_min_version:
+  - 10.12
+macos_machine:
+  - x86_64-apple-darwin13.4.0
+MACOSX_DEPLOYMENT_TARGET:
+  - 10.12

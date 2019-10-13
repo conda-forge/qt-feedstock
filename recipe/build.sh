@@ -340,7 +340,19 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
       sed -i '' "s|${CONDA_BUILD_SYSROOT}/|\${CMAKE_OSX_SYSROOT}/|g" ${CMAKE_FILE}
     done
   popd
+elif [[ ${HOST} =~ .*inux.* ]]; then
+  # I am not sure we want to do this really. It drops the sysroot, but conda-build
+  # does replace the sysroot.
+  pushd ${PREFIX}
+  SYSROOT_FILES=$(rg --type-add 'qt:*.cmake' --type-add 'qt:*.prl' --type-add 'qt:*.pc' --type-add 'qt:*.pri' -tqt x86_64-conda_cos6-linux-gnu/sysroot -l | sort)
+  for _SYSROOT_FILE in "${SYSROOT_FILES[@]}"; do
+   echo "INFO :: sysroot found in ${_SYSROOT_FILE}"
+   # If we did want to use real system libraries we would do this:
+   # sed -E -i.bak "s|[^ ]+/[^ ]*${HOST}\/sysroot||g"
+   # rm -f ${_SYSROOT_FILE}.bak
+  done
 fi
+
 
 LICENSE_DIR="$PREFIX/share/qt/3rd_party_licenses"
 for f in $(find * -iname "*LICENSE*" -or -iname "*COPYING*" -or -iname "*COPYRIGHT*" -or -iname "NOTICE"); do

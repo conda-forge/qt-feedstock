@@ -1,7 +1,7 @@
-From 95a1a184633079dffb20f507dd81ea363df30cac Mon Sep 17 00:00:00 2001
+From 372210cfe0592b58026d1311de11c82ef4f982b7 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 14:49:51 -0600
-Subject: [PATCH 4/6] qtbase: never enable new-dtags
+Subject: [PATCH 4/8] qtbase: never enable new-dtags
 
 Change-Id: I2c99367bc60b1d6e84811ab4e186ac0810cd399c
 ---
@@ -10,10 +10,10 @@ Change-Id: I2c99367bc60b1d6e84811ab4e186ac0810cd399c
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/qtbase/configure.json b/qtbase/configure.json
-index 9fce6d039e..42ad203068 100644
+index 7279259484..aa8e8c90b5 100644
 --- a/qtbase/configure.json
 +++ b/qtbase/configure.json
-@@ -353,7 +353,7 @@
+@@ -355,7 +355,7 @@
          "enable_new_dtags": {
              "label": "new dtags support",
              "type": "linkerSupportsFlag",
@@ -36,5 +36,5 @@ index 700f228c36..3a1e843ea5 100644
  QMAKE_LFLAGS_USE_GOLD   = -fuse-ld=gold
  
 -- 
-2.20.1
+2.23.0
 

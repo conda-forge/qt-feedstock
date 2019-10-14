@@ -1,17 +1,17 @@
-From 16578d1a599f914acd421b595be655e3a63c731d Mon Sep 17 00:00:00 2001
+From ff25a6d8cdaa98ab8ae423b692df0685e53a3ad6 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 14:45:19 -0600
-Subject: [PATCH 2/6] qtbase: osx: allow any xcrun in PATH
+Subject: [PATCH 2/8] qtbase: osx: allow any xcrun in PATH
 
 Change-Id: I6066837f34fbed47340aa280d696e9deb3c79fc7
 ---
- configure                            | 10 +++++-----
- mkspecs/features/mac/default_pre.prf |  8 ++++----
- mkspecs/features/mac/sdk.mk          |  2 +-
- mkspecs/features/mac/sdk.prf         |  4 ++--
- qtbase/mkspecs/features/mac/sdk.mk   | 12 ++++++++++++
+ configure                                 | 10 +++++-----
+ mkspecs/features/mac/default_pre.prf      |  8 ++++----
+ mkspecs/features/mac/sdk.mk               |  2 +-
+ mkspecs/features/mac/sdk.prf              |  4 ++--
+ qtbase/qtbase/mkspecs/features/mac/sdk.mk | 12 ++++++++++++
  5 files changed, 24 insertions(+), 12 deletions(-)
- create mode 100644 qtbase/mkspecs/features/mac/sdk.mk
+ create mode 100644 qtbase/qtbase/mkspecs/features/mac/sdk.mk
 
 diff --git a/qtbase/configure b/qtbase/configure
 index ef7bad1bfc..0d1f198d9f 100755
@@ -122,11 +122,11 @@ index 3a9c2778bb..12c1c82639 100644
      isEmpty(sysrooted): next()
  
      $$tool = $$sysrooted $$member(value, 1, -1)
-diff --git a/qtbase/qtbase/mkspecs/features/mac/sdk.mk b/qtbase/qtbase/mkspecs/features/mac/sdk.mk
+diff --git a/qtbase/qtbase/qtbase/mkspecs/features/mac/sdk.mk b/qtbase/qtbase/qtbase/mkspecs/features/mac/sdk.mk
 new file mode 100644
 index 0000000000..f912d6016a
 --- /dev/null
-+++ b/qtbase/qtbase/mkspecs/features/mac/sdk.mk
++++ b/qtbase/qtbase/qtbase/mkspecs/features/mac/sdk.mk
 @@ -0,0 +1,12 @@
 +CURRENT_MAC_SDK_VERSION := $(shell DEVELOPER_DIR=$(EXPORT_QMAKE_XCODE_DEVELOPER_PATH) xcrun --sdk $(EXPORT_QMAKE_MAC_SDK) -show-sdk-version)
 +
@@ -141,5 +141,5 @@ index 0000000000..f912d6016a
 +    $(error ^)
 +endif
 -- 
-2.20.1
+2.23.0
 

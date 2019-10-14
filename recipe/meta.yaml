@@ -119,7 +119,7 @@ requirements:
     # Probably only needed for WebEngine
     - python 2.7*
     - ninja
-    - ruby                               # [linux]
+    - ruby >=2.5                         # [linux]
     - bison                              # [linux]
     - flex                               # [linux]
     - gperf                              # [linux]

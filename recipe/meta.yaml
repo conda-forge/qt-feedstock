@@ -178,6 +178,9 @@ requirements:
     - llvmdev
     - clangdev
     - libclang
+    # - llvmdev   8.*  # [osx]
+    # - clangdev  8.*  # [osx]
+    # - libclang  8.*  # [osx]
   run:
     - openssl                            # [not osx]
     - libxcb                             # [linux]

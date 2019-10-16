@@ -73,7 +73,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     export LD=${GXX}
     export CC=${GCC}
     export CXX=${GXX}
-
+    # Urgh. Why?
+    conda init || true
     conda create -y --prefix "${SRC_DIR}/openssl_hack" -c https://repo.continuum.io/pkgs/main  \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack"  \
                   openssl=${openssl}
@@ -340,18 +341,42 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
       sed -i '' "s|${CONDA_BUILD_SYSROOT}/|\${CMAKE_OSX_SYSROOT}/|g" ${CMAKE_FILE}
     done
   popd
-elif [[ ${HOST} =~ .*inux.* ]]; then
-  # I am not sure we want to do this really. It drops the sysroot, but conda-build
-  # does replace the sysroot.
-  pushd ${PREFIX}
-  SYSROOT_FILES=$(rg --type-add 'qt:*.cmake' --type-add 'qt:*.prl' --type-add 'qt:*.pc' --type-add 'qt:*.pri' -tqt x86_64-conda_cos6-linux-gnu/sysroot -l | sort)
-  for _SYSROOT_FILE in "${SYSROOT_FILES[@]}"; do
-   echo "INFO :: sysroot found in ${_SYSROOT_FILE}"
-   # If we did want to use real system libraries we would do this:
-   # sed -E -i.bak "s|[^ ]+/[^ ]*${HOST}\/sysroot||g"
-   # rm -f ${_SYSROOT_FILE}.bak
-  done
 fi
+
+# We will set CONDA_BUILD_SYSROOT even on Linux so that all of this works OK. This is probably a feature that conda-build could perform
+# for us (both setting CONDA_BUILD_SYSROOT on Linux and doing these specific replacements, ping @msarahan,
+
+if [[ ${target_platform} =~ .*inux.* ]]; then
+  CB_SYSROOT_SUF=$(basename $(dirname $("${CC}" -print-sysroot)))/$(basename $("${CC}" -print-sysroot))
+else
+  CB_SYSROOT_SUF=${CONDA_BUILD_SYSROOT:-${CC} -print-sysroot}
+fi
+
+pushd ${PREFIX}
+  SYSROOT_FILES=$(rg --type-add 'qt:*.cmake' --type-add 'qt:*.prl' --type-add 'qt:*.pc' --type-add 'qt:*.pri' -tqt ${CB_SYSROOT_SUF} -l | sort)
+  for _SYSROOT_FILE in ${SYSROOT_FILES[@]}; do
+    echo "INFO :: sysroot found in ${_SYSROOT_FILE}"
+    rg --type-add 'qt:*.cmake' --type-add 'qt:*.prl' --type-add 'qt:*.pc' --type-add 'qt:*.pri' -tqt ${CB_SYSROOT_SUF} "${_SYSROOT_FILE}"
+    case "${_SYSROOT_FILE}" in
+      *.pri|*.prl)
+        SED_REPLACER="s|[^ ]+/[^ ]*${CB_SYSROOT_SUF}|\$\$\(CONDA_BUILD_SYSROOT\)|g"
+        ;;
+      *.cmake)
+        SED_REPLACER="s|[^ ]+/[^ ]*${CB_SYSROOT_SUF}|\$ENV{CONDA_BUILD_SYSROOT}|g"
+        ;;
+      # Because we pass this to pkg-config as `--define-variable=CONDA_BUILD_SYSROOT=<something>` and this cannot handle an empty something
+      # we also pass in the leading slash, that when CONDA_BUILD_SYSROOT is empty a single '/' is passed and pkg-config is not sad.
+      *.pc)
+        SED_REPLACER="s|[^ ]+/[^ ]*${CB_SYSROOT_SUF}\/|\${CONDA_BUILD_SYSROOT_S}\/|g"
+        ;;
+    esac
+    # Dry-run.
+    # cat "${_SYSROOT_FILE}" | sed -E "${SED_REPLACER}" | grep CONDA_BUILD_SYSROOT
+    # Do-it (good luck!)
+    sed -i.bak -E "${SED_REPLACER}" "${_SYSROOT_FILE}"
+    rm -f ${_SYSROOT_FILE}.bak
+  done
+popd
 
 
 LICENSE_DIR="$PREFIX/share/qt/3rd_party_licenses"

@@ -1,6 +1,9 @@
+set +x
 # Clean config for dirty builds
 # -----------------------------
-rm -f .qmake.stash .qmake.cache || true
+if  [[ -z ${DIRTY} ]]; then
+  rm -f .qmake.stash .qmake.cache || true
+fi
 
 # Compile
 # -------
@@ -27,6 +30,35 @@ echo BUILD_PREFIX=${BUILD_PREFIX}
 USED_BUILD_PREFIX=${BUILD_PREFIX:-${PREFIX}}
 echo USED_BUILD_PREFIX=${BUILD_PREFIX}
 
+# Use -optimize-debug as debug is otherwise too big.
+declare -a LIBS_NATURE_ARGS=()
+LIBS_NATURE_ARGS+=(-shared)
+if [[ ${CONDA_BUILD_QT_LIBS_NATURE} == debug ]]; then
+  LIBS_NATURE_ARGS+=(-force-debug-info)
+  LIBS_NATURE_ARGS+=(-separate-debug-info)
+  LIBS_NATURE_ARGS+=(-debug)
+  if [[ ! ${CC} =~ .*clang.* ]]; then
+    LIBS_NATURE_ARGS+=(-optimize-debug)
+  fi
+elif [[ ${CONDA_BUILD_QT_LIBS_NATURE} == debug-and-release ]]; then
+  # If you want this build you are probably having a lot of trouble.
+  LIBS_NATURE_ARGS+=(-force-debug-info)
+  LIBS_NATURE_ARGS+=(-separate-debug-info)
+  LIBS_NATURE_ARGS+=(-debug-and-release)
+  if [[ ! ${CC} =~ .*clang.* ]]; then
+    LIBS_NATURE_ARGS+=(-optimize-debug)
+  fi
+else
+  # LIBS_NATURE_ARGS+=(-force-debug-info)
+  # LIBS_NATURE_ARGS+=(-separate-debug-info)
+  LIBS_NATURE_ARGS+=(-release)
+  LIBS_NATURE_ARGS+=(-optimize-size)
+  if [[ ! ${CC} =~ .*clang.* ]]; then
+    LIBS_NATURE_ARGS+=(-reduce-relocations)
+  fi
+  LIBS_NATURE_ARGS+=(-optimized-tools)
+fi
+
 MAKE_JOBS=$CPU_COUNT
 # You can use this to cut down on the number of modules built. Of course the Qt package will not be of
 # much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
@@ -43,6 +75,27 @@ fi
 # For QDoc
 export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 
+function parse_macos_sdk_ver
+{
+  local _SYSROOT=${1}; shift
+  local _SDK_VER_VAR=${1} ; shift
+  local _SDK_VER_MAJOR_VAR=${1} ; shift
+  local _SDK_VER_MINOR_VAR=${1} ; shift
+  re='[^0-9]*([0-9\.]+)\.\.*'
+  if [[ "${_SYSROOT}" =~ $re ]]; then
+    local _SDK_VER=${BASH_REMATCH[1]}
+    re='([0-9]*)\.([0-9]*).*'
+    if [[ "${_SDK_VER}" =~ $re ]]; then
+      local _SDK_VER_MAJOR=${BASH_REMATCH[1]}
+      local _SDK_VER_MINOR=${BASH_REMATCH[2]}
+    fi
+  fi
+  eval "${_SDK_VER_VAR}=${_SDK_VER}"
+  eval "${_SDK_VER_MAJOR_VAR}=${_SDK_VER_MAJOR}"
+  eval "${_SDK_VER_MINOR_VAR}=${_SDK_VER_MINOR}"
+}
+
+
 # Problems: https://bugreports.qt.io/browse/QTBUG-61158
 #           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
 # Something to do with BUILD.gn files and/or ninja
@@ -57,7 +110,7 @@ export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 # grep -R include_dirs . | grep ninja | grep    _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
 # Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
 
-if [[ ${HOST} =~ .*linux.* ]]; then
+if [[ ${target_platform} =~ .*linux.* ]]; then
 
     if ! which ruby > /dev/null 2>&1; then
         echo "You need ruby to build qtwebkit"
@@ -97,7 +150,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # https://codereview.qt-project.org/#/c/157817/
     #
     sed -i "s/-isystem//g" "qtbase/mkspecs/common/gcc-base.conf"
-    export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
+    # export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
 
     export PATH=${PWD}:${PATH}
     declare -a SKIPS
@@ -116,7 +169,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       SKIPS+=(-skip); SKIPS+=(qt3d)
     fi
     declare -A COS6_MISSING_DEFINES
-    if [[ ${HOST} == *cos6* ]]; then
+    if [[ ${HOST} =~ .*cos6.* ]]; then
       COS6_MISSING_DEFINES["SYN_DROPPED"]="3"
       COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY1"]="0x2c0"
       COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY2"]="0x2c1"
@@ -154,6 +207,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # Had been trying with:
     #   -sysroot ${BUILD_PREFIX}/${HOST}/sysroot 
     # .. but it probably requires changing -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 to -L /usr/lib64
+    if [[ ! -f .status.configure ]]; then
     ./configure -prefix ${PREFIX} \
                 -libdir ${PREFIX}/lib \
                 -bindir ${PREFIX}/bin \
@@ -164,10 +218,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -I ${PREFIX}/include \
                 -L ${PREFIX}/lib \
                 -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
-                -release \
+                "${LIBS_NATURE_ARGS[@]}" \
                 -opensource \
                 -confirm-license \
-                -shared \
                 -nomake examples \
                 -nomake tests \
                 -verbose \
@@ -185,8 +238,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -no-libudev \
                 -no-avx \
                 -no-avx2 \
-                -optimize-size \
-                -reduce-relocations \
                 -cups \
                 -openssl-linked \
                 -openssl \
@@ -199,46 +250,40 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
                 -D GLX_GLXEXT_PROTOTYPES \
                 "${SKIPS[@]}"
+    echo "done" > .status.configure
+    fi
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
 #                -ltcg \
 #                --disable-new-dtags \
 
-    if [[ ${MINIMAL_BUILD} != yes ]]; then
-      CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
-      if find . -name "libQt5WebEngine*so" -exec false {} +; then
-        echo "Did not build qtwebengine, exiting"
-        exit 1
+    if [[ ! -f .status.make ]]; then
+      if [[ ${MINIMAL_BUILD} != yes ]]; then
+        CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
+        if find . -name "libQt5WebEngine*so" -exec false {} +; then
+          echo "Did not build qtwebengine, exiting"
+          exit 1
+        fi
       fi
+      
+      CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
+      echo "LIZZY :: Made it past make"
+      echo "done" > .status.make
     fi
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
-    make install
-fi
-
-function parse_macos_sdk_ver
-{
-  local _SYSROOT=${1}; shift
-  local _SDK_VER_VAR=${1} ; shift
-  local _SDK_VER_MAJOR_VAR=${1} ; shift
-  local _SDK_VER_MINOR_VAR=${1} ; shift
-  re='[^0-9]*([0-9\.]+)\.\.*'
-  if [[ "${_SYSROOT}" =~ $re ]]; then
-    local _SDK_VER=${BASH_REMATCH[1]}
-    re='([0-9]*)\.([0-9]*).*'
-    if [[ "${_SDK_VER}" =~ $re ]]; then
-      local _SDK_VER_MAJOR=${BASH_REMATCH[1]}
-      local _SDK_VER_MINOR=${BASH_REMATCH[2]}
-    fi
-  fi
-  eval "${_SDK_VER_VAR}=${_SDK_VER}"
-  eval "${_SDK_VER_MAJOR_VAR}=${_SDK_VER_MAJOR}"
-  eval "${_SDK_VER_MINOR_VAR}=${_SDK_VER_MINOR}"
-}
-
-if [[ ${HOST} =~ .*darwin.* ]]; then
-
+    # if [[ ! -f .status.make-install ]]; then
+      make install
+      echo "LIZZY :: Made it past make install"
+    #   echo "done" > .status.make-install
+    # fi
+elif [[ ${target_platform} == osx-64 ]]; then
     parse_macos_sdk_ver ${CONDA_BUILD_SYSROOT} OSX_SDK_VER OSX_SDK_VER_MAJOR OSX_SDK_VER_MINOR
-    printf "INFO :: Parsed ${CONDA_BUILD_SYSROOT} as:\n  OSX_SDK_VER=$OSX_SDK_VER OSX_SDK_VER_MAJOR=$SDK_VER_MAJOR OSX_SDK_VER_MINOR=$SDK_VER_MINOR"
+    printf "INFO :: Parsed ${CONDA_BUILD_SYSROOT} as:\n  OSX_SDK_VER=$OSX_SDK_VER OSX_SDK_VER_MAJOR=$OSX_SDK_VER_MAJOR OSX_SDK_VER_MINOR=$OSX_SDK_VER_MINOR"
+    # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
+    if [[ ${OSX_SDK_VER_MAJOR} < 11 ]] && [[ ${OSX_SDK_VER_MINOR} < 11 ]]; then
+      echo "ERROR: You asked me to use $CONDA_BUILD_SYSROOT as MacOS SDK (maj: ${OSX_SDK_VER_MAJOR} min: ${OSX_SDK_VER_MINOR})"
+      echo "         But because of the use of Objective-C Generics we need at \least MacOSX10.11.sdk"
+      exit 1
+    fi
 
     # Avoid Xcode
     [[ -f xcrun ]] || cp "${RECIPE_DIR}"/xcrun .
@@ -255,16 +300,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     # Qt passes clang flags to LD (e.g. -stdlib=c++)
     export LD=${CXX}
     PATH=${PWD}:${PATH}
-
-    # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
-    if [[ ${OSX_SDK_VER_MAJOR} --lt 11 ]] && [[ ${OSX_SDK_VER_MINOR} --lt 11 ]]; then
-      echo "ERROR: You asked me to use $CONDA_BUILD_SYSROOT as MacOS SDK (maj: ${SDK_VER_MAJOR} min: ${SDK_VER_MINOR})"
-      echo "         But because of the use of Objective-C Generics we need at \least MacOSX10.11.sdk"
-      exit 1
-    fi
-
-    #             -qtlibinfix .conda \
-
+    if [[ ! -f .status.configure ]]; then
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \
@@ -274,10 +310,9 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -L $PREFIX/lib \
                 -I $PREFIX/include \
                 -R $PREFIX/lib \
-                -release \
+                "${LIBS_NATURE_ARGS[@]}" \
                 -opensource \
                 -confirm-license \
-                -shared \
                 -nomake examples \
                 -nomake tests \
                 -verbose \
@@ -296,22 +331,30 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-libudev \
                 -no-egl \
                 -no-openssl \
-                -optimize-size \
                 -sdk macosx${OSX_SDK_VER}
+    echo "done" > .status.configure
+    fi
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
 # lto causes an increase in final tar.bz2 size of about 4% (tested with the above -skip options though, not the whole thing)
 #                -ltcg \
 
-    ####
-    make -j${MAKE_JOBS} module-qtwebengine || exit 1
-    if find . -name "libQt5WebEngine*dylib" -exec false {} +; then
-      echo "Did not build qtwebengine, exiting"
-      exit 1
+    # Just because qtwebengine fails most often, so eek any problems out.
+    if [[ ! -f .status.make ]]; then
+      make -j${MAKE_JOBS} module-qtwebengine || exit 1
+      if find . -name "libQt5WebEngine*dylib" -exec false {} +; then
+        echo "Did not build qtwebengine, exiting"
+        exit 1
+      fi
+      make -j${MAKE_JOBS} || exit 1
+      echo "done" > .status.make
     fi
-    make -j${MAKE_JOBS} || exit 1
-    make install
+#    if [[ ! -f .status.make-install ]]; then
+      make install
+      echo "LIZZY :: Made it past make install"
+#      echo "done" > .status.make-install
+#    fi
 
     # Avoid Xcode (2)
     mkdir -p "${PREFIX}"/bin/xc-avoidance || true
@@ -319,30 +362,33 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     cp "${RECIPE_DIR}"/xcodebuild "${PREFIX}"/bin/xc-avoidance/
 fi
 
+
 # Qt Charts
 # ---------
 pushd qtcharts
-${PREFIX}/bin/qmake qtcharts.pro PREFIX=${PREFIX}
-make || exit 1
-make install || exit 1
+  ${PREFIX}/bin/qmake qtcharts.pro PREFIX=${PREFIX}
+  make
+  make install
 popd
+
 
 # Post build setup
 # ----------------
-# Remove static libraries that are not part of the Qt SDK.
 pushd "${PREFIX}"/lib > /dev/null
-    find . -name "*.a" -and -not -name "libQt*" -exec rm -f {} \;
+    echo "WARNING :: Removing the following static libraries as they are not part of the Qt SDK."
+    find . -name "*.a" -and -not -name "libQt*" -exec echo {} \;
+    find . -name "*.a" -and -not -name "libQt*" -exec rm -f {} \; || true
 popd > /dev/null
 
 # Add qt.conf file to the package to make it fully relocatable
 cp "${RECIPE_DIR}"/qt.conf "${PREFIX}"/bin/
 
-if [[ ${HOST} =~ .*darwin.* ]]; then
+if [[ ${target_platform} == osx-64 ]]; then
   pushd ${PREFIX}
     # We built Qt itself with SDK 10.10, but we shouldn't
     # force users to also build their Qt apps with SDK 10.10
     # https://bugreports.qt.io/browse/QTBUG-41238
-    sed -i '' 's/macosx.*$/macosx/g' mkspecs/qdevice.pri
+    [[ -f mkspecs/qdevice.pri ]] && sed -i '' 's/macosx.*$/macosx/g' mkspecs/qdevice.pri
     # We allow macOS SDK 10.12 while upstream requires 10.13 (as of Qt 5.12.1).
     sed -i '' "s/QT_MAC_SDK_VERSION_MIN = 10\..*/QT_MAC_SDK_VERSION_MIN = ${OSX_SDK_VER_MAJOR}\.${OSX_SDK_VER_MINOR}/g" mkspecs/common/macx.conf
     # We may want to replace these with \$\${QMAKE_MAC_SDK_PATH}/ instead?
@@ -362,29 +408,36 @@ if [[ ${target_platform} =~ .*inux.* ]]; then
 else
   CB_SYSROOT_SUF=${CONDA_BUILD_SYSROOT:-${CC} -print-sysroot}
 fi
+echo "CB_SYSROOT_SUF=${CB_SYSROOT_SUF}"
 
 pushd ${PREFIX}
-  SYSROOT_FILES=$(rg --type-add 'qt:*.cmake' --type-add 'qt:*.prl' --type-add 'qt:*.pc' --type-add 'qt:*.pri' -tqt ${CB_SYSROOT_SUF} -l | sort)
+  SYSROOT_FILES=()
+  find . -name "*.cmake" -or -name "*.prl" -or -name "*.pc" -or -name "*.pri" >tmpfile
+  while IFS=  read -r; do
+    SYSROOT_FILES+=("$REPLY")
+  done <tmpfile
+  rm -f tmpfile
+  echo "SYSROOT_FILES is ${SYSROOT_FILES[@]}"
   for _SYSROOT_FILE in ${SYSROOT_FILES[@]}; do
     echo "INFO :: sysroot found in ${_SYSROOT_FILE}"
-    rg --type-add 'qt:*.cmake' --type-add 'qt:*.prl' --type-add 'qt:*.pc' --type-add 'qt:*.pri' -tqt ${CB_SYSROOT_SUF} "${_SYSROOT_FILE}"
-    case "${_SYSROOT_FILE}" in
+    case ${_SYSROOT_FILE} in
       *.pri|*.prl)
-        SED_REPLACER="s|[^ ]+/[^ ]*${CB_SYSROOT_SUF}|\$\$\(CONDA_BUILD_SYSROOT\)|g"
+        SED_REPLACER="s|[^ ]+/[^ \"]*${CB_SYSROOT_SUF}\"?|\$\$\(CONDA_BUILD_SYSROOT\)|g"
         ;;
       *.cmake)
-        SED_REPLACER="s|[^ ]+/[^ ]*${CB_SYSROOT_SUF}|\$ENV{CONDA_BUILD_SYSROOT}|g"
+        SED_REPLACER="s|[^ ]+/[^ \"]*${CB_SYSROOT_SUF}\"?|\$ENV{CONDA_BUILD_SYSROOT}|g"
         ;;
       # Because we pass this to pkg-config as `--define-variable=CONDA_BUILD_SYSROOT=<something>` and this cannot handle an empty something
       # we also pass in the leading slash, that when CONDA_BUILD_SYSROOT is empty a single '/' is passed and pkg-config is not sad.
       *.pc)
-        SED_REPLACER="s|[^ ]+/[^ ]*${CB_SYSROOT_SUF}\/|\${CONDA_BUILD_SYSROOT_S}\/|g"
+        SED_REPLACER="s|[^ ]+/[^ \"]*${CB_SYSROOT_SUF}\/\"?|\${CONDA_BUILD_SYSROOT_S}\/|g"
         ;;
     esac
     # Dry-run.
     # cat "${_SYSROOT_FILE}" | sed -E "${SED_REPLACER}" | grep CONDA_BUILD_SYSROOT
     # Do-it (good luck!)
-    sed -i.bak -E "${SED_REPLACER}" "${_SYSROOT_FILE}"
+    echo "sed -i.bak -E ${SED_REPLACER} ${_SYSROOT_FILE}"
+    sed -i.bak -E "${SED_REPLACER}" "${_SYSROOT_FILE}" || true
     rm -f ${_SYSROOT_FILE}.bak
   done
 popd

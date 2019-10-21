@@ -4,6 +4,16 @@
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
 {% set version = "5.12.5" %}
+# Valid is release, debug, debug-and-release
+{% set libs_nature = os.environ.get('CONDA_BUILD_QT_LIBS_NATURE', '') %}
+{% if libs_nature == 'debug' %}
+  {% set libs_pkg_suffix = "_d" %}
+{% elif libs_nature == 'debug-and-release' %}
+  {% set libs_pkg_suffix = "_dr" %}
+{% else %}
+  {% set libs_nature = 'release' %}
+  {% set libs_pkg_suffix = "" %}
+{% endif %}
 
 package:
   name: qt
@@ -23,6 +33,7 @@ source:
       - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
       - patches/0007-qtbase-Disable-kTLSProtocol13-for-macOS-10.12.patch
       - patches/0008-qtbase-Define-kIOSurfaceSuccess-if-it-is-not-defined.patch
+      - patches/0009-qtbase-qcore_for_sdk_10_13_1.patch
       # I do not think this is the correct approach. Something needs fixing, but
       # I think it is not just limited to GL which is all this patch handles.
       # - patches/0009-qtbase-fix-hardcoded-sysroot-path.patch
@@ -67,7 +78,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 2
+  number: 5
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
@@ -80,11 +91,20 @@ build:
     - /usr/lib/libresolv.9.dylib  # [osx]
     - /usr/lib/libsandbox.1.dylib  # [osx]
     - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
+  {% if libs_pkg_suffix != '' %}
+  string: {{ version }}{{ libs_pkg_suffix }}
+  {% endif %}
+  script_env:
+    - CONDA_BUILD_QT_LIBS_NATURE
+    - python_branding
 
 requirements:
   build:
     - {{ compiler('cxx') }}              # [not win]
     - {{ compiler('c') }}                # [not win]
+    # Hack to prevent clang-9 being used.
+    - clang 4.0.1                        # [osx]
+    - clangxx 4.0.1                        # [osx]
     - vs2017_win-64                      # [win64]
     - vs2017_win-32                      # [win32]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
@@ -214,6 +234,7 @@ test:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
+    - {{ cdt('at-spi-devel') }}          # [linux]
   files:
     - test/hello.pro
     - test/main-qtwebengine.cpp

@@ -94,6 +94,7 @@ build:
   {% if libs_pkg_suffix != '' %}
   string: {{ version }}{{ libs_pkg_suffix }}
   {% endif %}
+  rpath_patcher: patchelf
   script_env:
     - CONDA_BUILD_QT_LIBS_NATURE
     - python_branding
@@ -104,7 +105,7 @@ requirements:
     - {{ compiler('c') }}                # [not win]
     # Hack to prevent clang-9 being used.
     - clang 4.0.1                        # [osx]
-    - clangxx 4.0.1                        # [osx]
+    - clangxx 4.0.1                      # [osx]
     - vs2017_win-64                      # [win64]
     - vs2017_win-32                      # [win32]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]

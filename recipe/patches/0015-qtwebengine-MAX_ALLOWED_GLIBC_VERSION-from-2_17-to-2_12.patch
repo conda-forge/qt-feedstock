@@ -1,0 +1,12 @@
+--- ./qtwebengine/src/3rdparty/chromium/build/linux/sysroot_scripts/find_incompatible_glibc_symbols.py.orig	2019-10-24 18:11:21.525546217 +0200
++++ ./qtwebengine/src/3rdparty/chromium/build/linux/sysroot_scripts/find_incompatible_glibc_symbols.py	2019-10-24 18:13:52.678881981 +0200
+@@ -10,7 +10,8 @@
+ import sys
+ 
+ # This constant comes from https://crbug.com/580892
+-MAX_ALLOWED_GLIBC_VERSION = [2, 17]
++# This constant was changed from [2, 17] by Anaconda, Inc.
++MAX_ALLOWED_GLIBC_VERSION = [2, 12]
+ 
+ 
+ def get_replacements(nm_file, max_allowed_glibc_version):

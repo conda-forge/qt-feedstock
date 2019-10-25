@@ -56,6 +56,7 @@ source:
       - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
       - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
       - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
+      - patches/0015-qtwebengine-MAX_ALLOWED_GLIBC_VERSION-from-2_17-to-2_12.patch
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch

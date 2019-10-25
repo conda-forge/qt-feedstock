@@ -1,2 +1,6 @@
+macos_min_version:  # [osx]
+  - 10.12  # [osx]
+macos_machine:  # [osx]
+  - x86_64-apple-darwin13.4.0  # [osx]
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
-  - '10.12'                # [osx]
+  - 10.12  # [osx]

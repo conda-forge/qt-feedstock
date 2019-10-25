@@ -1,7 +1,7 @@
-From 07a04ecfa739dcce969b8726aa58f3496e6ad0d7 Mon Sep 17 00:00:00 2001
+From d57e95a41295dca69ce19391486020f88ca8c4e5 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sat, 9 Feb 2019 23:57:55 +0100
-Subject: [PATCH 6/6] qtbase: Do not set PKG_CONFIG_SYSROOT_DIR when -sysroot
+Subject: [PATCH 6/8] qtbase: Do not set PKG_CONFIG_SYSROOT_DIR when -sysroot
  passed
 
 We carefully manage PKG_CONFIG_LIBDIR and we have pkg-config
@@ -14,10 +14,10 @@ Change-Id: Ife0170c98f97656bb6de5357145cb13a6e068838
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/qtbase/configure.pri b/qtbase/configure.pri
-index 131aa868c2..6597a268bf 100644
+index 09c34af4ee..25817b1ad8 100644
 --- a/qtbase/configure.pri
 +++ b/qtbase/configure.pri
-@@ -366,8 +366,8 @@ defineTest(qtConfTest_detectPkgConfig) {
+@@ -362,8 +362,8 @@ defineTest(qtConfTest_detectPkgConfig) {
                  return(false)
              }
  
@@ -29,5 +29,5 @@ index 131aa868c2..6597a268bf 100644
          $${1}.pkgConfigLibdir = $$pkgConfigLibdir
          export($${1}.pkgConfigLibdir)
 -- 
-2.20.1
+2.23.0
 

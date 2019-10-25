@@ -2,6 +2,28 @@
 
 echo "$@" >> /tmp/xcrun-$$.log
 
+function parse_macos_sdk_ver
+{
+  local _SYSROOT=${1}; shift
+  local _SDK_VER_VAR=${1} ; shift
+  local _SDK_VER_MAJOR_VAR=${1} ; shift
+  local _SDK_VER_MINOR_VAR=${1} ; shift
+  re='[^0-9]*([0-9\.]+)\.\.*'
+  if [[ "${_SYSROOT}" =~ $re ]]; then
+    local _SDK_VER=${BASH_REMATCH[1]}
+    re='([0-9]*)\.([0-9]*).*'
+    if [[ "${_SDK_VER}" =~ $re ]]; then
+      local _SDK_VER_MAJOR=${BASH_REMATCH[1]}
+      local _SDK_VER_MINOR=${BASH_REMATCH[2]}
+    fi
+  fi
+  eval "${_SDK_VER_VAR}=${_SDK_VER}"
+  eval "${_SDK_VER_MAJOR_VAR}=${_SDK_VER_MAJOR}"
+  eval "${_SDK_VER_MINOR_VAR}=${_SDK_VER_MINOR}"
+}
+
+parse_macos_sdk_ver ${CONDA_BUILD_SYSROOT} _CONDA_QT_OSX_SDK_VER _CONDA_QT_OSX_SDK_VER_MAJ _CONDA_QT_OSX_SDK_MIN
+
 # We could not care less, luckily this always comes first
 if [[ ${1} == --sdk ]] || [[ ${1} == -sdk ]] || [[ ${1} == sdk ]]; then
   shift;
@@ -43,7 +65,7 @@ case ${1} in
     ;;
 
   *-show-sdk-version)
-    echo 10.12
+    echo ${_CONDA_QT_OSX_SDK_VER}
     exit 0
     ;;
 

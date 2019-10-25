@@ -16,6 +16,28 @@ elif [[ ${1} == -version ]]; then
   exit 0
 fi
 
+function parse_macos_sdk_ver
+{
+  local _SYSROOT=${1}; shift
+  local _SDK_VER_VAR=${1} ; shift
+  local _SDK_VER_MAJOR_VAR=${1} ; shift
+  local _SDK_VER_MINOR_VAR=${1} ; shift
+  re='[^0-9]*([0-9\.]+)\.\.*'
+  if [[ "${_SYSROOT}" =~ $re ]]; then
+    local _SDK_VER=${BASH_REMATCH[1]}
+    re='([0-9]*)\.([0-9]*).*'
+    if [[ "${_SDK_VER}" =~ $re ]]; then
+      local _SDK_VER_MAJOR=${BASH_REMATCH[1]}
+      local _SDK_VER_MINOR=${BASH_REMATCH[2]}
+    fi
+  fi
+  eval "${_SDK_VER_VAR}=${_SDK_VER}"
+  eval "${_SDK_VER_MAJOR_VAR}=${_SDK_VER_MAJOR}"
+  eval "${_SDK_VER_MINOR_VAR}=${_SDK_VER_MINOR}"
+}
+
+parse_macos_sdk_ver ${CONDA_BUILD_SYSROOT} _CONDA_QT_OSX_SDK_VER _CONDA_QT_OSX_SDK_VER_MAJ _CONDA_QT_OSX_SDK_MIN
+
 case ${1} in
 
   -version)
@@ -34,8 +56,8 @@ case ${1} in
       echo "TODO :: Implement fallback for xcodebuild --show-sdk-path"
       exit 1
     elif [[ ${1} == SDKVersion ]]; then
-      echo "10.12" >> /tmp/xcodebuild-$$.log
-      echo "10.12"
+      echo "${_CONDA_QT_OSX_SDK_VER}" >> /tmp/xcodebuild-$$.log
+      echo "${_CONDA_QT_OSX_SDK_VER}"
       exit 0
     elif [[ ${1} == PlatformPath ]]; then
       echo "Making this one up entirely, you may need a real Xcode" >> /tmp/xcodebuild-$$.log
@@ -43,7 +65,7 @@ case ${1} in
       echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform"
       exit 0
     elif [[ ${1} == ProductVersion ]]; then
-      echo "10.12"
+      echo "${_CONDA_QT_OSX_SDK_VER}"
       exit 0
     fi
     ;;

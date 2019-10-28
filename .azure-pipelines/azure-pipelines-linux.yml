@@ -10,12 +10,8 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      linux_ruby2.5:
-        CONFIG: linux_ruby2.5
-        UPLOAD_PACKAGES: True
-        DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_ruby2.6:
-        CONFIG: linux_ruby2.6
+      linux_:
+        CONFIG: linux_
         UPLOAD_PACKAGES: True
         DOCKER_IMAGE: condaforge/linux-anvil-comp7
   steps:

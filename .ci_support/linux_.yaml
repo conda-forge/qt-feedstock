@@ -71,8 +71,6 @@ pin_run_as_build:
     max_pin: x.x
 readline:
 - '8.0'
-ruby:
-- '2.5'
 sqlite:
 - '3'
 zlib:

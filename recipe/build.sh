@@ -242,6 +242,9 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
       fi
     fi
 
+    # Move VERSION file which conflicts with version in libc++ headers in case-insensitive files
+    mv qtwebengine/src/3rdparty/chromium/third_party/libsrtp/VERSION qtwebengine/src/3rdparty/chromium/third_party/libsrtp/LIBSRTP_VERSION || true;
+
     #             -qtlibinfix .conda \
 
     ./configure -prefix $PREFIX \

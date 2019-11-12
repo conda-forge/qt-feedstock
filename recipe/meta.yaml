@@ -80,8 +80,6 @@ build:
     - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
 
 requirements:
-  run_constrained:                                            # [osx]
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
   build:
     - {{ compiler('cxx') }}              # [not win]
     - {{ compiler('c') }}                # [not win]
@@ -182,6 +180,8 @@ requirements:
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
     - {{ pin_compatible("libclang") }}
+  run_constrained:                                            # [osx]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
 
 test:
   requires:

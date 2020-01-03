@@ -176,6 +176,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -system-zlib \
                 -system-sqlite \
                 -plugin-sql-sqlite \
+                -plugin-sql-mysql \
+                -plugin-sql-psql \
                 -qt-pcre \
                 -qt-xcb \
                 -xkbcommon \
@@ -269,6 +271,8 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -system-zlib \
                 -system-sqlite \
                 -plugin-sql-sqlite \
+                -plugin-sql-mysql \
+                -plugin-sql-psql \
                 -qt-freetype \
                 -qt-pcre \
                 -no-framework \

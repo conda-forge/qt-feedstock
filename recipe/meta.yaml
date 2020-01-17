@@ -160,6 +160,7 @@ requirements:
     - icu
     - libjpeg-turbo
     - libpng
+    - libtiff
     - nspr                               # [unix]
     - nss                                # [unix]
     - sqlite

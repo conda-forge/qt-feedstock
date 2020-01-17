@@ -1,0 +1,15 @@
+diff --git a/qtwebengine/src/core/configure.json b/qtwebengine/src/core/configure.json
+index b9c920444..773eedc61 100644
+--- a/qtwebengine/src/core/configure.json
++++ b/qtwebengine/src/core/configure.json
+@@ -192,8 +192,8 @@
+                 ],
+                 "main": [
+                     "JDIMENSION dummy;",
+-                    "jpeg_crop_scanline(nullptr, &dummy, &dummy);",
+-                    "jpeg_skip_scanlines(nullptr, dummy);"
++                    "jpeg_create_decompress(nullptr);",
++                    "jpeg_finish_decompress(nullptr);"
+                 ]
+             },
+             "sources": [

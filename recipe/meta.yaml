@@ -163,8 +163,8 @@ requirements:
     - nspr                               # [unix]
     - nss                                # [unix]
     - sqlite
-    - mysql
-    - postgresql
+    - mysql                              # [not win]
+    - postgresql                         # [not win]
     - zlib
     - libxcb                             # [linux]
     # We cannot install OpenSSL into the prefix when building qtwebengine

@@ -11,7 +11,7 @@ package:
 
 source:
   - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    md5: d8c9ed842d39f1a5f31a7ab31e4e886c
+    md5: 781c3179410aff7ef84607214e1e91b4
     patches:
 
       # qtbase

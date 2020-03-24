@@ -70,8 +70,6 @@ build:
   number: 3
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
-  # QtWebEngine fails on Linux unless we merge
-  merge_build_host: true  # [linux]
   run_exports:
     - {{ pin_subpackage('qt', max_pin='x.x') }}
   missing_dso_whitelist:  # [osx]
@@ -83,6 +81,7 @@ build:
 
 requirements:
   build:
+    - ccache
     - {{ compiler('cxx') }}              # [not win]
     - {{ compiler('c') }}                # [not win]
     - vs2017_win-64                      # [win64]

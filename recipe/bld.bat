@@ -89,7 +89,7 @@ rem These must have trailing spaces to avoid misinterpretation as 5>>, etc.
 echo QT_MAJOR_VERSION = %QTVERMAJ% >> Makefile
 echo QT_MINOR_VERSION = %QTVERMIN% >> Makefile
 echo QT_PATCH_VERSION = %QTVERPAT% >> Makefile
-echo CXX = cl>>Makefile
+echo CXX = cl.exe>>Makefile
 :: This is a hack, CFLAGS_CRT becomes part of CFLAGS_EXTRA, overwriting it.
 echo CFLAGS_CRT = -DQT_LIBINFIX=\"%QT_LIBINFIX%\" >> Makefile
 echo EXTRA_CXXFLAGS =>>Makefile

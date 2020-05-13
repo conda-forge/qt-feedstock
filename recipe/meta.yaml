@@ -3,15 +3,16 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.12.5" %}
+{% set version = "5.15.0" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    md5: d8c9ed842d39f1a5f31a7ab31e4e886c
+  #- url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
+  - url: http://download.qt.io/development_releases/qt/5.15/5.15.0-rc2/single/qt-everywhere-src-5.15.0-rc2.tar.xz
+    md5: 1a0d78992e55a46d97c4f885131b4ce7
     patches:
 
       # qtbase
@@ -19,7 +20,7 @@ source:
       - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
       - patches/0003-qtbase-use-better-clang-optimize-size.patch
       - patches/0004-qtbase-never-enable-new-dtags.patch
-      - patches/0005-qtbase-link-xcb-shm.patch
+      #- patches/0005-qtbase-link-xcb-shm.patch
       - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
       - patches/0007-qtbase-Disable-kTLSProtocol13-for-macOS-10.12.patch
       - patches/0008-qtbase-Define-kIOSurfaceSuccess-if-it-is-not-defined.patch
@@ -30,19 +31,19 @@ source:
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
       # qtwebengine
-      - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
-      - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      - patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
-      - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
+      #- patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
+      #- patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
+      #- patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
+      #- patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
       - patches/0006-qtwebengine-run-gn-verbosely.patch
       # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
-      - patches/0008-qtwebengine-link-gn-to-librt.patch
-      - patches/0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
-      - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
-      - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
-      - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
-      - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
-      - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
+      #- patches/0008-qtwebengine-link-gn-to-librt.patch
+      #- patches/0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
+      #- patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
+      #- patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
+      #- patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
+      #- patches/0013-qtwebengine-missing_EVIOCGPROP.diff
+      #- patches/0014-qtwebengine-HAVE_SENDMMSG.diff
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
@@ -65,8 +66,8 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 3
-  skip: True  # [win and vc != 14]
+  number: 0
+  skip: true  # [win and vc<14]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
   merge_build_host: true  # [linux]

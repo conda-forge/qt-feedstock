@@ -12,6 +12,12 @@ do
     unset $x
 done
 
+if which ccache; then
+  CCACHE=-ccache
+else
+  CCACHE=
+fi
+
 echo PREFIX=${PREFIX}
 echo BUILD_PREFIX=${BUILD_PREFIX}
 USED_BUILD_PREFIX=${BUILD_PREFIX:-${PREFIX}}
@@ -54,7 +60,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
         exit 1
     fi
 
-    if ! which ccache; then
+    if [[ -n ${CCACHE} ]]; then
       ln -s ${GXX} g++ || true
       ln -s ${GCC} gcc || true
       # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}
@@ -192,7 +198,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
                 -D GLX_GLXEXT_PROTOTYPES \
-                "${SKIPS[@]}"
+                "${SKIPS[@]}" \
+                ${CCACHE}
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
 #                -ltcg \
@@ -278,7 +285,8 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                -sdk macosx10.12
+                -sdk macosx10.12 \
+                ${CCACHE}
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d

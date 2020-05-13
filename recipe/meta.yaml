@@ -25,6 +25,7 @@ source:
       - patches/0008-qtbase-Define-kIOSurfaceSuccess-if-it-is-not-defined.patch
       # I do not think this is the correct approach. Something needs fixing, but
       # I think it is not just limited to GL which is all this patch handles.
+      # Pretty sure we need to rebuild all CDTs, rdonnelly channel has these.
       # - patches/0009-qtbase-fix-hardcoded-sysroot-path.patch
       # - patches/9999-qtbase-use-better-gcc-optimize-size.patch
 
@@ -177,9 +178,6 @@ requirements:
     - llvmdev
     - clangdev
     - libclang
-    # - llvmdev   8.*  # [osx]
-    # - clangdev  8.*  # [osx]
-    # - libclang  8.*  # [osx]
   run:
     - openssl                            # [not osx]
     - libxcb                             # [linux]

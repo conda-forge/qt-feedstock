@@ -6,16 +6,6 @@ rm -f .qmake.stash .qmake.cache || true
 # -------
 chmod +x configure
 
-# Remove the full path from CXX etc. If we don't do this
-# then the full path at build time gets put into
-# mkspecs/qmodule.pri and qmake attempts to use this.
-export AR=$(basename ${AR})
-export RANLIB=$(basename ${RANLIB})
-export STRIP=$(basename ${STRIP})
-export OBJDUMP=$(basename ${OBJDUMP})
-export CC=$(basename ${CC})
-export CXX=$(basename ${CXX})
-
 # Let Qt set its own flags and vars
 for x in OSX_ARCH CFLAGS CXXFLAGS LDFLAGS
 do
@@ -64,12 +54,14 @@ if [[ ${HOST} =~ .*linux.* ]]; then
         exit 1
     fi
 
-    ln -s ${GXX} g++ || true
-    ln -s ${GCC} gcc || true
-    # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}
-    ln -s ${USED_BUILD_PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
-    chmod +x g++ gcc gcc-ar
-    export PATH=${PWD}:${PATH}
+    if ! which ccache; then
+      ln -s ${GXX} g++ || true
+      ln -s ${GCC} gcc || true
+      # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}
+      ln -s ${USED_BUILD_PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
+      chmod +x g++ gcc gcc-ar
+      export PATH=${PWD}:${PATH}
+    fi
     export LD=${GXX}
     export CC=${GCC}
     export CXX=${GXX}

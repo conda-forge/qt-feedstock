@@ -118,7 +118,7 @@ requirements:
     - pkg-config                         # [linux]
     - make                               # [unix]
     # Probably only needed for WebEngine
-    - python 2.7*
+    - python *
     - ninja
     - ruby >=2.5                         # [linux]
     - bison                              # [linux]
@@ -134,7 +134,9 @@ requirements:
     # Otherwise build and host might end up with two different versions
     # If they do, merge_build_host will fail.
     - readline                           # [linux]
+    - ld_impl_linux-64 >=2.34            # [linux]
   host:
+    - ld_impl_linux-64 >=2.34            # [linux]
     # For pkg-config gl, fontconfig + freetype
     - pthread-stubs                      # [linux]
     - dbus                               # [linux]

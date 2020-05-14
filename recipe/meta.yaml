@@ -31,7 +31,7 @@ source:
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
       # qtwebengine
-      #- patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
+      - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       #- patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
       #- patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
       #- patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch

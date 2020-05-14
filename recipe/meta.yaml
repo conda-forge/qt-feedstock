@@ -115,6 +115,12 @@ requirements:
     - {{ cdt('libxxf86vm') }}            # [linux]
     - {{ cdt('libxxf86vm-devel') }}      # [linux]
     - {{ cdt('cups-devel') }}            # [linux]
+    - {{ cdt('gnutls') }}                # [linux]
+    - {{ cdt('libtasn1') }}              # [linux]
+    - {{ cdt('avahi-libs') }}            # [linux]
+    - {{ cdt('libgcrypt') }}             # [linux]
+    - {{ cdt('libgpg-error') }}          # [linux]
+    - {{ cdt('libcom_err') }}            # [linux]
 
     # For fontconfig + freetype
     - pkg-config                         # [linux]

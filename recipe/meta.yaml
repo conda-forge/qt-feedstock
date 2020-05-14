@@ -176,15 +176,15 @@ requirements:
     # For QDoc
     # http://doc.qt.io/Qt-5/qdoc-guide-clang.html
     # Only libclang is needed, but needs the full package for detection.
-    - llvmdev
-    - clangdev
-    - libclang
+    - llvmdev  # [not osx]
+    - clangdev  # [not osx]
+    - libclang  # [not osx]
   run:
     - openssl                            # [not osx]
     - libxcb                             # [linux]
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
-    - {{ pin_compatible("libclang") }}
+    - {{ pin_compatible("libclang") }}   # [not osx]
   run_constrained:                                            # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
 

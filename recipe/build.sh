@@ -179,7 +179,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -plugin-sql-mysql \
                 -plugin-sql-psql \
                 -qt-pcre \
-                -qt-xcb \
                 -xkbcommon \
                 -dbus \
                 -no-linuxfb \

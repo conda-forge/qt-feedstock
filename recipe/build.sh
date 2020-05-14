@@ -57,6 +57,10 @@ export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 # grep -R include_dirs . | grep ninja | grep    _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
 # Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
 
+# qtwebengine needs python 2
+conda create -y --prefix "${SRC_DIR}/python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
+export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
+
 if [[ ${HOST} =~ .*linux.* ]]; then
 
     if ! which ruby > /dev/null 2>&1; then

@@ -122,8 +122,6 @@ requirements:
     # For fontconfig + freetype
     - pkg-config                         # [linux]
     - make                               # [unix]
-    # Probably only needed for WebEngine
-    - python 2.7*
     - ninja
     - ruby >=2.5                         # [linux]
     - bison                              # [linux]
@@ -134,6 +132,7 @@ requirements:
     - m2-flex                            # [win]
     - m2-patch                           # [win]
     - jom                                # [win]
+    - curl                               # [win]
     - perl 5.*
     # Add readline here, so that newest readline is used.
     # Otherwise build and host might end up with two different versions

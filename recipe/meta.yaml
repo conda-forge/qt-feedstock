@@ -126,7 +126,6 @@ requirements:
     - pkg-config                         # [linux]
     - make                               # [unix]
     # Probably only needed for WebEngine
-    - python *
     - ninja
     - ruby >=2.5                         # [linux]
     - bison                              # [linux]

@@ -110,6 +110,10 @@ popd
 popd
 :SKIP_REBUILD_CONFIGURE_EXE
 
+:: qtwebengine needs python 2
+conda create -y --prefix "%SRC_DIR%\python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
+set "PATH=%SRC_DIR%\python2_hack\bin;%PATH%"
+
 :: See http://doc-snapshot.qt-project.org/qt5-5.4/windows-requirements.html
 :: this needs to be CALLed due to an exit statement at the end of configure:
 :: optimized-tools is necessary for qtlibinfix, otherwise:

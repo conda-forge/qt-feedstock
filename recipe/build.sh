@@ -59,7 +59,7 @@ export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 
 # qtwebengine needs python 2
 conda create -y --prefix "${SRC_DIR}/python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
-export PATH=${PATH}:${SRC_DIR}/python2_hack/bin
+export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
 
 if [[ ${HOST} =~ .*linux.* ]]; then
 
@@ -202,7 +202,10 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
                 -D GLX_GLXEXT_PROTOTYPES \
-                "${SKIPS[@]}"
+                "${SKIPS[@]}" \
+                QMAKE_LFLAGS+="-Wl,-rpath,$PREFIX/lib -Wl,-rpath-link,$PREFIX/lib -L$PREFIX/lib"
+
+
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
 #                -ltcg \

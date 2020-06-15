@@ -1,16 +1,16 @@
-From e0eb66a4f48e52b65464beff341f62bdcbd671a5 Mon Sep 17 00:00:00 2001
+From c9dd116c9788a2cd974caeea0f4c8285452d358f Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 23 Aug 2019 02:15:17 +0200
-Subject: [PATCH 7/8] qtbase: Disable kTLSProtocol13 for macOS <= 10.12
+Subject: [PATCH 7/9] qtbase: Disable kTLSProtocol13 for macOS <= 10.12
 
 ---
  src/network/ssl/qsslsocket_mac.cpp | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/qtbase/src/network/ssl/qsslsocket_mac.cpp b/qtbase/src/network/ssl/qsslsocket_mac.cpp
-index e6b71b293e..412ebad61c 100644
---- a/qtbase/src/network/ssl/qsslsocket_mac.cpp
-+++ b/qtbase/src/network/ssl/qsslsocket_mac.cpp
+diff --git a/src/network/ssl/qsslsocket_mac.cpp b/src/network/ssl/qsslsocket_mac.cpp
+index 77e847e972..ccd9aba78f 100644
+--- a/src/network/ssl/qsslsocket_mac.cpp
++++ b/src/network/ssl/qsslsocket_mac.cpp
 @@ -506,8 +506,10 @@ QSsl::SslProtocol QSslSocketBackendPrivate::sessionProtocol() const
          return QSsl::TlsV1_1;
      case kTLSProtocol12:
@@ -23,5 +23,5 @@ index e6b71b293e..412ebad61c 100644
          return QSsl::UnknownProtocol;
      }
 -- 
-2.23.0
+2.27.0
 

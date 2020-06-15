@@ -1,28 +1,26 @@
-From 5626e50f3effe46d36da129a83c9ec8a6c2f2c6b Mon Sep 17 00:00:00 2001
+From 697925bb04c2a97c83560977f455c0c7efd428f9 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 14:51:15 -0600
-Subject: [PATCH 5/8] qtbase: link xcb-shm
+Subject: [PATCH 5/9] qtbase: link xcb-shm
 
 Change-Id: I49300967cd92ed280a9a0c685e98a45c633118b6
 ---
- src/gui/configure.json | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ src/gui/configure.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/qtbase/src/gui/configure.json b/qtbase/src/gui/configure.json
-index 6dd6f5b16c..b44b4d0ed0 100644
---- a/qtbase/src/gui/configure.json
-+++ b/qtbase/src/gui/configure.json
-@@ -586,8 +586,8 @@
-             },
+diff --git a/src/gui/configure.json b/src/gui/configure.json
+index 5ebcdb99b5..e7e980fb22 100644
+--- a/src/gui/configure.json
++++ b/src/gui/configure.json
+@@ -589,7 +589,7 @@
              "headers": "xcb/xcb.h",
              "sources": [
--                { "type": "pkgConfig", "args": "xcb >= 1.9" },
+                 { "type": "pkgConfig", "args": "xcb >= 1.11" },
 -                "-lxcb"
-+                { "type": "pkgConfig", "args": "xcb >= 1.9 xcb-shm >= 1.9" },
 +                "-lxcb -lxcb-shm"
              ]
          },
          "xcb_icccm": {
 -- 
-2.23.0
+2.27.0
 

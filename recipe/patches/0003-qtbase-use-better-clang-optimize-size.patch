@@ -1,18 +1,18 @@
-From 55530332f644c1b3c314a82651b8639649b696c8 Mon Sep 17 00:00:00 2001
+From 6a721f0b260a6672d7e1e71b051f71a8018f04e6 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 14:48:02 -0600
-Subject: [PATCH 3/8] qtbase: use better clang optimize size
+Subject: [PATCH 3/9] qtbase: use better clang optimize size
 
 Change-Id: I2d0eae04918b9a6306b0684506f3253547233e36
 ---
  mkspecs/common/clang.conf | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/qtbase/mkspecs/common/clang.conf b/qtbase/mkspecs/common/clang.conf
-index 5800aaa5b4..8e3c6c1817 100644
---- a/qtbase/mkspecs/common/clang.conf
-+++ b/qtbase/mkspecs/common/clang.conf
-@@ -23,6 +23,7 @@ QMAKE_CFLAGS_LTCG                = -flto
+diff --git a/mkspecs/common/clang.conf b/mkspecs/common/clang.conf
+index 2499c8b6d8..4a38b66354 100644
+--- a/mkspecs/common/clang.conf
++++ b/mkspecs/common/clang.conf
+@@ -26,6 +26,7 @@ QMAKE_CFLAGS_LTCG_FATOBJECTS     = -flto
  QMAKE_CFLAGS_DISABLE_LTCG        = -fno-lto
  QMAKE_CFLAGS_GNUC99              = -std=gnu99
  QMAKE_CFLAGS_GNUC11              = -std=gnu11
@@ -21,5 +21,5 @@ index 5800aaa5b4..8e3c6c1817 100644
  QMAKE_CXXFLAGS_PRECOMPILE        = -x c++-header -c ${QMAKE_PCH_INPUT} -o ${QMAKE_PCH_OUTPUT}
  QMAKE_CXXFLAGS_USE_PRECOMPILE    = $$QMAKE_CFLAGS_USE_PRECOMPILE
 -- 
-2.23.0
+2.27.0
 

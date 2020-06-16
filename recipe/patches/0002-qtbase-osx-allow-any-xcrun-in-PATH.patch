@@ -85,10 +85,10 @@ index e3534561a5..56a7e62155 100644
          QMAKE_XCODE_VERSION = $$member(xcode_version, 1)
          isEmpty(QMAKE_XCODE_VERSION): error("Could not resolve Xcode version.")
          unset(xcode_version)
-diff --git a/mkspecs/features/mac/sdk.mk b/mkspecs/features/mac/sdk.mk
+diff --git a/qtbase/mkspecs/features/mac/sdk.mk b/qtbase/mkspecs/features/mac/sdk.mk
 index c40f58c987..349a0e58f2 100644
---- a/mkspecs/features/mac/sdk.mk
-+++ b/mkspecs/features/mac/sdk.mk
+--- a/qtbase/mkspecs/features/mac/sdk.mk
++++ b/qtbase/mkspecs/features/mac/sdk.mk
 @@ -1,6 +1,6 @@
  
  ifeq ($(QT_MAC_SDK_NO_VERSION_CHECK),)

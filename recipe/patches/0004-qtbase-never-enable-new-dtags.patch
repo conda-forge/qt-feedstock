@@ -1,7 +1,7 @@
-From ad260aab09f39dd1dc1add54f3b0ffe7021de06b Mon Sep 17 00:00:00 2001
+From 77dcfd1d7584f21d0fa25022cc1e3525973f25dd Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 14:49:51 -0600
-Subject: [PATCH 4/9] qtbase: never enable new-dtags
+Subject: [PATCH 04/11] qtbase: never enable new-dtags
 
 Change-Id: I2c99367bc60b1d6e84811ab4e186ac0810cd399c
 ---
@@ -11,8 +11,8 @@ Change-Id: I2c99367bc60b1d6e84811ab4e186ac0810cd399c
 
 diff --git a/configure.json b/configure.json
 index d1eb1d8102..842cb31d1d 100644
---- a/configure.json
-+++ b/configure.json
+--- a/qtbase/configure.json
++++ b/qtbase/configure.json
 @@ -413,7 +413,7 @@
          "enable_new_dtags": {
              "label": "new dtags support",
@@ -22,10 +22,10 @@ index d1eb1d8102..842cb31d1d 100644
          },
          "gdb_index": {
              "label": "gdb index support",
-diff --git a/mkspecs/common/gcc-base-unix.conf b/mkspecs/common/gcc-base-unix.conf
+diff --git a/qtbase/mkspecs/common/gcc-base-unix.conf b/qtbase/mkspecs/common/gcc-base-unix.conf
 index a456c8f3eb..5e21ad899c 100644
---- a/mkspecs/common/gcc-base-unix.conf
-+++ b/mkspecs/common/gcc-base-unix.conf
+--- a/qtbase/mkspecs/common/gcc-base-unix.conf
++++ b/qtbase/mkspecs/common/gcc-base-unix.conf
 @@ -18,7 +18,7 @@ QMAKE_LFLAGS_SONAME    += -Wl,-soname,
  QMAKE_LFLAGS_THREAD    +=
  QMAKE_LFLAGS_RPATH      = -Wl,-rpath,

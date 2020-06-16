@@ -1,17 +1,17 @@
-From 9a8baad1c3b2164cafbcda733b6be197c3ad84b8 Mon Sep 17 00:00:00 2001
+From 65eaacf43b04bf803f2f5d10dc1bb75df76c1b4a Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 14:40:29 -0600
-Subject: [PATCH 1/9] qtbase: osx: xctest check
+Subject: [PATCH 01/11] qtbase: osx: xctest check
 
 Change-Id: Icd9e4e910ad8abff6716e5dc6c7e6244c8668df8
 ---
  src/testlib/testlib.pro | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/src/testlib/testlib.pro b/src/testlib/testlib.pro
+diff --git a/qtbase/src/testlib/testlib.pro b/qtbase/src/testlib/testlib.pro
 index 787df6b648..a86eb98957 100644
---- a/src/testlib/testlib.pro
-+++ b/src/testlib/testlib.pro
+--- a/qtbase/src/testlib/testlib.pro
++++ b/qtbase/src/testlib/testlib.pro
 @@ -116,7 +116,7 @@ mac {
      }
  

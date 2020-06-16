@@ -1,0 +1,27 @@
+From 071d92472494882147bbf5ab61d363333ccd0e6d Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Tue, 16 Jun 2020 14:58:48 +0200
+Subject: [PATCH 10/11] qtbase: Add DISABLE_WINRT_DEPRECATION for WinSDK
+ 10.0.16299.0
+
+Credit to: Filipe Fernandes <ocefpaf@gmail.com>
+---
+ mkspecs/common/msvc-desktop.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/qtbase/mkspecs/common/msvc-desktop.conf b/qtbase/mkspecs/common/msvc-desktop.conf
+index f5d12f445b..d79fda1646 100644
+--- a/qtbase/mkspecs/common/msvc-desktop.conf
++++ b/qtbase/mkspecs/common/msvc-desktop.conf
+@@ -18,7 +18,7 @@ QMAKE_COMPILER          = msvc
+ CONFIG                 += flat debug_and_release debug_and_release_target precompile_header autogen_precompile_source embed_manifest_dll embed_manifest_exe
+ # MSVC 2017 15.8+ fixed std::aligned_storage but compilation fails without
+ # _ENABLE_EXTENDED_ALIGNED_STORAGE flag since the fix breaks binary compatibility.
+-DEFINES                += UNICODE _UNICODE WIN32 _ENABLE_EXTENDED_ALIGNED_STORAGE
++DEFINES                += UNICODE _UNICODE WIN32 _ENABLE_EXTENDED_ALIGNED_STORAGE DISABLE_WINRT_DEPRECATION
+ DEFINES_RELEASE        += NDEBUG
+ QMAKE_COMPILER_DEFINES += _WIN32
+ contains(QMAKE_TARGET.arch, x86_64) {
+-- 
+2.27.0
+

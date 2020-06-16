@@ -1,17 +1,17 @@
-From 697925bb04c2a97c83560977f455c0c7efd428f9 Mon Sep 17 00:00:00 2001
+From db786c607fb64eefb3b81c2ca5e26c2a02c86f89 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 14:51:15 -0600
-Subject: [PATCH 5/9] qtbase: link xcb-shm
+Subject: [PATCH 05/11] qtbase: link xcb-shm
 
 Change-Id: I49300967cd92ed280a9a0c685e98a45c633118b6
 ---
  src/gui/configure.json | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/src/gui/configure.json b/src/gui/configure.json
+diff --git a/qtbase/src/gui/configure.json b/qtbase/src/gui/configure.json
 index 5ebcdb99b5..e7e980fb22 100644
---- a/src/gui/configure.json
-+++ b/src/gui/configure.json
+--- a/qtbase/src/gui/configure.json
++++ b/qtbase/src/gui/configure.json
 @@ -589,7 +589,7 @@
              "headers": "xcb/xcb.h",
              "sources": [

@@ -3,7 +3,7 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.12.5" %}
+{% set version = "5.15.0" %}
 
 package:
   name: qt
@@ -11,7 +11,7 @@ package:
 
 source:
   - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    md5: d8c9ed842d39f1a5f31a7ab31e4e886c
+    md5: 610a228dba6ef469d14d145b71ab3b88
     patches:
 
       # qtbase
@@ -26,26 +26,27 @@ source:
       # I do not think this is the correct approach. Something needs fixing, but
       # I think it is not just limited to GL which is all this patch handles.
       # Pretty sure we need to rebuild all CDTs, rdonnelly channel has these.
-      # - patches/0009-qtbase-fix-hardcoded-sysroot-path.patch
-      # - patches/9999-qtbase-use-better-gcc-optimize-size.patch
+      # - patches/0009-qtbase-Fix-harcoded-sysroot-paths.patch
+      - patches/0010-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.patch
+      # - patches/0011-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-.patch
 
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
       # qtwebengine
-      - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
-      - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      - patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
-      - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
-      - patches/0006-qtwebengine-run-gn-verbosely.patch
-      # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
-      - patches/0008-qtwebengine-link-gn-to-librt.patch
-      - patches/0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
-      - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
-      - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
-      - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
-      - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
-      - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
+      # - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
+      # - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
+      # - patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
+      # - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
+      # - patches/0006-qtwebengine-run-gn-verbosely.patch
+      # # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
+      # - patches/0008-qtwebengine-link-gn-to-librt.patch
+      # - patches/0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
+      # - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
+      # - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
+      # - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
+      # - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
+      # - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
@@ -82,7 +83,7 @@ build:
 
 requirements:
   build:
-    - ccache
+    # - ccache
     - {{ compiler('cxx') }}              # [not win]
     - {{ compiler('c') }}                # [not win]
     - vs2017_win-64                      # [win64]

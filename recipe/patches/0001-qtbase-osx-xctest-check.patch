@@ -1,7 +1,7 @@
 From 65eaacf43b04bf803f2f5d10dc1bb75df76c1b4a Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 14:40:29 -0600
-Subject: [PATCH 01/11] qtbase: osx: xctest check
+Subject: [PATCH 1/2] qtbase: osx: xctest check
 
 Change-Id: Icd9e4e910ad8abff6716e5dc6c7e6244c8668df8
 ---

@@ -1,19 +1,28 @@
-From 3cb2819e6dcbb973414c11e6863cd4ea03bd66f9 Mon Sep 17 00:00:00 2001
+From f8f015edeb0d273b06c6eb1eebe43d4eb0904d2b Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 15:01:00 -0600
 Subject: [PATCH] qtwebengine: allow any xcblah in PATH
 
 Change-Id: Ib38ab9c66e3f60e84a366693995d83fc3160880a
 ---
- mkspecs/features/platform.prf | 2 +-
- src/core/config/mac_osx.pri   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ configure.pri                     | 4 ++--
+ src/buildtools/config/mac_osx.pri | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/qtwebengine/mkspecs/features/platform.prf b/qtwebengine/mkspecs/features/platform.prf
-index 35eb6b89..de8b5338 100644
---- a/qtwebengine/mkspecs/features/platform.prf
-+++ b/qtwebengine/mkspecs/features/platform.prf
-@@ -111,7 +111,7 @@ defineTest(isMinOSXSDKVersion) {
+diff --git a/qtwebengine/configure.pri b/qtwebengine/configure.pri
+index 37a85517..c455613f 100644
+--- a/qtwebengine/configure.pri
++++ b/qtwebengine/configure.pri
+@@ -324,7 +324,7 @@ defineReplace(webEngineGetMacOSVersion) {
+ }
+ 
+ defineReplace(webEngineGetMacOSSDKVersion) {
+-    value = $$system("/usr/bin/xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
++    value = $$system("xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
+     return($$value)
+ }
+ 
+@@ -467,7 +467,7 @@ defineTest(qtwebengine_isMinOSXSDKVersion) {
      requested_minor = $$2
      requested_patch = $$3
      isEmpty(requested_patch): requested_patch = 0
@@ -21,11 +30,11 @@ index 35eb6b89..de8b5338 100644
 +    WEBENGINE_OSX_SDK_PRODUCT_VERSION = $$system("xcodebuild -sdk $$QMAKE_MAC_SDK -version ProductVersion 2>/dev/null")
      export(WEBENGINE_OSX_SDK_PRODUCT_VERSION)
      isEmpty(WEBENGINE_OSX_SDK_PRODUCT_VERSION) {
-         skipBuild("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")
-diff --git a/qtwebengine/src/core/config/mac_osx.pri b/qtwebengine/src/core/config/mac_osx.pri
-index 4426901c..52f89df3 100644
---- a/qtwebengine/src/core/config/mac_osx.pri
-+++ b/qtwebengine/src/core/config/mac_osx.pri
+         qtwebengine_platformError("Could not resolve SDK product version for \'$$QMAKE_MAC_SDK\'.")
+diff --git a/qtwebengine/src/buildtools/config/mac_osx.pri b/qtwebengine/src/buildtools/config/mac_osx.pri
+index 9373928d..2bbed3da 100644
+--- a/qtwebengine/src/buildtools/config/mac_osx.pri
++++ b/qtwebengine/src/buildtools/config/mac_osx.pri
 @@ -5,7 +5,7 @@ load(functions)
  # otherwise query for it.
  QMAKE_MAC_SDK_VERSION = $$eval(QMAKE_MAC_SDK.$${QMAKE_MAC_SDK}.SDKVersion)
@@ -36,5 +45,5 @@ index 4426901c..52f89df3 100644
  }
  
 -- 
-2.19.1
+2.23.0
 

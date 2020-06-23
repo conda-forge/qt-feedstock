@@ -14,6 +14,11 @@ for MODULE in "${PATCHED_MODULES[@]}"; do
     for PATCH in ${PATCHES[@]}; do
       echo "PATCHING ${MODULE} with: ${PATCH}"
     done
-    git am -3 "${PATCHES[@]}"
+    git am -3 -p2 "${PATCHES[@]}"
   popd
 done
+
+# Regen via e.g.:
+# git am -3 -p5 ../../../../../../r/a.wip/qt-feedstock/recipe/patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
+# git format-patch --src-prefix=a/qtwebengine/ --dst-prefix=b/qtwebengine/ -1
+# git format-patch --start-number=9 --src-prefix=a/qtwebengine/3rdparty/chromium/ --dst-prefix=b/qtwebengine/3rdparty/chromium/ -1

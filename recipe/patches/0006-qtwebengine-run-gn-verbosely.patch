@@ -1,4 +1,4 @@
-From 951a455348d8b4e2213951a962e1f9b547dee994 Mon Sep 17 00:00:00 2001
+From 15d5c85c4401bddb5c205110155dd12e5c0f89f8 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 15:27:44 -0600
 Subject: [PATCH] qtwebengine: run gn verbosely
@@ -9,10 +9,10 @@ Change-Id: I559751a7c7b64641dc50f78dc5bb54cdd103c701
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/qtwebengine/src/core/gn_run.pro b/qtwebengine/src/core/gn_run.pro
-index 9860c454..1966cf95 100644
+index 8b16d7c5..1d5e8c0f 100644
 --- a/qtwebengine/src/core/gn_run.pro
 +++ b/qtwebengine/src/core/gn_run.pro
-@@ -39,7 +39,7 @@ build_pass|!debug_and_release {
+@@ -41,7 +41,7 @@ build_pass|!debug_and_release {
      gn_src_root = $$system_quote($$system_path($$QTWEBENGINE_ROOT/$$getChromiumSrcDir()))
      gn_build_root = $$system_quote($$system_path($$OUT_PWD/$$getConfigDir()))
      gn_python = "--script-executable=$$pythonPathForSystem()"
@@ -22,5 +22,5 @@ index 9860c454..1966cf95 100644
      message("Running: $$gn_run ")
      !system($$gn_run) {
 -- 
-2.19.1
+2.27.0
 

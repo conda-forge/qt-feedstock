@@ -1,5 +1,5 @@
---- ./work/qtwebengine/src/core/config/common.pri.orig  2019-01-30 10:06:04.776357953 +0000
-+++ ./work/qtwebengine/src/core/config/common.pri	2019-01-30 09:46:04.170282106 +0000
+--- ./work/qtwebengine/src/buildtools/config/common.pri.orig  2019-01-30 10:06:04.776357953 +0000
++++ ./work/qtwebengine/src/buildtools/config/common.pri	2019-01-30 09:46:04.170282106 +0000
 @@ -2,8 +2,12 @@
  include($$QTWEBENGINE_OUT_ROOT/src/core/qtwebenginecore-config.pri)
  QT_FOR_CONFIG += webenginecore

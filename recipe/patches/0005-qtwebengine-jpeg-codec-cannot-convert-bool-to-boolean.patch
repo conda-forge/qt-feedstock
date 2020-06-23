@@ -4,13 +4,13 @@ Date: Mon, 10 Dec 2018 15:25:39 -0600
 Subject: [PATCH] qtwebengine: jpeg codec cannot convert bool to boolean
 
 ---
- .../pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp      | 12 ++++++------
+ .../pdfium/core/fxcodec/codec/fx_codec.cpp      | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp b/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec.cpp b/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec.cpp
 index f0b8d66d3a..932ac29aeb 100644
---- a/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp
-+++ b/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec_jpeg.cpp
+--- a/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec.cpp
++++ b/qtwebengine/src/3rdparty/chromium/third_party/pdfium/core/fxcodec/codec/fx_codec.cpp
 @@ -77,11 +77,11 @@ static void _src_skip_data(struct jpeg_decompress_struct* cinfo, long num) {
  }
  

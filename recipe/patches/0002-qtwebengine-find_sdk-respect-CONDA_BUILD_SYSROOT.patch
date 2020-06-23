@@ -1,19 +1,19 @@
-From 8030f6a30c4d899e554bf67ae6a89de3e15429ba Mon Sep 17 00:00:00 2001
+From 82b5c43be3d45b295830d82f0197693eba12f1e1 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
-Date: Mon, 10 Dec 2018 15:03:17 -0600
+Date: Tue, 23 Jun 2020 16:44:29 +0200
 Subject: [PATCH] qtwebengine: find_sdk respect CONDA_BUILD_SYSROOT
 
 ---
  chromium/build/mac/find_sdk.py | 9 +++++++--
  1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py b/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py
-index 540a3202e4..4b004aa48e 100755
---- a/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py
-+++ b/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py
-@@ -51,6 +51,13 @@ def main():
-   if options.developer_dir:
-     os.environ['DEVELOPER_DIR'] = options.developer_dir
+diff --git a/qtwebengine/src/third_party/chromium/build/mac/find_sdk.py b/qtwebengine/src/third_party/chromium/build/mac/find_sdk.py
+index 38c28832250..59d500ab285 100755
+--- a/qtwebengine/src/third_party/chromium/build/mac/find_sdk.py
++++ b/qtwebengine/src/third_party/chromium/build/mac/find_sdk.py
+@@ -66,6 +66,13 @@ def main():
+   min_sdk_version = args[0]
+ 
  
 +  # Avoid this nonsense, and it really is nonsense (options.sdk_path does nothing)
 +  if 'CONDA_BUILD_SYSROOT' in os.environ:
@@ -21,18 +21,18 @@ index 540a3202e4..4b004aa48e 100755
 +    if options.print_sdk_path:
 +      print(result)
 +    return result
-+
-   job = subprocess.Popen(['xcode-select', '-print-path'],
-                          stdout=subprocess.PIPE,
-                          stderr=subprocess.STDOUT)
-@@ -99,7 +106,5 @@ def main():
++ 
+   # If we are passed the developer dir, then we don't need to call xcode-select.
+   # This is important to avoid since we want to minimize dependencies on the
+   # xcode toolchain.
+@@ -122,7 +129,5 @@ def main():
  
  
  if __name__ == '__main__':
 -  if sys.platform != 'darwin':
 -    raise Exception("This script only runs on Mac")
-   print main()
+   print(main())
    sys.exit(0)
 -- 
-2.19.1
+2.23.0
 

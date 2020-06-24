@@ -7,10 +7,10 @@ Subject: [PATCH] qtwebengine: use CONDA_PREFIX/include for system_libjpeg
  chromium/third_party/BUILD.gn | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/qtwebengine/src/third_party/chromium/third_party/BUILD.gn b/qtwebengine/src/third_party/chromium/third_party/BUILD.gn
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn b/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn
 index 6fee0b3b33b..ccd029dd701 100644
---- a/qtwebengine/src/third_party/chromium/third_party/BUILD.gn
-+++ b/qtwebengine/src/third_party/chromium/third_party/BUILD.gn
+--- a/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn
 @@ -32,6 +32,8 @@ if (use_system_libjpeg) {
  }
  

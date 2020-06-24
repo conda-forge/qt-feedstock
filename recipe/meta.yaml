@@ -34,19 +34,20 @@ source:
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
       # qtwebengine
-      # - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
-      # - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      # - patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
+      - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
+      - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
+      - patches/0004-qtwebengine-use-CONDA_PREFIX-include-for-system_libj.patch
       # - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
-      # - patches/0006-qtwebengine-run-gn-verbosely.patch
-      # # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
-      # - patches/0008-qtwebengine-link-gn-to-librt.patch
-      # - patches/0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
-      # - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
-      # - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
+      - patches/0006-qtwebengine-run-gn-verbosely.patch
+      # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
+      - patches/0008-qtwebengine-link-gn-to-librt.patch
+      - patches/0009-qtwebengine-chromium-Add-conda_prefix-to-gn.patch
+      - patches/0010-qtwebengine-Add-conda_prefix-to-gn.patch
+      - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
+      - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
       # - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
-      # - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
-      # - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
+      - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
+      - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
@@ -83,7 +84,7 @@ build:
 
 requirements:
   build:
-    # - ccache
+    - ccache
     - {{ compiler('cxx') }}              # [not win]
     - {{ compiler('c') }}                # [not win]
     - vs2017_win-64                      # [win64]

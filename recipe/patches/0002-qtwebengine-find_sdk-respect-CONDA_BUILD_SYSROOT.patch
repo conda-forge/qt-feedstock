@@ -7,10 +7,10 @@ Subject: [PATCH] qtwebengine: find_sdk respect CONDA_BUILD_SYSROOT
  chromium/build/mac/find_sdk.py | 9 +++++++--
  1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/qtwebengine/src/third_party/chromium/build/mac/find_sdk.py b/qtwebengine/src/third_party/chromium/build/mac/find_sdk.py
+diff --git a/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py b/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py
 index 38c28832250..59d500ab285 100755
---- a/qtwebengine/src/third_party/chromium/build/mac/find_sdk.py
-+++ b/qtwebengine/src/third_party/chromium/build/mac/find_sdk.py
+--- a/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py
++++ b/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py
 @@ -66,6 +66,13 @@ def main():
    min_sdk_version = args[0]
  

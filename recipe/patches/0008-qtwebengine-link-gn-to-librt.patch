@@ -7,10 +7,10 @@ Subject: [PATCH] qtwebengine: link gn to librt
  gn/build/gen.py | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/qtwebengine/src/3rdparty/gn/gn/build/gen.py b/qtwebengine/src/3rdparty/gn/gn/build/gen.py
+diff --git a/qtwebengine/src/3rdparty/gn/build/gen.py b/qtwebengine/src/3rdparty/gn/build/gen.py
 index b09d32ce842..3f9c913d0a7 100755
---- a/qtwebengine/src/3rdparty/gn/gn/build/gen.py
-+++ b/qtwebengine/src/3rdparty/gn/gn/build/gen.py
+--- a/qtwebengine/src/3rdparty/gn/build/gen.py
++++ b/qtwebengine/src/3rdparty/gn/build/gen.py
 @@ -366,6 +366,7 @@ def WriteGNNinja(path, platform, host, options):
  
        # This is needed by libc++.

@@ -10,10 +10,10 @@ From: https://github.com/google/perfetto/commit/db8546e1b9735fb6b1203104122f9bc5
  .../importers/systrace/systrace_trace_parser.cc              | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/qtwebengine/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc b/qtwebengine/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc b/qtwebengine/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
 index 33d5cb1f6f6..bbadfc2e4d2 100644
---- a/qtwebengine/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
-+++ b/qtwebengine/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
+--- a/qtwebengine/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
++++ b/qtwebengine/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
 @@ -27,6 +27,7 @@
  #include "src/trace_processor/track_tracker.h"
  

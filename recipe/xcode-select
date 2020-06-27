@@ -9,9 +9,9 @@ if [[ ${1} == --sdk || ${1} == -sdk ]]; then
 elif [[ ${1} == -version ]]; then
   # If Qt uses this to determine C++ features then we need to
   # pretend to be a very recent Xcode.
-  echo "Xcode 8.3.3" >> /tmp/xcode-select-$$.log
+  echo "Xcode 10.0.0" >> /tmp/xcode-select-$$.log
   echo "Build version 8E3004b" >> /tmp/xcode-select-$$.log
-  echo "Xcode 8.3.3"
+  echo "Xcode 10.0.0"
   echo "Build version 8E3004b"
   exit 0
 fi

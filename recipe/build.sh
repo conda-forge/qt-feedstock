@@ -18,11 +18,6 @@ else
   CCACHE=
 fi
 
-echo PREFIX=${PREFIX}
-echo BUILD_PREFIX=${BUILD_PREFIX}
-USED_BUILD_PREFIX=${BUILD_PREFIX:-${PREFIX}}
-echo USED_BUILD_PREFIX=${BUILD_PREFIX}
-
 MAKE_JOBS=$CPU_COUNT
 # You can use this to cut down on the number of modules built. Of course the Qt package will not be of
 # much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
@@ -37,7 +32,7 @@ if [[ -d qtwebkit ]]; then
 fi
 
 # For QDoc
-export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
+export LLVM_INSTALL_DIR=${PREFIX}
 
 # Problems: https://bugreports.qt.io/browse/QTBUG-61158
 #           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
@@ -64,7 +59,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       ln -s ${GXX} g++ || true
       ln -s ${GCC} gcc || true
       # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}
-      ln -s ${USED_BUILD_PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
+      ln -s ${BUILD_PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
       chmod +x g++ gcc gcc-ar
       export PATH=${PWD}:${PATH}
     fi
@@ -95,7 +90,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # https://codereview.qt-project.org/#/c/157817/
     #
     sed -i "s/-isystem//g" "qtbase/mkspecs/common/gcc-base.conf"
-    export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
+    export PKG_CONFIG_LIBDIR=$(${BUILD_PREFIX}/bin/pkg-config --pclibdir)
 
     export PATH=${PWD}:${PATH}
     declare -a SKIPS

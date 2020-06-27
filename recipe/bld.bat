@@ -2,6 +2,9 @@
 setlocal EnableDelayedExpansion
 set SHORT_VERSION=%PKG_VERSION:~0,-2%
 
+:: You might need to follow this advice if attempting to build on VS2019 against the v142 toolset:
+:: https://developercommunity.visualstudio.com/content/problem/518592/2019-fatal-error-c1083-cannot-open-include-file-at.html
+
 :: You may not always want this when doing dirty builds (debugging late stage
 :: problems, but if debugging configure time issues you probably do want this).
 if exist config.cache del config.cache

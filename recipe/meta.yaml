@@ -28,12 +28,13 @@ source:
       # Pretty sure we need to rebuild all CDTs, rdonnelly channel has these.
       # - patches/0009-qtbase-Fix-harcoded-sysroot-paths.patch
       - patches/0010-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.patch
-      # - patches/0011-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-.patch
+      - patches/0011-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-.patch
 
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
       # qtwebengine
+      - patches/0000-qtwebengine-Fix-compilation-on-Windows-VSC.patch
       - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
       - patches/0004-qtwebengine-use-CONDA_PREFIX-include-for-system_libj.patch
@@ -118,8 +119,10 @@ requirements:
     - {{ cdt('cups-devel') }}            # [linux]
 
     # For fontconfig + freetype
+    # What about macOS pkg-config?
     - pkg-config                         # [linux]
-    - make                               # [unix]
+    - patch                              # [not win]
+    - make                               # [not win]
     # Probably only needed for WebEngine
     - python 2.7*
     - ninja

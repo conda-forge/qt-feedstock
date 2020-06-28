@@ -166,23 +166,36 @@ echo on
 jom -U release
 :: Hooray for racey build systems. You may get a failure about a QtWebengine .stamp file being missing. You may not. Who knows?
 jom -U release
-if %errorlevel% neq 0 exit /b %errorlevel%
+:: Stupidy we see an attempt *by* C:\qt5b\qt-5.15.0_17\_h_env\Library\bin\qmake.exe to copy a non-existant C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake.exe on-top of itself!
+::  cd qmake\ && ( if not exist Makefile.qmake-aux C:\qt5b\qt-5.15.0_17\work\qtbase\bin\qmake.exe -o Makefile.qmake-aux C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake-aux.pro ) && C:\qt5b\qt-5.15.0_17\_build_env\jom.exe -f Makefile.qmake-aux install
+::  C:\qt5b\qt-5.15.0_17\_build_env\jom.exe -f Makefile.qmake-aux.Release install
+::  C:\qt5b\qt-5.15.0_17\work\qtbase\bin\qmake.exe -install qinstall -exe C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake.exe C:\qt5b\qt-5.15.0_17\_h_env\Library\bin\qmake.exe
+::    Error copying C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake.exe to C:\qt5b\qt-5.15.0_17\_h_env\Library\bin\qmake.exe: Cannot open C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake.exe for input
+::    jom: C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\Makefile.qmake-aux.Release [install_qmake] Error 3
+::    jom: C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\Makefile.qmake-aux [release-install] Error 2
+:: if %errorlevel% neq 0 exit /b %errorlevel%
+
+if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
+  echo WARNING :: %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. See comment in bld.bat.
+  echo WARNING :: Copying it from qtbase\bin\qmake.exe and re-running 'jom -U release' but with '-K' to keep going.
+  copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
+  jom -U -K release
+:ok_qmake_exists
+
 echo Finished `jom -U release`
 jom -U install
 :: I expect raciness here too:
 jom -U install
-if %errorlevel% neq 0 exit /b %errorlevel%
-echo Finished `jom -U install`
+if %errorlevel% eq 0 goto ok_we_made_it
+  echo ERROR :: Could not get a final `jom -U install` to work. Bailing ..
+  exit /b %errorlevel%
+:ok_we_made_it
+echo INFO :: Finished `jom -U install`
 pushd qtbase
   jom -U install_mkspecs
   if %errorlevel% neq 0 exit /b %errorlevel%
   echo Finished `jom -U install_mkspecs`
 popd
-
-if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
-echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. Copying it from qtbase\bin\qmake.exe
-copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
-:ok_qmake_exists
 
 :: To rewrite qt.conf contents per conda environment
 if not exist %PREFIX%\Scripts mkdir %PREFIX%\Scripts

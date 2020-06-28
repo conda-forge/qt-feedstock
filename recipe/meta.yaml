@@ -4,6 +4,16 @@
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
 {% set version = "5.15.0" %}
+# Valid is release, debug, debug-and-release
+{% set libs_nature = os.environ.get('CONDA_BUILD_QT_LIBS_NATURE', '') %}
+{% if libs_nature == 'debug' %}
+  {% set libs_pkg_suffix = "_d" %}
+{% elif libs_nature == 'debug-and-release' %}
+  {% set libs_pkg_suffix = "_dr" %}
+{% else %}
+  {% set libs_nature = 'release' %}
+  {% set libs_pkg_suffix = "" %}
+{% endif %}
 
 package:
   name: qt
@@ -28,13 +38,14 @@ source:
       # Pretty sure we need to rebuild all CDTs, rdonnelly channel has these.
       # - patches/0009-qtbase-Fix-harcoded-sysroot-paths.patch
       - patches/0010-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.patch
-      - patches/0011-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-.patch
+      # - patches/0011-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-.patch
 
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
       # qtwebengine
       - patches/0000-qtwebengine-Fix-compilation-on-Windows-VSC.patch
+      - patches/0000-qtwebengine-Fix-VS2017-builds.patch
       - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
       - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
       - patches/0004-qtwebengine-use-CONDA_PREFIX-include-for-system_libj.patch
@@ -82,6 +93,12 @@ build:
     - /usr/lib/libresolv.9.dylib  # [osx]
     - /usr/lib/libsandbox.1.dylib  # [osx]
     - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
+  {% if libs_pkg_suffix != '' %}
+  string: {{ version }}{{ libs_pkg_suffix }}
+  {% endif %}
+  rpath_patcher: patchelf
+  script_env:
+    - CONDA_BUILD_QT_LIBS_NATURE
 
 requirements:
   build:
@@ -173,7 +190,8 @@ requirements:
     - mysql                              # [not win]
     - postgresql                         # [not win]
     - zlib
-    - libxcb                             # [linux]
+    # Gets found in preference to the sysroot one.
+    # - libxcb                             # [linux]
     # We cannot install OpenSSL into the prefix when building qtwebengine
     # on linux as BoringSSL and OpenSSL then conflict with each other.
     - openssl                            # [win]
@@ -185,12 +203,12 @@ requirements:
     - libclang
   run:
     - openssl                            # [not osx]
-    - libxcb                             # [linux]
+    # - libxcb                             # [linux]
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
     - {{ pin_compatible("libclang") }}
-  run_constrained:                                            # [osx]
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
+  run_constrained:                                             # [osx]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.14") }}  # [osx]
 
 test:
   requires:
@@ -220,6 +238,7 @@ test:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
+    - {{ cdt('at-spi-devel') }}          # [linux]
   files:
     - test/hello.pro
     - test/main-qtwebengine.cpp

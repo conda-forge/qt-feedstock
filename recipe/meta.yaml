@@ -14,6 +14,15 @@
   {% set libs_nature = 'release' %}
   {% set libs_pkg_suffix = "" %}
 {% endif %}
+# You can use this to cut down on the number of modules built. Of course the Qt package will not be of
+# much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
+# size of the libraries or when doing difficult (yearly!) updates.
+{% set minimal_build = os.environ.get('CONDA_BUILD_QT_MINIMAL_BUILD', '') %}
+{% if minimal_build == 'yes' %}
+  {% set libs_pkg_suffix = "_minimal" %}
+{% else %}
+  {% set minimal_build = 'no' %}
+{% endif %}
 
 package:
   name: qt
@@ -38,6 +47,7 @@ source:
       # Pretty sure we need to rebuild all CDTs, rdonnelly channel has these.
       # - patches/0009-qtbase-Fix-harcoded-sysroot-paths.patch
       - patches/0010-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.patch
+      - patches/0011-qtbase-Fix-QMAKE_LIBDIR_X11-and-QMAKE_LIBDIR_OPENGL-.patch
       # - patches/0011-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-.patch
 
       # qtwinextras
@@ -82,7 +92,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 3
+  number: 0
   skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
   run_exports:
@@ -99,14 +109,15 @@ build:
   rpath_patcher: patchelf
   script_env:
     - CONDA_BUILD_QT_LIBS_NATURE
+    - MINIMAL_BUILD={{ minimal_build }}
 
 requirements:
   build:
-    - ccache
-    - {{ compiler('cxx') }}              # [not win]
-    - {{ compiler('c') }}                # [not win]
-    - vs2017_win-64                      # [win64]
-    - vs2017_win-32                      # [win32]
+    # - ccache
+    - {{ compiler('cxx') }}
+    - {{ compiler('c') }}
+    - patch                              # [not win]
+    - m2-patch                           # [win]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
     - {{ cdt('libxext-devel') }}         # [linux]
@@ -136,14 +147,12 @@ requirements:
     - {{ cdt('cups-devel') }}            # [linux]
 
     # For fontconfig + freetype
-    # What about macOS pkg-config?
     - pkg-config                         # [linux]
-    - patch                              # [not win]
-    - make                               # [not win]
+    - make                               # [unix]
     # Probably only needed for WebEngine
     - python 2.7*
     - ninja
-    - ruby >=2.5                         # [linux]
+    - ruby                               # [linux]
     - bison                              # [linux]
     - flex                               # [linux]
     - gperf                              # [linux]
@@ -180,18 +189,20 @@ requirements:
     # - libopus                            # [unix]
     # - libvpx                             # [unix]
     # - ffmpeg                             # [unix]
-    - expat                              # [linux]
     - icu
     - jpeg
     - libpng
+{% if minimal_build == 'no' %}
+    - expat                              # [linux]
+    - libxml2                            # [linux]
     - nspr                               # [unix]
     - nss                                # [unix]
+{% endif %}
     - sqlite
     - mysql                              # [not win]
     - postgresql                         # [not win]
     - zlib
-    # Gets found in preference to the sysroot one.
-    # - libxcb                             # [linux]
+    - libxcb                             # [linux]
     # We cannot install OpenSSL into the prefix when building qtwebengine
     # on linux as BoringSSL and OpenSSL then conflict with each other.
     - openssl                            # [win]
@@ -203,9 +214,11 @@ requirements:
     - libclang
   run:
     - openssl                            # [not osx]
-    # - libxcb                             # [linux]
+    - libxcb                             # [linux]
+    {% if minimal_build == 'no' %}
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
+    {% endif %}
     - {{ pin_compatible("libclang") }}
   run_constrained:                                             # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.14") }}  # [osx]
@@ -241,17 +254,21 @@ test:
     - {{ cdt('at-spi-devel') }}          # [linux]
   files:
     - test/hello.pro
-    - test/main-qtwebengine.cpp
+    - xcodebuild
+    - xcrun
     - test/main.cpp
     - test/main.qml
     - test/qml.qrc
     - test/qrc_qml.cpp
+{% if minimal_build == 'no' %}
     - test/qtwebengine.pro
-    - xcodebuild
-    - xcrun
+    - test/main-qtwebengine.cpp
+{% endif %}
   commands:
+{% if minimal_build == 'no' %}
     - if not exist %LIBRARY_BIN%\\Qt5WebEngine.dll exit 1                  # [win]
     - test -f $PREFIX/lib/libQt5WebEngine${SHLIB_EXT}                      # [unix]
+{% endif %}
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]

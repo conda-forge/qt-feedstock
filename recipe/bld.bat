@@ -20,15 +20,15 @@ if exist config.cache del config.cache
 :: Webengine requires either working OpenGL drivers or
 :: Angle (therefore DirectX >= 11). This works on some
 :: VMs and not others.  Windows 7 VirtualBox instantly
-:: aborts when loading Spyder sSo we've had to disable
+:: aborts when loading Spyder so we've had to disable
 :: it globally.
 :: Using Mesa from MSYS2 is mentioned as a workaround:
-::  http://wiki.qt.io/Cross-compiling-Mesa-for-Windows
+::   http://wiki.qt.io/Cross-compiling-Mesa-for-Windows
 :: `set QT_OPENGL=software` forces Qt5 to use that but
 :: but when I tried it it was too buggy; Spyder crashed a
-:: little bit later, though it worked for Carlos.
+:: little bit later, though it worked for Carlos Cordoba.
 set WEBBACKEND=qtwebengine
-set QT_LIBINFIX=_conda
+:: set QT_LIBINFIX=_conda
 
 where perl.exe
 if %ERRORLEVEL% neq 0 (
@@ -113,6 +113,12 @@ popd
 popd
 :SKIP_REBUILD_CONFIGURE_EXE
 
+if "%MINIMAL_BUILD%"=="yes" (
+  set SKIPS=-skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
+) else (
+  set SKIPS=
+)
+
 :: See http://doc-snapshot.qt-project.org/qt5-5.4/windows-requirements.html
 :: this needs to be CALLed due to an exit statement at the end of configure:
 :: optimized-tools is necessary for qtlibinfix, otherwise:
@@ -151,8 +157,10 @@ call configure ^
      -system-sqlite ^
      -system-zlib ^
      -plugin-sql-sqlite ^
-     -qtlibinfix %QT_LIBINFIX% ^
+     %SKIPS% ^
      -verbose
+
+::      -qtlibinfix %QT_LIBINFIX%
 
 if %errorlevel% neq 0 exit /b %errorlevel%
 
@@ -176,8 +184,8 @@ jom -U release
 :: if %errorlevel% neq 0 exit /b %errorlevel%
 
 if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
-  echo WARNING :: %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. See comment in bld.bat.
-  echo WARNING :: Copying it from qtbase\bin\qmake.exe and re-running 'jom -U release' but with '-K' to keep going.
+  echo WARNING :: `%LIBRARY_BIN%\qmake.exe` does not exist `jom -U install` failed, very strange. See comment in `bld.bat`.
+  echo WARNING :: Copying it from `qtbase\bin\qmake.exe` and re-running `jom -U release` but with `-K` to keep going.
   copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
   jom -U -K release
 :ok_qmake_exists
@@ -186,10 +194,10 @@ echo Finished `jom -U release`
 jom -U install
 :: I expect raciness here too:
 jom -U install
-if %errorlevel% eq 0 goto ok_we_made_it
-  echo ERROR :: Could not get a final `jom -U install` to work. Bailing ..
-  exit /b %errorlevel%
-:ok_we_made_it
+:: if %errorlevel% equ 0 goto ok_we_made_it
+::   echo ERROR :: Could not get a final `jom -U install` to work. Bailing ..
+::   exit /b %errorlevel%
+:: :ok_we_made_it
 echo INFO :: Finished `jom -U install`
 pushd qtbase
   jom -U install_mkspecs

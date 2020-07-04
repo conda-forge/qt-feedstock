@@ -12,5 +12,7 @@ make
 ./hello
 # Only test that this builds
 make clean
-qmake qtwebengine.pro
-make
+if [[ -f qtwebengine.pro ]]; then
+  qmake qtwebengine.pro
+  make
+fi

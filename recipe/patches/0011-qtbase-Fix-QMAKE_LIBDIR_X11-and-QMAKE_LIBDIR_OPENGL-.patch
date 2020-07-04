@@ -1,0 +1,27 @@
+From 1c0593a17b3f8ef9564bc1d2dad2b5481d9d2fbb Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sat, 4 Jul 2020 21:17:33 +0200
+Subject: [PATCH] qtbase: Fix QMAKE_LIBDIR_X11 and QMAKE_LIBDIR_OPENGL for
+ centos-6 layout in linux-g++-64 mkspec
+
+---
+ mkspecs/linux-g++-64/qmake.conf | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/qtbase/mkspecs/linux-g++-64/qmake.conf b/qtbase/mkspecs/linux-g++-64/qmake.conf
+index a79b69ff31..1b52301451 100644
+--- a/qtbase/mkspecs/linux-g++-64/qmake.conf
++++ b/qtbase/mkspecs/linux-g++-64/qmake.conf
+@@ -18,7 +18,7 @@ include(../common/gcc-base-unix.conf)
+ include(../common/g++-unix.conf)
+ 
+ 
+-QMAKE_LIBDIR_X11        = /usr/X11R6/lib64
+-QMAKE_LIBDIR_OPENGL     = /usr/X11R6/lib64
++QMAKE_LIBDIR_X11        = /usr/lib64
++QMAKE_LIBDIR_OPENGL     = /usr/lib64
+ 
+ load(qt_config)
+-- 
+2.27.0
+

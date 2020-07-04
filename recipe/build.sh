@@ -2,6 +2,15 @@
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true
 
+if [[ ${target_platform} =~ .*linux.* ]]; then
+  ln -s ${GXX} g++ || true
+  ln -s ${GCC} gcc || true
+  ln -s ${AR} ar || true
+  ln -s ${NM} nm || true
+  # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}
+  ln -s ${GCC_AR} gcc-ar || true
+  chmod +x g++ gcc ar nm gcc-ar
+fi
 # Compile
 # -------
 chmod +x configure
@@ -48,10 +57,6 @@ else
 fi
 
 MAKE_JOBS=$CPU_COUNT
-# You can use this to cut down on the number of modules built. Of course the Qt package will not be of
-# much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
-# size of the libraries.
-MINIMAL_BUILD=no
 
 if [[ -d qtwebkit ]]; then
   # From: http://www.linuxfromscratch.org/blfs/view/svn/x/qtwebkit5.html
@@ -191,6 +196,36 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
     COS6_MISSING_DEFINES["ABS_MT_PRESSURE"]="0x3a"
     COS6_MISSING_DEFINES["ABS_MT_DISTANCE"]="0x3b"
 
+# OpenGL CDT problems as ever:
+#
+# old (working, of sorts):
+#
+# PATH=$SRC_DIR:$PATH \
+#   g++ -Wl,-O1 \
+#     -fuse-ld=gold \
+#     -o opengl main.o \
+#     -L$PREFIX/lib \
+#     -L$BUILD_PREFIX/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 \
+#     $BUILD_PREFIX/bin/../x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64/libGL.so
+#
+# .. this only worked because gold doesn't care!
+#
+# vs 5.15.0, non-working:
+#
+# PATH=$SRC_DIR:$PATH \
+#   g++ -m64 -Wl,-O1 \
+#     -o opengl main.o \
+#     -L$PREFIX/lib \
+#     -L$BUILD_PREFIX/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 \
+#     -L/usr/lib64 \
+#     -L$BUILD_PREFIX/bin/../x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -lGL
+#
+# From conda-build, we have a CDT test that involves OpenGL:
+#
+# build deps are: pkg-config libxcb libselinux-devel libxi-devel libx11-devel libxau-devel libxext-devel libxfixes-devel mesa-libgl-devel xorg-x11-proto-devel mesa-dri-drivers libxdamage-devel libxxf86vm
+#
+# echo -e "#include <GL/gl.h>\nint main() { glBegin(GL_TRIANGLES); glEnd(); return 0; }" | ${CC} -o ${PREFIX}/bin/links-to-opengl-cdt -x c $(pkg-config --libs gl) -Wl,-rpath-link,${PREFIX}/lib -
+
     for key in "${!COS6_MISSING_DEFINES[@]}"; do
       mv ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h.bak
       cp ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h.bak ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
@@ -285,7 +320,6 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
     #   fi
     # fi
     CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
-    echo "LIZZY :: Made it past make"
     echo "done" > .status.make
 
     # We may as well check all DSOs here. We may as well do that in CB's post.py too.
@@ -324,7 +358,6 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
   fi
   # if [[ ! -f .status.make-install ]]; then
   make install
-  echo "LIZZY :: Made it past make install"
   #   echo "done" > .status.make-install
   # fi
 elif [[ ${target_platform} == osx-64 ]]; then
@@ -352,9 +385,9 @@ elif [[ ${target_platform} == osx-64 ]]; then
   # Qt passes clang flags to LD (e.g. -stdlib=c++)
   export LD=${CXX}
   PATH=${PWD}:${PATH}
+  # [[ -f .status.configure ]] && rm .status.configure
   if [[ ! -f .status.configure ]]; then
     ./configure -prefix $PREFIX \
-  
                 -libdir $PREFIX/lib \
                 -bindir $PREFIX/bin \
                 -headerdir $PREFIX/include/qt \
@@ -388,9 +421,11 @@ elif [[ ${target_platform} == osx-64 ]]; then
                 -no-openssl \
                 -sdk macosx${OSX_SDK_VER} \
                 "${SKIPS[@]}" 2>&1 | tee configure.log
-    if fgrep "QDoc will not be compiled" configure.log; then
-      echo "ERROR :: Failed to find libclang, I guess."
-      exit 1
+    if [[ ${MINIMAL_BUILD} != yes ]]; then
+      if fgrep "QDoc will not be compiled" configure.log; then
+        echo "ERROR :: Failed to find libclang, I guess."
+        exit 1
+      fi
     fi
     echo "done" > .status.configure
   fi
@@ -400,20 +435,24 @@ elif [[ ${target_platform} == osx-64 ]]; then
   # lto causes an increase in final tar.bz2 size of about 4% (tested with the above -skip options though, not the whole thing)
   #                -ltcg \
   # Just because qtwebengine fails most often, so eek any problems out.
+  # [[ -f .status.make ]] && rm .status.make
   if [[ ! -f .status.make ]]; then
-    make -j${MAKE_JOBS} module-qtwebengine || exit 1
-    if find . -name "libQt5WebEngine*dylib" -exec false {} +; then
-      echo "Did not build qtwebengine, exiting"
-      exit 1
+    if [[ ${MINIMAL_BUILD} != yes ]]; then
+      make -j${MAKE_JOBS} module-qtwebengine || exit 1
+      if find . -name "libQt5WebEngine*dylib" -exec false {} +; then
+        echo "Did not build qtwebengine, exiting"
+        exit 1
+      fi
     fi
     make -j${MAKE_JOBS} || exit 1
     echo "done" > .status.make
   fi
-# if [[ ! -f .status.make-install ]]; then
-    make install
-    echo "LIZZY :: Made it past make install"
-#    echo "done" > .status.make-install
-#  fi
+  # [[ -f .status.make-install ]] && rm .status.make-install
+  if [[ ! -f .status.make-install ]]; then
+    # This is race-y on macOS.
+    make -j${MAKE_JOBS} install || make install || make install || exit 1
+    echo "done" > .status.make-install
+  fi
 
   # Avoid Xcode (2)
   mkdir -p "${PREFIX}"/bin/xc-avoidance || true

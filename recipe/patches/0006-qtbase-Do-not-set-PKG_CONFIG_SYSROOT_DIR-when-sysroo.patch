@@ -24,7 +24,7 @@ index e775bf046e..6d45f53f20 100644
 -            pkgConfigSysrootDir = $$sysroot
 -            qtConfAddNote("PKG_CONFIG_SYSROOT_DIR automatically set to $$pkgConfigSysrootDir")
 +            # pkgConfigSysrootDir = $$sysroot
-+            qtConfAddNote("WARNING :: Qt upstream would've set PKG_CONFIG_SYSROOT_DIR automatically set to $$pkgConfigSysrootDir, we do not!")
++            qtConfAddNote("WARNING :: Qt upstream would've set PKG_CONFIG_SYSROOT_DIR automatically to $$pkgConfigSysrootDir, we do not!")
          }
          $${1}.pkgConfigLibdir = $$pkgConfigLibdir
          export($${1}.pkgConfigLibdir)

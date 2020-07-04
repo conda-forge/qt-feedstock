@@ -6,3 +6,23 @@ macos_machine:
   - x86_64-apple-darwin13.4.0
 MACOSX_DEPLOYMENT_TARGET:
   - 10.14
+replacements:
+  all_replacements:
+    - tag: 'pkg-config build metadata'
+      glob_patterns:
+        - '*.pc'
+      regex_re: '(?:-L|-I)?\"?([^;\s]+\/sysroot\/)'
+      replacement_re: '$(CONDA_BUILD_SYSROOT_S)'
+      regex_rg: '([^;\s"]+/sysroot/)'
+    - tag: 'CMake build metadata'
+      glob_patterns:
+        - '*.cmake'
+      regex_re: '([^;\s"]+/sysroot)'
+      replacement_re: '$ENV{CONDA_BUILD_SYSROOT}'
+    - tag: 'qmake build metadata'
+      glob_patterns:
+        - '*.pri'
+        - '*.prl'
+      regex_re: '(?:-L|-I)?\"?([^;\s]+\/sysroot)'
+      replacement_re: '$(CONDA_BUILD_SYSROOT)'
+      regex_rg: '([^;\s"]+/sysroot)'

@@ -48,6 +48,7 @@ source:
       # - patches/0009-qtbase-Fix-harcoded-sysroot-paths.patch
       - patches/0010-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.patch
       - patches/0011-qtbase-Fix-QMAKE_LIBDIR_X11-and-QMAKE_LIBDIR_OPENGL-.patch
+      - patches/0012-qtbase-Add-hardcoded-for-now-to-centos6-64-bit-AMD64.patch
       # - patches/0011-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-.patch
 
       # qtwinextras

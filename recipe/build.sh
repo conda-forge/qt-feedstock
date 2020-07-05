@@ -220,11 +220,17 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
 #     -L/usr/lib64 \
 #     -L$BUILD_PREFIX/bin/../x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -lGL
 #
-# From conda-build, we have a CDT test that involves OpenGL:
+# Frm conda-build, we have a CDT test that involves OpenGL:
 #
 # build deps are: pkg-config libxcb libselinux-devel libxi-devel libx11-devel libxau-devel libxext-devel libxfixes-devel mesa-libgl-devel xorg-x11-proto-devel mesa-dri-drivers libxdamage-devel libxxf86vm
 #
 # echo -e "#include <GL/gl.h>\nint main() { glBegin(GL_TRIANGLES); glEnd(); return 0; }" | ${CC} -o ${PREFIX}/bin/links-to-opengl-cdt -x c $(pkg-config --libs gl) -Wl,-rpath-link,${PREFIX}/lib -
+#
+# echo -e "#include <GL/gl.h>\nint main() { glBegin(GL_TRIANGLES); glEnd(); return 0; }" > gl.c
+# x86_64-conda_cos6-linux-gnu-cc -o links-to-opengl-cdt -x c -L${PREFIX}/bin/../x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -lGL -Wl,-rpath-link,${PREFIX}/lib gl.c
+#
+# pushd /opt/conda/conda-bld/qt-5.15.0_minimal_25/work ; . build_env_setup.sh ; PATH=$PWD:$PATH && cd config.tests/opengl
+# g++ -m64 -Wl,-O1 -o opengl main.o   -L$PREFIX/lib -L$BUILD_PREFIX/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -L$BUILD_PREFIX/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -L$BUILD_PREFIX/bin/../x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -lGL
 
     for key in "${!COS6_MISSING_DEFINES[@]}"; do
       mv ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h.bak

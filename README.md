@@ -5,7 +5,7 @@ Home: http://qt-project.org
 
 Package license: LGPL-3.0
 
-Feedstock license: BSD 3-Clause
+Feedstock license: BSD-3-Clause
 
 Summary: Qt is a cross-platform application and UI framework.
 

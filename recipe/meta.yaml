@@ -146,7 +146,12 @@ requirements:
     - {{ cdt('libxxf86vm') }}            # [linux]
     - {{ cdt('libxxf86vm-devel') }}      # [linux]
     - {{ cdt('cups-devel') }}            # [linux]
-
+    - {{ cdt('libcom_err') }}            # [linux]
+    - {{ cdt('libcom_err') }}            # [linux]
+    - {{ cdt('gnutls') }}                # [linux]
+    - {{ cdt('avahi-libs') }}            # [linux]
+    - {{ cdt('libgpg-error') }}          # [linux]
+    - {{ cdt('libtasn1') }}              # [linux]
     # For fontconfig + freetype
     - pkg-config                         # [linux]
     - make                               # [unix]
@@ -220,6 +225,7 @@ requirements:
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
     {% endif %}
+    - {{ pin_compatible("mysql") }}  # [not win]
     - {{ pin_compatible("libclang") }}
   run_constrained:                                             # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.14") }}  # [osx]

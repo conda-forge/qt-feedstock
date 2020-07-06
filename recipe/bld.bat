@@ -205,6 +205,11 @@ pushd qtbase
   echo Finished `jom -U install_mkspecs`
 popd
 
+if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
+echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. Copying it from qtbase\bin\qmake.exe
+copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
+:ok_qmake_exists
+
 :: To rewrite qt.conf contents per conda environment
 if not exist %PREFIX%\Scripts mkdir %PREFIX%\Scripts
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"

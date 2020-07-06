@@ -229,7 +229,7 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
 # echo -e "#include <GL/gl.h>\nint main() { glBegin(GL_TRIANGLES); glEnd(); return 0; }" > gl.c
 # x86_64-conda_cos6-linux-gnu-cc -o links-to-opengl-cdt -x c -L${PREFIX}/bin/../x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -lGL -Wl,-rpath-link,${PREFIX}/lib gl.c
 #
-# pushd /opt/conda/conda-bld/qt-5.15.0_minimal_25/work ; . build_env_setup.sh ; PATH=$PWD:$PATH && cd config.tests/opengl
+# pushd /opt/conda/conda-bld/qt-5.15.0_minimal_26/work ; . build_env_setup.sh ; PATH=$PWD:$PATH && cd config.tests/opengl
 # g++ -m64 -Wl,-O1 -o opengl main.o   -L$PREFIX/lib -L$BUILD_PREFIX/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -L$BUILD_PREFIX/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -L$BUILD_PREFIX/bin/../x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64 -lGL
 
     for key in "${!COS6_MISSING_DEFINES[@]}"; do
@@ -275,7 +275,6 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
                 -datadir ${PREFIX} \
                 -I ${PREFIX}/include \
                 -L ${PREFIX}/lib \
-                -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
                 "${LIBS_NATURE_ARGS[@]}" \
                 -opensource \
                 -confirm-license \

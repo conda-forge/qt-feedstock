@@ -43,7 +43,7 @@ case ${1} in
     ;;
 
   *-show-sdk-version)
-    echo 10.12
+    echo ${MACOSX_DEPLOYMENT_TARGET}
     exit 0
     ;;
 

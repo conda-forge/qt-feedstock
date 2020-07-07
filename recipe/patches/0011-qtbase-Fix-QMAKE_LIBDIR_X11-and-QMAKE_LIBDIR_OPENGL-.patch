@@ -18,8 +18,8 @@ index a79b69ff31..1b52301451 100644
  
 -QMAKE_LIBDIR_X11        = /usr/X11R6/lib64
 -QMAKE_LIBDIR_OPENGL     = /usr/X11R6/lib64
-+QMAKE_LIBDIR_X11        = /usr/lib64
-+QMAKE_LIBDIR_OPENGL     = /usr/lib64
++QMAKE_LIBDIR_X11        = 
++QMAKE_LIBDIR_OPENGL     = 
  
  load(qt_config)
 -- 

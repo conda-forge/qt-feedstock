@@ -214,3 +214,24 @@ copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
 if not exist %PREFIX%\Scripts mkdir %PREFIX%\Scripts
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
 if %errorlevel% neq 0 exit /b %errorlevel%
+
+:: On Windows, Qt seems to find and build this automatically. I am not sure
+:: it installs it. Either way, another build in the source dir fails with:
+:: ASSERT: "fileName.isEmpty() || isAbsolutePath(fileName)" in file C:\opt\conda\conda-bld\qt-5.15.0_min_14\work\qtbase\qmake\library\ioutils.cpp, line 54
+:: build. Still, an in-source build is more likely to succeed, so if we find
+:: one has not been done (for whatever reason), then prefer that.
+if exist qtcharts\Makefile (
+  echo "INFO :: Found qtcharts\Makefile, trying to jom install it"
+  pushd qtcharts
+    jom install INSTALL_ROOT=%PREFIX%
+  :: mkdir qtcharts-build
+  :: pushd qtcharts-build
+  ::  %LIBRARY_BIN%\qmake.exe -r ..\qtcharts\qtcharts.pro
+  :: echo "INFO :: Did not find qtcharts\Makefile, building in qtcharts src dir"
+) else (
+  pushd qtcharts
+    %LIBRARY_BIN%\qmake.exe -r .\qtcharts.pro
+    jom
+    jom install INSTALL_ROOT=%PREFIX%
+  popd
+)

@@ -56,6 +56,11 @@ else
   LIBS_NATURE_ARGS+=(-optimized-tools)
 fi
 
+sed -i'.' "s#\@BUILD_PREFIX@#${BUILD_PREFIX}#g" qtbase/mkspecs/linux-g++-64/qmake.conf || true
+sed -i'.' "s#\@PREFIX@#${PREFIX}#g" qtbase/mkspecs/linux-g++-64/qmake.conf || true
+grep ${BUILD_PREFIX} qtbase/mkspecs/linux-g++-64/qmake.conf || exit 1
+grep ${PREFIX} qtbase/mkspecs/linux-g++-64/qmake.conf || exit 1
+
 MAKE_JOBS=$CPU_COUNT
 
 if [[ -d qtwebkit ]]; then
@@ -195,6 +200,10 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
     COS6_MISSING_DEFINES["ABS_MT_SLOT"]="0x2f"
     COS6_MISSING_DEFINES["ABS_MT_PRESSURE"]="0x3a"
     COS6_MISSING_DEFINES["ABS_MT_DISTANCE"]="0x3b"
+    # This shouldn't go in input.h (or anywhere) and I decided to patch around
+    # it instead.
+    # COS6_MISSING_DEFINES["PTRACE_GETREGSET"]="0x4204"
+    # COS6_MISSING_DEFINES["PTRACE_SETREGSET"]="0x4205"
 
 # OpenGL CDT problems as ever:
 #
@@ -302,6 +311,9 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
                 -cups \
                 -openssl-linked \
                 -openssl \
+                -Wno-deprecated-declarations \
+                -Wno-maybe-uninitialized \
+                -Wno-unused-but-set-variable \
                 -Wno-expansion-to-defined \
                 "${QT_CONFIGURE_EXTRA_DEFINES[@]}" \
                 "${SKIPS[@]}" 2>&1 | tee configure.log
@@ -390,7 +402,7 @@ elif [[ ${target_platform} == osx-64 ]]; then
   # Qt passes clang flags to LD (e.g. -stdlib=c++)
   export LD=${CXX}
   PATH=${PWD}:${PATH}
-  # [[ -f .status.configure ]] && rm .status.configure
+  [[ -f .status.configure ]] && rm .status.configure
   if [[ ! -f .status.configure ]]; then
     ./configure -prefix $PREFIX \
                 -libdir $PREFIX/lib \
@@ -425,6 +437,9 @@ elif [[ ${target_platform} == osx-64 ]]; then
                 -no-egl \
                 -no-openssl \
                 -sdk macosx${OSX_SDK_VER} \
+                -Wno-deprecated-copy \
+                -Wno-deprecated-declarations \
+                -Wno-range-loop-construct \
                 "${SKIPS[@]}" 2>&1 | tee configure.log
     if [[ ${MINIMAL_BUILD} != yes ]]; then
       if fgrep "QDoc will not be compiled" configure.log; then
@@ -440,7 +455,13 @@ elif [[ ${target_platform} == osx-64 ]]; then
   # lto causes an increase in final tar.bz2 size of about 4% (tested with the above -skip options though, not the whole thing)
   #                -ltcg \
   # Just because qtwebengine fails most often, so eek any problems out.
-  # [[ -f .status.make ]] && rm .status.make
+  [[ -f .status.make ]] && rm .status.make
+
+  # Hack for dirty builds. I am not sure why it is needed.
+  if [[ ! -f ${PREFIX}/bin/qmake ]] && [[ -f qtbase/qmake/qmake ]]; then
+    cp qtbase/qmake/qmake ${PREFIX}/bin/qmake
+  fi
+
   if [[ ! -f .status.make ]]; then
     if [[ ${MINIMAL_BUILD} != yes ]]; then
       make -j${MAKE_JOBS} module-qtwebengine || exit 1
@@ -452,7 +473,7 @@ elif [[ ${target_platform} == osx-64 ]]; then
     make -j${MAKE_JOBS} || exit 1
     echo "done" > .status.make
   fi
-  # [[ -f .status.make-install ]] && rm .status.make-install
+  [[ -f .status.make-install ]] && rm .status.make-install
   if [[ ! -f .status.make-install ]]; then
     # This is race-y on macOS.
     make -j${MAKE_JOBS} install || make install || make install || exit 1

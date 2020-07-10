@@ -20,9 +20,9 @@ index 1b52301451..9d2afc34f1 100644
  QMAKE_CFLAGS            = -m64
 -QMAKE_LFLAGS            = -m64
 +# This is needed so that config.tests/opengl links correctly:
-+# QMAKE_LFLAGS            = -m64 -Wl,-rpath-link,${BUILD_PREFIX}/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64
-+# It also may work in some cases to use -Wl,-rpath-link,${PREFIX}/lib but if adding that I think preferring sysroot is best:
-+QMAKE_LFLAGS            = -m64 -Wl,-rpath-link,${BUILD_PREFIX}/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64:${PREFIX}/lib
++# QMAKE_LFLAGS            = -m64 -Wl,-rpath-link,@BUILD_PREFIX@/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64
++# It also may work in some cases to use -Wl,-rpath-link,@PREFIX@/lib but if adding that I think preferring sysroot is best:
++QMAKE_LFLAGS            = -m64 -Wl,-rpath-link,@BUILD_PREFIX@/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64:@PREFIX@/lib
  
  include(../common/gcc-base-unix.conf)
  include(../common/g++-unix.conf)

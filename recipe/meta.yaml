@@ -71,6 +71,10 @@ source:
       # - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
       - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
       - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
+      - patches/0015-qtwebengine-Add-glibc-2.28-compile-guard-around-rena.patch
+      - patches/0016-qtwebengine-Define-PTRAGET_-G-S-ETREGSET-to-0x4204-a.patch
+      - patches/0017-qtwebengine-Relax-glibc-restriction-from-2.16-to-2.1.patch
+      - patches/0018-qtwebengine-Some-glibc-kernel-define-hacks.patch
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
@@ -105,7 +109,7 @@ build:
     - /usr/lib/libsandbox.1.dylib  # [osx]
     - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
   {% if libs_pkg_suffix != '' %}
-  string: {{ version }}{{ libs_pkg_suffix }}
+  string: h{{ PKG_HASH }}{{ libs_pkg_suffix }}
   {% endif %}
   rpath_patcher: patchelf
   script_env:
@@ -114,7 +118,7 @@ build:
 
 requirements:
   build:
-    # - ccache
+    - ccache
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - patch                              # [not win]
@@ -231,6 +235,8 @@ requirements:
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.14") }}  # [osx]
 
 test:
+  script_env:
+    - MINIMAL_BUILD={{ minimal_build }}
   requires:
     - {{ compiler('cxx') }}
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
@@ -260,7 +266,6 @@ test:
     - {{ cdt('libxxf86vm') }}            # [linux]
     - {{ cdt('at-spi-devel') }}          # [linux]
   files:
-    - test/hello.pro
     - xcodebuild
     - xcrun
     - test/main.cpp
@@ -268,8 +273,11 @@ test:
     - test/qml.qrc
     - test/qrc_qml.cpp
 {% if minimal_build == 'no' %}
+    - test/hello.pro
     - test/qtwebengine.pro
     - test/main-qtwebengine.cpp
+{% else %}
+    - test/hello-minimal.pro
 {% endif %}
   commands:
 {% if minimal_build == 'no' %}

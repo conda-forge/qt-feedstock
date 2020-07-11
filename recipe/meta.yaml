@@ -75,6 +75,8 @@ source:
       - patches/0016-qtwebengine-Define-PTRAGET_-G-S-ETREGSET-to-0x4204-a.patch
       - patches/0017-qtwebengine-Relax-glibc-restriction-from-2.16-to-2.1.patch
       - patches/0018-qtwebengine-Some-glibc-kernel-define-hacks.patch
+      - patches/0019-qtwebengine-Attempt-to-get-conda_prefix-include-into.patch
+      - patches/0020-qtwebengine-Use-conda_prefix-for-chromium-gpu.patch
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch

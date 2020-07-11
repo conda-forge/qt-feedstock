@@ -1,0 +1,31 @@
+From 895e8a36545e66b50fa006ca847f04eeca9357d8 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Fri, 10 Jul 2020 18:24:40 +0200
+Subject: [PATCH 19/21] qtwebengine: Attempt to get conda_prefix/include into
+ Skia compile command lines
+
+Otherwise the fontconfig/fontconfig.h gets found in the CDT/sysroot
+and that is bad.
+
+See: https://bugreports.qt.io/browse/QTBUG-61158
+and: https://bugs.chromium.org/p/chromium/issues/detail?id=741592
+---
+ chromium/third_party/skia/BUILD.gn | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/skia/BUILD.gn b/qtwebengine/src/3rdparty/chromium/third_party/skia/BUILD.gn
+index bcbe6eb2479..6b47726d1ab 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/skia/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/third_party/skia/BUILD.gn
+@@ -76,6 +76,8 @@ config("skia_private") {
+   lib_dirs = []
+   if (skia_use_angle) {
+     defines += [ "SK_ANGLE" ]
++  include_dirs = [ conda_prefix+"/include" ]
++  lib_dirs = [ conda_prefix+"/lib" ]
+   }
+ }
+ 
+-- 
+2.27.0
+

@@ -1,0 +1,43 @@
+From 9edf550a56ed348e04af89a909d8b14628392579 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sat, 11 Jul 2020 20:01:39 +0200
+Subject: [PATCH 20/21] qtwebengine: include m/p/i/b/native_struct.mojom.h in
+ c/b/{utility_process_host_receiver_bindings.cc,service_process_host_impl.cc}
+
+---
+ chromium/content/browser/service_process_host_impl.cc         | 3 +++
+ .../content/browser/utility_process_host_receiver_bindings.cc | 4 ++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/content/browser/service_process_host_impl.cc b/qtwebengine/src/3rdparty/chromium/content/browser/service_process_host_impl.cc
+index 1d417b84d88..41884dcd295 100644
+--- a/qtwebengine/src/3rdparty/chromium/content/browser/service_process_host_impl.cc
++++ b/qtwebengine/src/3rdparty/chromium/content/browser/service_process_host_impl.cc
+@@ -17,6 +17,9 @@
+ #include "content/public/browser/browser_task_traits.h"
+ #include "content/public/browser/browser_thread.h"
+ #include "content/public/browser/service_process_host.h"
++// This seems to be missing. At least on Linux, without it, we see:
++// error: invalid application of 'sizeof' to incomplete type 'mojo::native::SerializedHandle'
++#include "mojo/public/interfaces/bindings/native_struct.mojom.h"
+ #include "mojo/public/cpp/bindings/generic_pending_receiver.h"
+ #include "mojo/public/cpp/bindings/remote.h"
+ 
+diff --git a/qtwebengine/src/3rdparty/chromium/content/browser/utility_process_host_receiver_bindings.cc b/qtwebengine/src/3rdparty/chromium/content/browser/utility_process_host_receiver_bindings.cc
+index d25a0e07692..467caa7e507 100644
+--- a/qtwebengine/src/3rdparty/chromium/content/browser/utility_process_host_receiver_bindings.cc
++++ b/qtwebengine/src/3rdparty/chromium/content/browser/utility_process_host_receiver_bindings.cc
+@@ -13,6 +13,10 @@
+ #include "content/browser/font_service.h"  // nogncheck
+ #endif
+ 
++// This seems to be missing. At least on Linux, without it, we see:
++// error: invalid application of 'sizeof' to incomplete type 'mojo::native::SerializedHandle'
++#include "mojo/public/interfaces/bindings/native_struct.mojom.h"
++
+ namespace content {
+ 
+ void UtilityProcessHost::BindHostReceiver(
+-- 
+2.27.0
+

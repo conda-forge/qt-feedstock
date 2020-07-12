@@ -1,0 +1,43 @@
+From 116fa6945bd8051ac1a8492fc1935c38fa90b8d9 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 12 Jul 2020 10:50:27 +0200
+Subject: [PATCH 11/17] qtwebenginec: Add missing EVIOCGPROP
+
+---
+ chromium/third_party/libevdev/src/src/libevdev.c    | 4 ++++
+ chromium/ui/events/ozone/evdev/event_device_info.cc | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/libevdev/src/src/libevdev.c b/qtwebengine/src/3rdparty/chromium/third_party/libevdev/src/src/libevdev.c
+index e920a026443..f4e9bdb6258 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/libevdev/src/src/libevdev.c
++++ b/qtwebengine/src/3rdparty/chromium/third_party/libevdev/src/src/libevdev.c
+@@ -23,6 +23,10 @@
+ #define EVIOCGMTSLOTS(len)  _IOC(_IOC_READ, 'E', 0x0a, len)
+ #endif
+ 
++#ifndef EVIOCGPROP
++#define EVIOCGPROP(len)    _IOC(_IOC_READ, 'E', 0x09, len)
++#endif
++
+ /* Set clockid to be used for timestamps */
+ #ifndef EVIOCSCLOCKID
+ #define EVIOCSCLOCKID  _IOW('E', 0xa0, int)
+diff --git a/qtwebengine/src/3rdparty/chromium/ui/events/ozone/evdev/event_device_info.cc b/qtwebengine/src/3rdparty/chromium/ui/events/ozone/evdev/event_device_info.cc
+index d6c07343ce7..64be7adbf74 100644
+--- a/qtwebengine/src/3rdparty/chromium/ui/events/ozone/evdev/event_device_info.cc
++++ b/qtwebengine/src/3rdparty/chromium/ui/events/ozone/evdev/event_device_info.cc
+@@ -16,6 +16,10 @@
+ #define EVIOCGMTSLOTS(len) _IOC(_IOC_READ, 'E', 0x0a, len)
+ #endif
+ 
++#if !defined(EVIOCGPROP)
++#define EVIOCGPROP(len)    _IOC(_IOC_READ, 'E', 0x09, len)
++#endif
++
+ namespace ui {
+ 
+ namespace {
+-- 
+2.27.0
+

@@ -54,29 +54,30 @@ source:
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
-      # qtwebengine
-      - patches/0000-qtwebengine-Fix-compilation-on-Windows-VSC.patch
-      - patches/0000-qtwebengine-Fix-VS2017-builds.patch
-      - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
-      - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      - patches/0004-qtwebengine-use-CONDA_PREFIX-include-for-system_libj.patch
-      # - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
-      - patches/0006-qtwebengine-run-gn-verbosely.patch
-      # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
-      - patches/0008-qtwebengine-link-gn-to-librt.patch
-      - patches/0009-qtwebengine-chromium-Add-conda_prefix-to-gn.patch
-      - patches/0010-qtwebengine-Add-conda_prefix-to-gn.patch
-      - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
-      - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
-      # - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
-      - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
-      - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
-      - patches/0015-qtwebengine-Add-glibc-2.28-compile-guard-around-rena.patch
-      - patches/0016-qtwebengine-Define-PTRAGET_-G-S-ETREGSET-to-0x4204-a.patch
-      - patches/0017-qtwebengine-Relax-glibc-restriction-from-2.16-to-2.1.patch
-      - patches/0018-qtwebengine-Some-glibc-kernel-define-hacks.patch
-      - patches/0019-qtwebengine-Attempt-to-get-conda_prefix-include-into.patch
-      - patches/0020-qtwebengine-Use-conda_prefix-for-chromium-gpu.patch
+      # qtwebengine (Qt part)
+      # regenerate with `git format-patch -2`
+      - patches/0001-qtwebengine-run-gn-verbosely.patch
+      - patches/0002-qtwebengine-Relax-glibc-restriction-from-2.16-to-2.1.patch
+
+      # qtwebenginec (chromium submodule)
+      # regenerate with `git format-patch --src-prefix=a/qtwebengine/src/3rdparty/ --dst-prefix=b/qtwebengine/src/3rdparty/ -17`
+      - patches/0001-qtwebenginec-Fix-compilation-on-Windows-VSC.patch
+      - patches/0002-qtwebenginec-Fix-VS2017-builds.patch
+      - patches/0003-qtwebenginec-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
+      - patches/0004-qtwebenginec-use-CONDA_PREFIX-include-for-system_lib.patch
+      - patches/0005-qtwebenginec-Add-conda_prefix-to-gn.patch
+      - patches/0006-qtwebenginec-Use-conda_prefix-for-chromium-gpu.patch
+      - patches/0007-qtwebenginec-Use-conda_prefix-for-system_zlib.patch
+      - patches/0008-qtwebenginec-Use-conda_prefix-for-ui_gl.patch
+      - patches/0009-qtwebenginec-macOS-10.11-support-Define-NSEventTypeS.patch
+      - patches/0010-qtwebenginec-link-gn-to-librt.patch
+      - patches/0011-qtwebenginec-Add-missing-EVIOCGPROP.patch
+      - patches/0012-qtwebenginec-Define-HAVE_SENDMMSG-to-0-when-glibc-2..patch
+      - patches/0013-qtwebenginec-__NR_renameat2-requires-glibc-2.28.patch
+      - patches/0014-qtwebenginec-Define-PTRAGET_-G-S-ETREGSET-to-0x4204-.patch
+      - patches/0015-qtwebenginec-Some-glibc-kernel-define-hacks.patch
+      - patches/0016-qtwebenginec-Attempt-to-get-conda_prefix-include-int.patch
+      - patches/0017-qtwebenginec-include-m-p-i-b-native_struct.mojom.h-i.patch
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch

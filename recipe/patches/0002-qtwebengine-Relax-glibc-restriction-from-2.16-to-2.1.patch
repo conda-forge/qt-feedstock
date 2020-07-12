@@ -1,0 +1,33 @@
+From 9f4a9f98d08114ade0403688fed937f238a6ba3f Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Fri, 10 Jul 2020 02:06:24 +0200
+Subject: [PATCH 2/2] qtwebengine: Relax glibc restriction from >2.16 to >2.11
+
+---
+ src/buildtools/configure.json | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/buildtools/configure.json b/src/buildtools/configure.json
+index a80ef32e..039325b0 100644
+--- a/src/buildtools/configure.json
++++ b/src/buildtools/configure.json
+@@ -271,13 +271,13 @@
+             "type": "detectGn"
+         },
+         "webengine-glibc": {
+-            "label": "glibc > 2.16",
++            "label": "glibc > 2.11",
+             "type": "compile",
+             "test": {
+                 "include": "features.h",
+                 "tail": [
+-                    "#if __GLIBC__ < 2 || __GLIBC_MINOR__ < 17",
+-                    "#error glibc versions below 2.17 are not supported",
++                    "#if __GLIBC__ < 2 || __GLIBC_MINOR__ < 12",
++                    "#error glibc versions below 2.12 are not supported",
+                     "#endif"
+                 ]
+             }
+-- 
+2.27.0
+

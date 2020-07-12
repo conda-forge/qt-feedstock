@@ -1,0 +1,32 @@
+From d70f4c814b2aef6cfe448380cb0df517e138860b Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Thu, 9 Jul 2020 23:16:50 +0200
+Subject: [PATCH 14/17] qtwebenginec: Define PTRAGET_{G,S}ETREGSET to 0x4204
+ and 0x4205 if not defined
+
+---
+ .../syscall_parameters_restrictions.cc                    | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc b/qtwebengine/src/3rdparty/chromium/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+index d9789a7133e..072126ffb47 100644
+--- a/qtwebengine/src/3rdparty/chromium/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
++++ b/qtwebengine/src/3rdparty/chromium/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+@@ -130,6 +130,14 @@ using sandbox::bpf_dsl::Error;
+ using sandbox::bpf_dsl::If;
+ using sandbox::bpf_dsl::ResultExpr;
+ 
++#if !defined(PTRACE_GETREGSET)
++#define PTRACE_GETREGSET 0x4204
++#endif
++
++#if !defined(PTRACE_SETREGSET)
++#define PTRACE_SETREGSET 0x4205
++#endif
++
+ namespace sandbox {
+ 
+ #if !defined(OS_NACL_NONSFI)
+-- 
+2.27.0
+

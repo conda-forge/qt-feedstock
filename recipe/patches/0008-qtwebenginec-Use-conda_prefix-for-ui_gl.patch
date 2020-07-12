@@ -1,0 +1,25 @@
+From 0b12bd43a97226c652e19531041294fb94399eef Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 12 Jul 2020 11:16:36 +0200
+Subject: [PATCH 08/17] qtwebenginec: Use conda_prefix for ui_gl
+
+---
+ chromium/ui/gl/BUILD.gn | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/ui/gl/BUILD.gn b/qtwebengine/src/3rdparty/chromium/ui/gl/BUILD.gn
+index 95db92bfcf3..e2c95976391 100644
+--- a/qtwebengine/src/3rdparty/chromium/ui/gl/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/ui/gl/BUILD.gn
+@@ -42,6 +42,8 @@ config("gl_config") {
+   if (use_egl) {
+     defines += [ "USE_EGL" ]
+   }
++  include_dirs = [ conda_prefix+"/include" ]
++  lib_dirs = [ conda_prefix+"/lib" ]
+ }
+ 
+ jumbo_component("gl") {
+-- 
+2.27.0
+

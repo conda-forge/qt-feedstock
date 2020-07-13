@@ -1,7 +1,25 @@
-# Please keep these at the top for better visability
+# Please keep these various arrays passed to configure
+# at the top for better visability and easier tweaking.
+
+declare -a SKIPS=()
+if [[ ${MINIMAL_BUILD} == yes ]]; then
+  SKIPS+=(-skip qtwebsockets)
+  SKIPS+=(-skip qtwebchannel)
+  SKIPS+=(-skip qtwebengine)
+  SKIPS+=(-skip qtsvg)
+  SKIPS+=(-skip qtsensors)
+  SKIPS+=(-skip qtcanvas3d)
+  SKIPS+=(-skip qtconnectivity)
+  SKIPS+=(-skip declarative)
+  SKIPS+=(-skip multimedia)
+  SKIPS+=(-skip qttools)
+  SKIPS+=(-skip qtlocation)
+  SKIPS+=(-skip qt3d)
+fi
+
 declare -a COMMON_CONFIG=()
 COMMON_CONFIG+=(-opensource -confirm-license)
-COMMON_CONFIG+=(-prefix ${PREFIX}
+COMMON_CONFIG+=(-prefix ${PREFIX})
 COMMON_CONFIG+=(-libdir ${PREFIX}/lib)
 COMMON_CONFIG+=(-bindir ${PREFIX}/bin)
 COMMON_CONFIG+=(-headerdir ${PREFIX}/include/qt)
@@ -47,6 +65,10 @@ MACOS_CONFIG+=(-no-egl)
 MACOS_CONFIG+=(-no-openssl)
 MACOS_CONFIG+=(-sdk macosx${OSX_SDK_VER})
 
+# If any of these warnings are due to our patches we should fix that instead.
+# .. I do not like suppressing them but the logs are very messy because the
+# .. warnings come mostly from problems in some fairly commonly used headers
+# .. and in general I do not think our patches add a lot to the overall count.
 declare -a WARNING_SUPPRESSIONS=()
 # linux (g++) and macOS (clang-10)
 WARNING_SUPPRESSIONS+=(-Wno-deprecated-declarations)
@@ -61,9 +83,6 @@ WARNING_SUPPRESSIONS+=(-Wno-deprecated-copy)
 # Clean config for dirty builds
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true
-
-
-
 
 if [[ ${target_platform} =~ .*linux.* ]]; then
   ln -s "${GXX}" g++ || true
@@ -167,6 +186,12 @@ function parse_macos_sdk_ver
   eval "${_SDK_VER_MINOR_VAR}=${_SDK_VER_MINOR}"
 }
 
+if [[ -d qtwebkit ]]; then
+  if ! which ruby > /dev/null 2>&1; then
+    echo "You need ruby to build qtwebkit"
+    exit 1
+  fi
+fi
 
 # Problems: https://bugreports.qt.io/browse/QTBUG-61158
 #           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
@@ -180,30 +205,10 @@ function parse_macos_sdk_ver
 # Need to figure out what in the BUILD.gn files is different, so compare the smallest file from each?
 # grep -R include_dirs . | grep ninja | grep -v _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
 # grep -R include_dirs . | grep ninja | grep    _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
-# Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
-
-declare -a SKIPS
-if [[ ${MINIMAL_BUILD} == yes ]]; then
-  SKIPS+=(-skip); SKIPS+=(qtwebsockets)
-  SKIPS+=(-skip); SKIPS+=(qtwebchannel)
-  SKIPS+=(-skip); SKIPS+=(qtwebengine)
-  SKIPS+=(-skip); SKIPS+=(qtsvg)
-  SKIPS+=(-skip); SKIPS+=(qtsensors)
-  SKIPS+=(-skip); SKIPS+=(qtcanvas3d)
-  SKIPS+=(-skip); SKIPS+=(qtconnectivity)
-  SKIPS+=(-skip); SKIPS+=(declarative)
-  SKIPS+=(-skip); SKIPS+=(multimedia)
-  SKIPS+=(-skip); SKIPS+=(qttools)
-  SKIPS+=(-skip); SKIPS+=(qtlocation)
-  SKIPS+=(-skip); SKIPS+=(qt3d)
-fi
+# Then find the .gn or .gni files that these ninja files were created from and figure out what is missing from where
+# .. the patches are a good reference for possible fixes.
 
 if [[ ${target_platform} =~ .*linux.* ]]; then
-
-  if ! which ruby > /dev/null 2>&1; then
-    echo "You need ruby to build qtwebkit"
-    exit 1
-  fi
 
   if [[ -n ${CCACHE} ]]; then
     ln -s ${GXX} g++ || true
@@ -213,6 +218,7 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
     chmod +x g++ gcc gcc-ar
     export PATH=${PWD}:${PATH}
   fi
+
   export LD=${GXX}
   export CC=${GCC}
   export CXX=${GXX}
@@ -244,10 +250,9 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
   declare -A COS6_MISSING_DEFINES=()
   declare -a QT_CONFIGURE_EXTRA_DEFINES=()
 
+  # Do not change this to target_platform, we are explicitly working around centos6 things.
   if [[ ${HOST} =~ .*cos6.* ]]; then
-    
-  
-    # Quite a big hack here. These are passed to Qt's configure command-line.
+    # Quite a big hack here. These are passed to Qt's configure command-line (or they were but are not currently and maybe should be!)
     QT_CONFIGURE_EXTRA_DEFINES+=("-D" "_X_INLINE=inline")
     QT_CONFIGURE_EXTRA_DEFINES+=("-D" "XK_dead_currency=0xfe6f")
     QT_CONFIGURE_EXTRA_DEFINES+=("-D" "_FORTIFY_SOURCE=2")
@@ -273,10 +278,6 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
     COS6_MISSING_DEFINES["ABS_MT_SLOT"]="0x2f"
     COS6_MISSING_DEFINES["ABS_MT_PRESSURE"]="0x3a"
     COS6_MISSING_DEFINES["ABS_MT_DISTANCE"]="0x3b"
-    # This shouldn't go in input.h (or anywhere) and I decided to patch around
-    # it instead.
-    # COS6_MISSING_DEFINES["PTRACE_GETREGSET"]="0x4204"
-    # COS6_MISSING_DEFINES["PTRACE_SETREGSET"]="0x4205"
 
 # OpenGL CDT problems as ever:
 #
@@ -579,7 +580,6 @@ pushd ${PREFIX}
   done
 popd
 fi
-
 
 LICENSE_DIR="$PREFIX/share/qt/3rd_party_licenses"
     find . -name "*.a" -and -not -name "libQt*" -exec echo {} \;

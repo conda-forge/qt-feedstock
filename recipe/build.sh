@@ -47,10 +47,19 @@ elif [[ ${CONDA_BUILD_QT_LIBS_NATURE} == debug-and-release ]]; then
     LIBS_NATURE_ARGS+=(-optimize-debug)
   fi
 else
+  if [[ ${CONDA_BUILD_QT_LIBS_NATURE} != release ]]; then
+    echo "WARNING :: CONDA_BUILD_QT_LIBS_NATURE (${CONDA_BUILD_QT_LIBS_NATURE}) unrecognised, making release builds"
+  fi
   # LIBS_NATURE_ARGS+=(-force-debug-info)
   # LIBS_NATURE_ARGS+=(-separate-debug-info)
   LIBS_NATURE_ARGS+=(-release)
-  LIBS_NATURE_ARGS+=(-optimize-size)
+  if [[ ${target_platform} == osx-64 ]]; then
+    echo "WARNING :: -optimize-size causes and ICE on macOS, I think. Disabling it."
+    echo "WARNING :: The flags not being used are: QMAKE_CFLAGS_OPTIMIZE_SIZE = -Oz -fomit-frame-pointer -fdata-sections -fvisibility=hidden"
+    echo "WARNING :: Please see problems/ICE-on-macOS.txt for the ICE invocation command-line and crash-dump"
+  else
+    LIBS_NATURE_ARGS+=(-optimize-size)
+  fi
   if [[ ! ${CC} =~ .*clang.* ]]; then
     LIBS_NATURE_ARGS+=(-reduce-relocations)
   fi

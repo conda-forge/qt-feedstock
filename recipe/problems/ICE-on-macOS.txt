@@ -1,0 +1,70 @@
+fatal error: error in backend: Cannot select: 0x7fc0d40b73a0: v8i1 = bitcast 0x7fc0f7106c08
+  0x7fc0f7106c08: v16i32 = mul 0x7fc107836028, 0x7fc1078383d0
+    0x7fc107836028: v16i32,ch = CopyFromReg 0x7fc0f3e77c08, Register:v16i32 %211
+      0x7fc0d40b7338: v16i32 = Register %211
+    0x7fc1078383d0: v16i32,ch = X86ISD::VBROADCAST_LOAD<(load 4 from constant-pool)> 0x7fc0f3e77c08, 0x7fc1090529a8
+      0x7fc1090529a8: i64 = X86ISD::WrapperRIP TargetConstantPool:i64<i32 3> 0
+        0x7fc109052668: i64 = TargetConstantPool<i32 3> 0
+In function: _ZN3skxL8exec_opsEPK2OpPPKvPKcPci
+Stack dump:
+0.      Program arguments: ../../../../../_build_env/bin/clang++ -MMD -MF obj/skia/skcms/skcms.o.d -DOFFICIAL_BUILD -DTOOLKIT_QT -D_LIBCPP_HAS_NO_ALIGNED_ALLOCATION -DCR_XCODE_VERSION=1030 -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES=0 -DNDEBUG -DNVALGRIND -DDYNAMIC_ANNOTATIONS_ENABLED=0 -I../../3rdparty/chromium/third_party/skia/include/third_party/skcms -Igen -I../../3rdparty/chromium -w -std=c11 -fno-strict-aliasing -fstack-protector -Wno-unknown-attributes -Wno-unknown-pragmas -Wno-unknown-warning-option -fcolor-diagnostics -fmerge-all-constants -arch x86_64 -Wall -Wextra -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -Wimplicit-fallthrough -Wthread-safety -Wextra-semi -Wunguarded-availability -Wno-missing-field-initializers -Wno-unused-parameter -Wno-c++11-narrowing -Wno-unneeded-internal-declaration -Wno-undefined-var-template -Wno-ignored-pragma-optimize -Wno-implicit-int-float-conversion -Wno-final-dtor-non-final-class -Wno-bitwise-conditional-parentheses -Wno-builtin-assume-aligned-alignment -Wno-deprecated-copy -Oz -fno-omit-frame-pointer -g0 -isysroot ../../../../../../../../MacOSX10.14.sdk -mmacosx-version-min=10.13 -fvisibility=hidden -Wheader-hygiene -Wstring-conversion -Wtautological-overlap-compare -Wno-parentheses-equality -Wno-tautological-compare -Wno-undefined-bool-conversion -Wno-tautological-undefined-compare -std=c++14 -stdlib=libc++ -fno-exceptions -fno-rtti -fvisibility-inlines-hidden -c ../../3rdparty/chromium/third_party/skia/third_party/skcms/skcms.cc -o obj/skia/skcms/skcms.o 
+1.      <eof> parser at end of file
+2.      Code generation
+3.      Running pass 'Function Pass Manager' on module '../../3rdparty/chromium/third_party/skia/third_party/skcms/skcms.cc'.
+4.      Running pass 'X86 DAG->DAG Instruction Selection' on function '@_ZN3skxL8exec_opsEPK2OpPPKvPKcPci'
+0  libLLVM-10.dylib      0x00000001053a17b5 llvm::sys::PrintStackTrace(llvm::raw_ostream&) + 37
+1  libLLVM-10.dylib      0x00000001053a06b8 llvm::sys::RunSignalHandlers() + 248
+2  libLLVM-10.dylib      0x00000001053a0d82 llvm::sys::CleanupOnSignal(unsigned long) + 210
+3  libLLVM-10.dylib      0x00000001052e4441 (anonymous namespace)::CrashRecoveryContextImpl::HandleCrash(int, unsigned long) + 97
+4  libLLVM-10.dylib      0x00000001052e43de llvm::CrashRecoveryContext::HandleExit(int) + 14
+5  libLLVM-10.dylib      0x000000010539d703 llvm::sys::Process::Exit(int) + 35
+6  clang++               0x0000000102818275 LLVMErrorHandler(void*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, bool) + 101
+7  libLLVM-10.dylib      0x00000001052efaab llvm::report_fatal_error(llvm::Twine const&, bool) + 251
+8  libLLVM-10.dylib      0x00000001052efb83 llvm::report_fatal_error(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, bool) + 35
+9  libLLVM-10.dylib      0x0000000105a3c102 llvm::SelectionDAGISel::CannotYetSelect(llvm::SDNode*) + 818
+10 libLLVM-10.dylib      0x0000000105a3b1c2 llvm::SelectionDAGISel::SelectCodeCommon(llvm::SDNode*, unsigned char const*, unsigned int) + 15538
+11 libLLVM-10.dylib      0x00000001074605f0 (anonymous namespace)::X86DAGToDAGISel::Select(llvm::SDNode*) + 28576
+12 libLLVM-10.dylib      0x0000000105a335dc llvm::SelectionDAGISel::DoInstructionSelection() + 396
+13 libLLVM-10.dylib      0x0000000105a32c6a llvm::SelectionDAGISel::CodeGenAndEmitDAG() + 1434
+14 libLLVM-10.dylib      0x0000000105a3236a llvm::SelectionDAGISel::SelectAllBasicBlocks(llvm::Function const&) + 6602
+15 libLLVM-10.dylib      0x0000000105a2fc64 llvm::SelectionDAGISel::runOnMachineFunction(llvm::MachineFunction&) + 2068
+16 libLLVM-10.dylib      0x000000010745669d (anonymous namespace)::X86DAGToDAGISel::runOnMachineFunction(llvm::MachineFunction&) + 141
+17 libLLVM-10.dylib      0x00000001056852cd llvm::MachineFunctionPass::runOnFunction(llvm::Function&) + 285
+18 libLLVM-10.dylib      0x00000001054be7c1 llvm::FPPassManager::runOnFunction(llvm::Function&) + 1057
+19 libLLVM-10.dylib      0x00000001054bea73 llvm::FPPassManager::runOnModule(llvm::Module&) + 67
+20 libLLVM-10.dylib      0x00000001054bef39 llvm::legacy::PassManagerImpl::run(llvm::Module&) + 969
+21 libclang-cpp.10.dylib 0x00000001036d0c51 clang::EmitBackendOutput(clang::DiagnosticsEngine&, clang::HeaderSearchOptions const&, clang::CodeGenOptions const&, clang::TargetOptions const&, clang::LangOptions const&, llvm::DataLayout const&, llvm::Module*, clang::BackendAction, std::__1::unique_ptr<llvm::raw_pwrite_stream, std::__1::default_delete<llvm::raw_pwrite_stream> >) + 13505
+22 libclang-cpp.10.dylib 0x0000000103996744 clang::BackendConsumer::HandleTranslationUnit(clang::ASTContext&) + 1044
+23 libclang-cpp.10.dylib 0x0000000102966f83 clang::ParseAST(clang::Sema&, bool, bool) + 691
+24 libclang-cpp.10.dylib 0x0000000104193eb8 clang::FrontendAction::Execute() + 168
+25 libclang-cpp.10.dylib 0x0000000104127dc1 clang::CompilerInstance::ExecuteAction(clang::FrontendAction&) + 1553
+26 libclang-cpp.10.dylib 0x000000010420781e clang::ExecuteCompilerInvocation(clang::CompilerInstance*) + 2190
+27 clang++               0x0000000102817e11 cc1_main(llvm::ArrayRef<char const*>, char const*, void*) + 2177
+28 clang++               0x0000000102815cd6 ExecuteCC1Tool(llvm::SmallVectorImpl<char const*>&) + 358
+29 libclang-cpp.10.dylib 0x0000000103dbf0a7 void llvm::function_ref<void ()>::callback_fn<clang::driver::CC1Command::Execute(llvm::ArrayRef<llvm::Optional<llvm::StringRef> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, bool*) const::$_1>(long) + 23
+30 libLLVM-10.dylib      0x00000001052e43ba llvm::CrashRecoveryContext::RunSafely(llvm::function_ref<void ()>) + 218
+31 libclang-cpp.10.dylib 0x0000000103dbe434 clang::driver::CC1Command::Execute(llvm::ArrayRef<llvm::Optional<llvm::StringRef> >, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >*, bool*) const + 404
+32 libclang-cpp.10.dylib 0x0000000103d89021 clang::driver::Compilation::ExecuteCommand(clang::driver::Command const&, clang::driver::Command const*&) const + 433
+33 libclang-cpp.10.dylib 0x0000000103d895dc clang::driver::Compilation::ExecuteJobs(clang::driver::JobList const&, llvm::SmallVectorImpl<std::__1::pair<int, clang::driver::Command const*> >&) const + 140
+34 libclang-cpp.10.dylib 0x0000000103da47fc clang::driver::Driver::ExecuteCompilation(clang::driver::Compilation&, llvm::SmallVectorImpl<std::__1::pair<int, clang::driver::Command const*> >&) + 444
+35 clang++               0x00000001028155ce main + 10590
+36 libdyld.dylib         0x00007fff6e5afcc9 start + 1
+clang-10: error: clang frontend command failed with exit code 70 (use -v to see invocation)
+clang version 10.0.0 
+Target: x86_64-apple-darwin19.5.0
+Thread model: posix
+InstalledDir: /opt/conda/conda-bld/qt-5.15.0_max_35/work/qtwebengine/src/core/release/../../../../../_build_env/bin
+clang-10: note: diagnostic msg: PLEASE submit a bug report to  and include the crash backtrace, preprocessed source, and associated run script.
+clang-10: note: diagnostic msg: 
+********************
+
+PLEASE ATTACH THE FOLLOWING FILES TO THE BUG REPORT:
+Preprocessed source(s) and associated run script(s) are located at:
+clang-10: note: diagnostic msg: /var/folders/6k/8qm25gh54jjdk3r5dvxggxq80000gn/T/skcms-766c44.cpp
+clang-10: note: diagnostic msg: /var/folders/6k/8qm25gh54jjdk3r5dvxggxq80000gn/T/skcms-766c44.sh
+clang-10: note: diagnostic msg: Crash backtrace is located in
+clang-10: note: diagnostic msg: /Users/rdonnelly/Library/Logs/DiagnosticReports/clang-10_<YYYY-MM-DD-HHMMSS>_<hostname>.crash
+clang-10: note: diagnostic msg: (choose the .crash file that corresponds to your crash)
+clang-10: note: diagnostic msg: 
+
+********************

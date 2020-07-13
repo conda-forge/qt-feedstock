@@ -1,6 +1,69 @@
+# Please keep these at the top for better visability
+declare -a COMMON_CONFIG=()
+COMMON_CONFIG+=(-opensource -confirm-license)
+COMMON_CONFIG+=(-prefix ${PREFIX}
+COMMON_CONFIG+=(-libdir ${PREFIX}/lib)
+COMMON_CONFIG+=(-bindir ${PREFIX}/bin)
+COMMON_CONFIG+=(-headerdir ${PREFIX}/include/qt)
+COMMON_CONFIG+=(-archdatadir ${PREFIX})
+COMMON_CONFIG+=(-datadir ${PREFIX})
+COMMON_CONFIG+=(-I ${PREFIX}/include)
+COMMON_CONFIG+=(-L ${PREFIX}/lib)
+COMMON_CONFIG+=(-nomake examples)
+COMMON_CONFIG+=(-nomake tests)
+COMMON_CONFIG+=(-verbose)
+COMMON_CONFIG+=(-skip wayland)
+COMMON_CONFIG+=(-system-libjpeg)
+COMMON_CONFIG+=(-system-libpng)
+COMMON_CONFIG+=(-system-zlib)
+COMMON_CONFIG+=(-system-sqlite)
+COMMON_CONFIG+=(-plugin-sql-sqlite)
+COMMON_CONFIG+=(-plugin-sql-mysql)
+COMMON_CONFIG+=(-plugin-sql-psql)
+COMMON_CONFIG+=(-qt-pcre)
+COMMON_CONFIG+=(-dbus)
+COMMON_CONFIG+=(-no-libudev)
+
+declare -a LINUX_CONFIG=()
+LINUX_CONFIG+=(-platform linux-g++-64)
+LINUX_CONFIG+=(-sql-sqlite)
+LINUX_CONFIG+=(-sql-mysql)
+LINUX_CONFIG+=(-sql-psql)
+LINUX_CONFIG+=(-xkbcommon)
+LINUX_CONFIG+=(-no-linuxfb)
+LINUX_CONFIG+=(-no-avx)
+LINUX_CONFIG+=(-no-avx2)
+LINUX_CONFIG+=(-cups)
+LINUX_CONFIG+=(-openssl-linked)
+LINUX_CONFIG+=(-openssl)
+
+declare -a MACOS_CONFIG=()
+MACOS_CONFIG+=(-R $PREFIX/lib)
+MACOS_CONFIG+=(-qt-freetype)
+MACOS_CONFIG+=(-no-framework)
+MACOS_CONFIG+=(-no-mtdev)
+MACOS_CONFIG+=(-no-harfbuzz)
+MACOS_CONFIG+=(-no-egl)
+MACOS_CONFIG+=(-no-openssl)
+MACOS_CONFIG+=(-sdk macosx${OSX_SDK_VER})
+
+declare -a WARNING_SUPPRESSIONS=()
+# linux (g++) and macOS (clang-10)
+WARNING_SUPPRESSIONS+=(-Wno-deprecated-declarations)
+WARNING_SUPPRESSIONS+=(-Wno-unused-but-set-variable)
+# May be linux only?
+WARNING_SUPPRESSIONS+=(-Wno-maybe-uninitialized)
+WARNING_SUPPRESSIONS+=(-Wno-expansion-to-defined)
+# May be macOS only?
+WARNING_SUPPRESSIONS+=(-Wno-range-loop-construct)
+WARNING_SUPPRESSIONS+=(-Wno-deprecated-copy)
+
 # Clean config for dirty builds
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true
+
+
+
 
 if [[ ${target_platform} =~ .*linux.* ]]; then
   ln -s "${GXX}" g++ || true
@@ -285,47 +348,9 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
   #    You might need to modify the include and library search paths by editing QMAKE_INCDIR_OPENGL[_ES2],
   #    QMAKE_LIBDIR_OPENGL[_ES2] and QMAKE_LIBS_OPENGL[_ES2] in the mkspec for your platform.
   if [[ ! -f .status.configure ]]; then
-    ./configure -prefix ${PREFIX} \
-                -platform linux-g++-64 \
-                -libdir ${PREFIX}/lib \
-                -bindir ${PREFIX}/bin \
-                -headerdir ${PREFIX}/include/qt \
-                -archdatadir ${PREFIX} \
-                -datadir ${PREFIX} \
-                -I ${PREFIX}/include \
-                -L ${PREFIX}/lib \
+    ./configure "${COMMON_CONFIG[@]}" \
                 "${LIBS_NATURE_ARGS[@]}" \
-                -opensource \
-                -confirm-license \
-                -nomake examples \
-                -nomake tests \
-                -verbose \
-                -skip wayland \
-                -system-libjpeg \
-                -system-libpng \
-                -system-zlib \
-                -system-sqlite \
-                -sql-sqlite \
-                -sql-mysql \
-                -sql-psql \
-                -plugin-sql-sqlite \
-                -plugin-sql-mysql \
-                -plugin-sql-psql \
-                -qt-pcre \
-                -xkbcommon \
-                -dbus \
-                -no-linuxfb \
-                -no-libudev \
-                -no-avx \
-                -no-avx2 \
-                -cups \
-                -openssl-linked \
-                -openssl \
-                -Wno-deprecated-declarations \
-                -Wno-maybe-uninitialized \
-                -Wno-unused-but-set-variable \
-                -Wno-expansion-to-defined \
-                "${QT_CONFIGURE_EXTRA_DEFINES[@]}" \
+                "${WARNING_SUPPRESSIONS[@]}" \
                 "${SKIPS[@]}" 2>&1 | tee configure.log
     if fgrep "QDoc will not be compiled" configure.log; then
       echo "ERROR :: Failed to find libclang, I guess."
@@ -420,43 +445,9 @@ elif [[ ${target_platform} == osx-64 ]]; then
   PATH=${PWD}:${PATH}
   [[ -f .status.configure ]] && rm .status.configure
   if [[ ! -f .status.configure ]]; then
-    ./configure -prefix $PREFIX \
-                -libdir $PREFIX/lib \
-                -bindir $PREFIX/bin \
-                -headerdir $PREFIX/include/qt \
-                -archdatadir $PREFIX \
-                -datadir $PREFIX \
-                -L $PREFIX/lib \
-                -I $PREFIX/include \
-                -R $PREFIX/lib \
+    ./configure "${COMMON_CONFIG[@]}" \
                 "${LIBS_NATURE_ARGS[@]}" \
-                -opensource \
-                -confirm-license \
-                -nomake examples \
-                -nomake tests \
-                -verbose \
-                -skip wayland \
-                -system-libjpeg \
-                -system-libpng \
-                -system-zlib \
-                -system-sqlite \
-                -plugin-sql-sqlite \
-                -plugin-sql-mysql \
-                -plugin-sql-psql \
-                -qt-freetype \
-                -qt-pcre \
-                -no-framework \
-                -dbus \
-                -no-mtdev \
-                -no-harfbuzz \
-                -no-libudev \
-                -no-egl \
-                -no-openssl \
-                -sdk macosx${OSX_SDK_VER} \
-                -Wno-deprecated-copy \
-                -Wno-deprecated-declarations \
-                -Wno-range-loop-construct \
-                -Wno-unused-but-set-variable \
+                "${WARNING_SUPPRESSIONS[@]}" \
                 "${SKIPS[@]}" 2>&1 | tee configure.log
     if [[ ${MINIMAL_BUILD} != yes ]]; then
       if fgrep "QDoc will not be compiled" configure.log; then

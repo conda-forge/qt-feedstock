@@ -404,8 +404,8 @@ elif [[ ${target_platform} == osx-64 ]]; then
   ln -s "${LIBTOOL}" "${PREFIX}"/bin/libtool || true
   chmod +x "${PREFIX}"/bin/libtool
   # Just in-case our strip is better than the system one.
-  ln -s "${STRIP}" strip || true
-  chmod +x strip
+  ln -s "${STRIP}" "${PREFIX}"/bin/strip || true
+  chmod +x "${PREFIX}"/bin/strip
   # Qt passes clang flags to LD (e.g. -stdlib=c++)
   export LD=${CXX}
   PATH=${PWD}:${PATH}
@@ -503,6 +503,10 @@ pushd qtcharts
   make install
 popd
 
+if [[ ${target_platform} == osx-64 ]]; then
+  rm -f "${PREFIX}"/bin/libtool || true
+  rm -f "${PREFIX}"/bin/strip || true
+fi
 
 # Post build setup
 # ----------------

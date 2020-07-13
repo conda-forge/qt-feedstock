@@ -247,37 +247,39 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
   sed -i "s/-isystem//g" "qtbase/mkspecs/common/gcc-base.conf"
   
   export PATH=${PWD}:${PATH}
-  declare -A COS6_MISSING_DEFINES=()
-  declare -a QT_CONFIGURE_EXTRA_DEFINES=()
+  declare -a COS6_CONFIG_EXTRA_DEFINES=()
+  declare -A COS6_CHROMIUM_HACKED_DEFINES=()
 
   # Do not change this to target_platform, we are explicitly working around centos6 things.
   if [[ ${HOST} =~ .*cos6.* ]]; then
-    # Quite a big hack here. These are passed to Qt's configure command-line (or they were but are not currently and maybe should be!)
-    QT_CONFIGURE_EXTRA_DEFINES+=("-D" "_X_INLINE=inline")
-    QT_CONFIGURE_EXTRA_DEFINES+=("-D" "XK_dead_currency=0xfe6f")
-    QT_CONFIGURE_EXTRA_DEFINES+=("-D" "_FORTIFY_SOURCE=2")
-    QT_CONFIGURE_EXTRA_DEFINES+=("-D" "FC_WEIGHT_EXTRABLACK=215")
-    QT_CONFIGURE_EXTRA_DEFINES+=("-D" "FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK")
-    QT_CONFIGURE_EXTRA_DEFINES+=("-D" "GLX_GLXEXT_PROTOTYPES")
+    # Quite a big hack here. These are passed to Qt's configure command-line.
+    COS6_CONFIG_EXTRA_DEFINES+=("-D" "_X_INLINE=inline")
+    COS6_CONFIG_EXTRA_DEFINES+=("-D" "XK_dead_currency=0xfe6f")
+    COS6_CONFIG_EXTRA_DEFINES+=("-D" "_FORTIFY_SOURCE=2")
+    COS6_CONFIG_EXTRA_DEFINES+=("-D" "FC_WEIGHT_EXTRABLACK=215")
+    COS6_CONFIG_EXTRA_DEFINES+=("-D" "FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK")
+    COS6_CONFIG_EXTRA_DEFINES+=("-D" "GLX_GLXEXT_PROTOTYPES")
 
     # Major hack here.
-    # The following macros are missing in cos6 and there are a few files that I have to patch to make it work
-    # Tried giving this as macros to ./configure, but the configure script doesn't pass them to ninja when building chromium.
-    COS6_MISSING_DEFINES["SYN_DROPPED"]="3"
-    COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY1"]="0x2c0"
-    COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY2"]="0x2c1"
-    COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY3"]="0x2c2"
-    COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY4"]="0x2c3"
-    COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY17"]="0x2d0"
-    COS6_MISSING_DEFINES["INPUT_PROP_POINTER"]="0x00"
-    COS6_MISSING_DEFINES["INPUT_PROP_DIRECT"]="0x01"
-    COS6_MISSING_DEFINES["INPUT_PROP_BUTTONPAD"]="0x02"
-    COS6_MISSING_DEFINES["INPUT_PROP_SEMI_MT"]="0x03"
-    COS6_MISSING_DEFINES["INPUT_PROP_MAX"]="0x1f"
-    COS6_MISSING_DEFINES["INPUT_PROP_CNT"]="0x20"
-    COS6_MISSING_DEFINES["ABS_MT_SLOT"]="0x2f"
-    COS6_MISSING_DEFINES["ABS_MT_PRESSURE"]="0x3a"
-    COS6_MISSING_DEFINES["ABS_MT_DISTANCE"]="0x3b"
+    # The following macros are missing in cos6 and there are a few files that I have to patch to make it work/
+    # I tried giving these as macros to ./configure, but the configure script doesn't pass them to ninja when
+    # building chromium. It would be nice to find a way to fix this, or localise the patches into each point of
+    # use in the chromium sources.
+    COS6_CHROMIUM_HACKED_DEFINES["SYN_DROPPED"]="3"
+    COS6_CHROMIUM_HACKED_DEFINES["BTN_TRIGGER_HAPPY1"]="0x2c0"
+    COS6_CHROMIUM_HACKED_DEFINES["BTN_TRIGGER_HAPPY2"]="0x2c1"
+    COS6_CHROMIUM_HACKED_DEFINES["BTN_TRIGGER_HAPPY3"]="0x2c2"
+    COS6_CHROMIUM_HACKED_DEFINES["BTN_TRIGGER_HAPPY4"]="0x2c3"
+    COS6_CHROMIUM_HACKED_DEFINES["BTN_TRIGGER_HAPPY17"]="0x2d0"
+    COS6_CHROMIUM_HACKED_DEFINES["INPUT_PROP_POINTER"]="0x00"
+    COS6_CHROMIUM_HACKED_DEFINES["INPUT_PROP_DIRECT"]="0x01"
+    COS6_CHROMIUM_HACKED_DEFINES["INPUT_PROP_BUTTONPAD"]="0x02"
+    COS6_CHROMIUM_HACKED_DEFINES["INPUT_PROP_SEMI_MT"]="0x03"
+    COS6_CHROMIUM_HACKED_DEFINES["INPUT_PROP_MAX"]="0x1f"
+    COS6_CHROMIUM_HACKED_DEFINES["INPUT_PROP_CNT"]="0x20"
+    COS6_CHROMIUM_HACKED_DEFINES["ABS_MT_SLOT"]="0x2f"
+    COS6_CHROMIUM_HACKED_DEFINES["ABS_MT_PRESSURE"]="0x3a"
+    COS6_CHROMIUM_HACKED_DEFINES["ABS_MT_DISTANCE"]="0x3b"
 
 # OpenGL CDT problems as ever:
 #
@@ -350,8 +352,10 @@ if [[ ${target_platform} =~ .*linux.* ]]; then
   #    QMAKE_LIBDIR_OPENGL[_ES2] and QMAKE_LIBS_OPENGL[_ES2] in the mkspec for your platform.
   if [[ ! -f .status.configure ]]; then
     ./configure "${COMMON_CONFIG[@]}" \
+                "${LINUX_CONFIG[@]}" \
                 "${LIBS_NATURE_ARGS[@]}" \
                 "${WARNING_SUPPRESSIONS[@]}" \
+                "${COS6_CONFIG_EXTRA_DEFINES[@]}" \
                 "${SKIPS[@]}" 2>&1 | tee configure.log
     if fgrep "QDoc will not be compiled" configure.log; then
       echo "ERROR :: Failed to find libclang, I guess."
@@ -447,6 +451,7 @@ elif [[ ${target_platform} == osx-64 ]]; then
   [[ -f .status.configure ]] && rm .status.configure
   if [[ ! -f .status.configure ]]; then
     ./configure "${COMMON_CONFIG[@]}" \
+                "${MACOS_CONFIG[@]}" \
                 "${LIBS_NATURE_ARGS[@]}" \
                 "${WARNING_SUPPRESSIONS[@]}" \
                 "${SKIPS[@]}" 2>&1 | tee configure.log

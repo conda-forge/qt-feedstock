@@ -1,4 +1,4 @@
-From 116fa6945bd8051ac1a8492fc1935c38fa90b8d9 Mon Sep 17 00:00:00 2001
+From 89284f1d784ea3fa6274bb699caedefe69125ab6 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 12 Jul 2020 10:50:27 +0200
 Subject: [PATCH 11/17] qtwebenginec: Add missing EVIOCGPROP
@@ -39,5 +39,5 @@ index d6c07343ce7..64be7adbf74 100644
  
  namespace {
 -- 
-2.27.0
+2.23.0
 

@@ -1,4 +1,4 @@
-From 55b2d1178072da3f2e34912d4775bab06ce33c28 Mon Sep 17 00:00:00 2001
+From 9fc9f0d37bd474fc55e5fdd815433997f097c4f8 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 12 Jul 2020 11:15:35 +0200
 Subject: [PATCH 07/17] qtwebenginec: Use conda_prefix for system_zlib
@@ -35,5 +35,5 @@ index abc06049baf..bbed00d7233 100644
  
  group("zlib") {
 -- 
-2.27.0
+2.23.0
 

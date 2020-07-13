@@ -1,4 +1,4 @@
-From e20746a3d692f7c155128a59df6abe4ee1c8a9d9 Mon Sep 17 00:00:00 2001
+From 392a8acea8626470a98044163c7913332311468d Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 12 Jul 2020 10:53:41 +0200
 Subject: [PATCH 13/17] qtwebenginec: __NR_renameat2 requires glibc >= 2.28
@@ -22,5 +22,5 @@ index 19b825a150d..a45825c66c1 100644
               allowed_command_set_.test(COMMAND_RENAME);
  
 -- 
-2.27.0
+2.23.0
 

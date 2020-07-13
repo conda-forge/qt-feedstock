@@ -1,4 +1,4 @@
-From 77ca0f72de69b88397de7dec51199fc7ea38a77c Mon Sep 17 00:00:00 2001
+From 41366e9147d27f01b45e3c7dba58220f47d73a77 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sun, 12 Jul 2020 10:52:09 +0200
 Subject: [PATCH 12/17] qtwebenginec: Define HAVE_SENDMMSG to 0 when glibc <
@@ -25,5 +25,5 @@ index ce96046e720..9c77ca6bcb1 100644
  #define HAVE_SENDMMSG 0
  #endif
 -- 
-2.27.0
+2.23.0
 

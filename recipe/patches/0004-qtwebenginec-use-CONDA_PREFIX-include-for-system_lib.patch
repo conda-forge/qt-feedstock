@@ -1,4 +1,4 @@
-From 90d99f1b9b194b5d04f70cc092cdf24a809d3f3e Mon Sep 17 00:00:00 2001
+From 8727c255fa37f1ea0c248720ee6941a80980879e Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 10 Dec 2018 15:05:47 -0600
 Subject: [PATCH 04/17] qtwebenginec: use CONDA_PREFIX/include for
@@ -22,5 +22,5 @@ index 6fee0b3b33b..ccd029dd701 100644
  }
  
 -- 
-2.27.0
+2.23.0
 

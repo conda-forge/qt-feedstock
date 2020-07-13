@@ -1,4 +1,4 @@
-From ba433747aaf907ed078099ed9f525ea277c7c0b2 Mon Sep 17 00:00:00 2001
+From 79d8bd4c6798f60fdcd7b4c93f25784eab2d4cc7 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Tue, 23 Jun 2020 22:14:01 +0200
 Subject: [PATCH 05/17] qtwebenginec: Add conda_prefix to gn
@@ -51,5 +51,5 @@ index 390e9f00644..9c4cd3f10c9 100644
  #
  # =============================================
 -- 
-2.27.0
+2.23.0
 

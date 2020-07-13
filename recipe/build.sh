@@ -3,14 +3,15 @@
 rm -f .qmake.stash .qmake.cache || true
 
 if [[ ${target_platform} =~ .*linux.* ]]; then
-  ln -s ${GXX} g++ || true
-  ln -s ${GCC} gcc || true
-  ln -s ${AR} ar || true
-  ln -s ${NM} nm || true
+  ln -s "${GXX}" g++ || true
+  ln -s "${GCC}" gcc || true
+  ln -s "${AR}" ar || true
+  ln -s "${NM}" nm || true
   # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}
-  ln -s ${GCC_AR} gcc-ar || true
+  ln -s "${GCC_AR}" gcc-ar || true
   chmod +x g++ gcc ar nm gcc-ar
 fi
+
 # Compile
 # -------
 chmod +x configure
@@ -394,11 +395,17 @@ elif [[ ${target_platform} == osx-64 ]]; then
   chmod +x xcrun xcodebuild xcode-select
   # Some test runs 'clang -v', but I do not want to add it as a requirement just for that.
   ln -s "${CXX}" ${HOST}-clang || true
+  chmod +x ${HOST}-clang
   # For ltcg we cannot use libtool (or at least not the macOS 10.9 system one) due to lack of LLVM bitcode support.
-  ln -s "${LIBTOOL}" libtool || true
+  # Update, trouble with: "python ../../3rdparty/chromium/build/toolchain/mac/filter_libtool.py" fails with
+  # "lib/python2.7/subprocess.py", line 1047, in _execute_child
+  # OSError: [Errno 2] No such file or directory"
+  # .. trying without this symlink for now
+  ln -s "${LIBTOOL}" "${PREFIX}"/bin/libtool || true
+  chmod +x "${PREFIX}"/bin/libtool
   # Just in-case our strip is better than the system one.
   ln -s "${STRIP}" strip || true
-  chmod +x ${HOST}-clang libtool strip
+  chmod +x strip
   # Qt passes clang flags to LD (e.g. -stdlib=c++)
   export LD=${CXX}
   PATH=${PWD}:${PATH}
@@ -440,6 +447,7 @@ elif [[ ${target_platform} == osx-64 ]]; then
                 -Wno-deprecated-copy \
                 -Wno-deprecated-declarations \
                 -Wno-range-loop-construct \
+                -Wno-unused-but-set-variable \
                 "${SKIPS[@]}" 2>&1 | tee configure.log
     if [[ ${MINIMAL_BUILD} != yes ]]; then
       if fgrep "QDoc will not be compiled" configure.log; then

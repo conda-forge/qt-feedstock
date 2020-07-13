@@ -1,4 +1,4 @@
-From 4848ff6377527b0acc541933df76c97b9d9cafb5 Mon Sep 17 00:00:00 2001
+From 9921828f37d903e674bd090aaaee237ffed17109 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 10 Jul 2020 18:24:40 +0200
 Subject: [PATCH 16/17] qtwebenginec: Attempt to get conda_prefix/include into
@@ -27,5 +27,5 @@ index bcbe6eb2479..6b47726d1ab 100644
  }
  
 -- 
-2.27.0
+2.23.0
 

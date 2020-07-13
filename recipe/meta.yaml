@@ -51,16 +51,18 @@ source:
       - patches/0012-qtbase-Add-hardcoded-for-now-to-centos6-64-bit-AMD64.patch
       # - patches/0011-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-.patch
 
-      # qtwinextras
+      # qtwinextras (TODO :: Fix the commit msg to begin with "qtwinextras:"" then add apply/regen instructions)
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
       # qtwebengine (Qt part)
-      # regenerate with `git format-patch -2`
+      # apply with `pushd qtwebengine && git am -3 -p2 ${RECIPE_DIR}/patches/*-qtwebengine-*.patch ; popd`
+      # regenerate with `git format-patch -2 --src-prefix=a/qtwebengine/ --dst-prefix=b/qtwebengine/`
       - patches/0001-qtwebengine-run-gn-verbosely.patch
       - patches/0002-qtwebengine-Relax-glibc-restriction-from-2.16-to-2.1.patch
 
       # qtwebenginec (chromium submodule)
-      # regenerate with `git format-patch --src-prefix=a/qtwebengine/src/3rdparty/ --dst-prefix=b/qtwebengine/src/3rdparty/ -17`
+      # apply with `pushd qtwebengine/src/3rdparty/ && git am -3 -p4 ${RECIPE_DIR}/patches/*-qtwebenginec-*.patch ; popd`
+      # regenerate with `git format-patch --src-prefix=a/qtwebengine/src/3rdparty/ --dst-prefix=b/qtwebengine/src/3rdparty/ -18`
       - patches/0001-qtwebenginec-Fix-compilation-on-Windows-VSC.patch
       - patches/0002-qtwebenginec-Fix-VS2017-builds.patch
       - patches/0003-qtwebenginec-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
@@ -78,8 +80,9 @@ source:
       - patches/0015-qtwebenginec-Some-glibc-kernel-define-hacks.patch
       - patches/0016-qtwebenginec-Attempt-to-get-conda_prefix-include-int.patch
       - patches/0017-qtwebenginec-include-m-p-i-b-native_struct.mojom.h-i.patch
+      - patches/0018-qtwebenginec-Define-V4L2_CID_AUTO_EXPOSURE_BIAS-if-n.patch
 
-      # qtscript
+      # qtwinextras (TODO :: Fix the commit msg to begin with "qtscript:"" then add apply/regen instructions)
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 
   - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
@@ -121,7 +124,14 @@ build:
 
 requirements:
   build:
-    - ccache
+    # ccache might be causing an ICE on macOS.
+    # Stack dump:
+    #   0.	Program arguments: ../../../../../_build_env/bin/clang++ -MMD -MF obj/skia/skcms/skcms.o.d -DOFFICIAL_BUILD -DTOOLKIT_QT -D_LIBCPP_HAS_NO_ALIGNED_ALLOCATION -DCR_XCODE_VERSION=1030 -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES=0 -DNDEBUG -DNVALGRIND -DDYNAMIC_ANNOTATIONS_ENABLED=0 -I../../3rdparty/chromium/third_party/skia/include/third_party/skcms -Igen -I../../3rdparty/chromium -w -std=c11 -fno-strict-aliasing -fstack-protector -Wno-unknown-attributes -Wno-unknown-pragmas -Wno-unknown-warning-option -fcolor-diagnostics -fmerge-all-constants -arch x86_64 -Wall -Wextra -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -Wimplicit-fallthrough -Wthread-safety -Wextra-semi -Wunguarded-availability -Wno-missing-field-initializers -Wno-unused-parameter -Wno-c++11-narrowing -Wno-unneeded-internal-declaration -Wno-undefined-var-template -Wno-ignored-pragma-optimize -Wno-implicit-int-float-conversion -Wno-final-dtor-non-final-class -Wno-bitwise-conditional-parentheses -Wno-builtin-assume-aligned-alignment -Wno-deprecated-copy -Oz -fno-omit-frame-pointer -g0 -isysroot ../../../../../../../../MacOSX10.14.sdk -mmacosx-version-min=10.13 -fvisibility=hidden -Wheader-hygiene -Wstring-conversion -Wtautological-overlap-compare -Wno-parentheses-equality -Wno-tautological-compare -Wno-undefined-bool-conversion -Wno-tautological-undefined-compare -std=c++14 -stdlib=libc++ -fno-exceptions -fno-rtti -fvisibility-inlines-hidden -c ../../3rdparty/chromium/third_party/skia/third_party/skcms/skcms.cc -o obj/skia/skcms/skcms.o 
+    #   1.	<eof> parser at end of file
+    #   2.	Code generation
+    #   3.	Running pass 'Function Pass Manager' on module '../../3rdparty/chromium/third_party/skia/third_party/skcms/skcms.cc'.
+    #   4.	Running pass 'X86 DAG->DAG Instruction Selection' on function '@_ZN3skxL8exec_opsEPK2OpPPKvPKcPci'
+    # - ccache
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - patch                              # [not win]

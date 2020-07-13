@@ -1,4 +1,4 @@
-From 030b8d4617eefa021b380d66c7c656d495c813d6 Mon Sep 17 00:00:00 2001
+From dfb161456ed784d331445c0de9522a433f8a41ff Mon Sep 17 00:00:00 2001
 From: Peter Varga <pvarga@inf.u-szeged.hu>
 Date: Tue, 2 Jun 2020 08:19:28 +0200
 Subject: [PATCH 02/17] qtwebenginec: Fix VS2017 builds
@@ -67,5 +67,5 @@ index 2c838f37382..a4ed8a12f0e 100644
  #include "torque-generated/exported-macros-assembler-tq.h"
  
 -- 
-2.27.0
+2.23.0
 

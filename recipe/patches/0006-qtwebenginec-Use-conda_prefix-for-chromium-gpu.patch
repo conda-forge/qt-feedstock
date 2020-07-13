@@ -1,4 +1,4 @@
-From 8e410af2c86792eabcac8706f5d5a6c557caf2ca Mon Sep 17 00:00:00 2001
+From 011c5ddee7854d32d3a05550c8be01ff205416bb Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sat, 11 Jul 2020 21:01:47 +0200
 Subject: [PATCH 06/17] qtwebenginec: Use conda_prefix for chromium/gpu
@@ -46,5 +46,5 @@ index 260f5016abb..f6b0b62f8b2 100644
  
  source_set("test_support") {
 -- 
-2.27.0
+2.23.0
 

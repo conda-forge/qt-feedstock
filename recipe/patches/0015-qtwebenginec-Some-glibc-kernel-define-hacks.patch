@@ -1,4 +1,4 @@
-From 97f29f7c405f41b7f93dcdd2ff9990d1434dce32 Mon Sep 17 00:00:00 2001
+From 5a14197d74cd7ee79977d4ca85d759fc93163f92 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Fri, 10 Jul 2020 12:08:08 +0200
 Subject: [PATCH 15/17] qtwebenginec: Some glibc/kernel define hacks
@@ -135,5 +135,5 @@ index b58c0eda0b5..e62cbea5e41 100644
  
  #include "perfetto/base/build_config.h"
 -- 
-2.27.0
+2.23.0
 

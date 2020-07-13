@@ -1,4 +1,4 @@
-From dc38d626d76ecda4ba01e73c104a7877b0535c14 Mon Sep 17 00:00:00 2001
+From 6c94f7365fc02fab5ffb9ed8af987b721b853fd1 Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Mon, 27 Aug 2018 16:54:41 +0100
 Subject: [PATCH 09/17] qtwebenginec: macOS 10.11 support: Define
@@ -24,5 +24,5 @@ index c58128fce66..db4906acaf8 100644
  
  #include "base/mac/sdk_forward_declarations.h"
 -- 
-2.27.0
+2.23.0
 

@@ -1,0 +1,29 @@
+From 940c03f68cb1ff37a0e1e34c90f2fe059b643e84 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Mon, 13 Jul 2020 00:02:41 +0200
+Subject: [PATCH 18/18] qtwebenginec: Define V4L2_CID_AUTO_EXPOSURE_BIAS if
+ necessary
+
+---
+ chromium/media/capture/video/linux/v4l2_capture_delegate.cc | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/media/capture/video/linux/v4l2_capture_delegate.cc b/qtwebengine/src/3rdparty/chromium/media/capture/video/linux/v4l2_capture_delegate.cc
+index 3c33f9f6ca3..feaadc2f320 100644
+--- a/qtwebengine/src/3rdparty/chromium/media/capture/video/linux/v4l2_capture_delegate.cc
++++ b/qtwebengine/src/3rdparty/chromium/media/capture/video/linux/v4l2_capture_delegate.cc
+@@ -41,6 +41,11 @@ using media::mojom::MeteringMode;
+ #define V4L2_PIX_FMT_INVZ v4l2_fourcc('I', 'N', 'V', 'Z')
+ #endif
+ 
++#ifndef V4L2_CID_AUTO_EXPOSURE_BIAS
++// https://elixir.bootlin.com/linux/v4.7/source/include/uapi/linux/v4l2-controls.h#L687
++#define V4L2_CID_AUTO_EXPOSURE_BIAS		(V4L2_CID_CAMERA_CLASS_BASE+19)
++#endif
++
+ namespace media {
+ 
+ namespace {
+-- 
+2.27.0
+

@@ -29,9 +29,9 @@ index 38c28832250..68501f5d6eb 100755
 +      pass
 +    if options.print_bin_path:
 +      if conda_prefix:
-+        print(conda_prefix)
++        print(conda_prefix+'/bin/')
 +      else:
-+        print('/usr/bin')
++        print('/usr/bin/')
 +    return '10.14'
 + 
    # If we are passed the developer dir, then we don't need to call xcode-select.

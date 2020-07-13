@@ -1,4 +1,4 @@
-From 6370e46106509bd7475f850e9bbfb505c307a8aa Mon Sep 17 00:00:00 2001
+From 871596ff5a1449b39922fd1e30ade9d48c1ae65d Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Sat, 11 Jul 2020 20:01:39 +0200
 Subject: [PATCH 17/17] qtwebenginec: include m/p/i/b/native_struct.mojom.h in
@@ -39,5 +39,5 @@ index d25a0e07692..467caa7e507 100644
  
  void UtilityProcessHost::BindHostReceiver(
 -- 
-2.27.0
+2.23.0
 

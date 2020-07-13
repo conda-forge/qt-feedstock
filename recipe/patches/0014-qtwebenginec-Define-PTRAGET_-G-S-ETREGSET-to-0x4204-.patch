@@ -1,4 +1,4 @@
-From d70f4c814b2aef6cfe448380cb0df517e138860b Mon Sep 17 00:00:00 2001
+From 635ea930c204b93f3cee5d0a34fad9da41ee77df Mon Sep 17 00:00:00 2001
 From: Ray Donnelly <mingw.android@gmail.com>
 Date: Thu, 9 Jul 2020 23:16:50 +0200
 Subject: [PATCH 14/17] qtwebenginec: Define PTRAGET_{G,S}ETREGSET to 0x4204
@@ -28,5 +28,5 @@ index d9789a7133e..072126ffb47 100644
  
  #if !defined(OS_NACL_NONSFI)
 -- 
-2.27.0
+2.23.0
 

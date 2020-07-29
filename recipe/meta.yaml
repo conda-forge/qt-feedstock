@@ -239,7 +239,7 @@ test:
 
 about:
   home: http://qt-project.org
-  license: LGPL-3.0
+  license: LGPL-3.0-only
   license_file: LICENSE.LGPLv3
   summary: 'Qt is a cross-platform application and UI framework.'
   description: |

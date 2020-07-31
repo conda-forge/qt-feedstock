@@ -119,7 +119,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       SKIPS+=(-skip); SKIPS+=(qt3d)
     fi
     declare -A COS6_MISSING_DEFINES
-    if [[ ${HOST} == *cos6* ]]; then
+    if [[ ${_CONDA_PYTHON_SYSCONFIGDATA_NAME} == *cos6* ]]; then
       COS6_MISSING_DEFINES["SYN_DROPPED"]="3"
       COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY1"]="0x2c0"
       COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY2"]="0x2c1"

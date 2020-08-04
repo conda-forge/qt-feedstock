@@ -122,7 +122,7 @@ requirements:
     - {{ cdt('libcom_err') }}            # [linux]
 
     # For fontconfig + freetype
-    - pkg-config                         # [linux]
+    - pkg-config                         # [unix]
     - make                               # [unix]
     - ninja
     - ruby >=2.5                         # [linux]

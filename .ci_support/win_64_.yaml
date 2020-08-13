@@ -2,6 +2,8 @@ channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
+curl:
+- '7'
 cxx_compiler:
 - vs2017
 icu:
@@ -13,6 +15,8 @@ libpng:
 openssl:
 - 1.1.1
 pin_run_as_build:
+  curl:
+    max_pin: x
   icu:
     max_pin: x
   jpeg:

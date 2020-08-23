@@ -43,6 +43,10 @@ fi
 # For QDoc
 export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 
+# Remove protobuf which is pulled in indirectly
+rm -rf $PREFIX/include/google/protobuf
+rm -rf $PREFIX/bin/protoc
+
 # Problems: https://bugreports.qt.io/browse/QTBUG-61158
 #           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
 # Something to do with BUILD.gn files and/or ninja
@@ -155,7 +159,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # LIBRARY_PATH=/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/../../../../x86_64-conda_cos6-linux-gnu/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/../../../../x86_64-conda_cos6-linux-gnu/lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib/
     # .. this is probably my fault.
     # Had been trying with:
-    #   -sysroot ${BUILD_PREFIX}/${HOST}/sysroot 
+    #   -sysroot ${BUILD_PREFIX}/${HOST}/sysroot
     # .. but it probably requires changing -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 to -L /usr/lib64
     ./configure -prefix ${PREFIX} \
                 -libdir ${PREFIX}/lib \
@@ -238,9 +242,6 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     # Qt passes clang flags to LD (e.g. -stdlib=c++)
     export LD=${CXX}
     PATH=${PWD}:${PATH}
-    # Remove protobuf which is pulled in indirectly
-    rm -rf $PREFIX/include/google/protobuf
-    rm -rf $PREFIX/bin/protoc
 
     # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
     if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX10.12.sdk" ]]; then

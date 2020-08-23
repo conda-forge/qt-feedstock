@@ -120,7 +120,7 @@ requirements:
     - {{ cdt('libgcrypt') }}             # [linux]
     - {{ cdt('libgpg-error') }}          # [linux]
     - {{ cdt('libcom_err') }}            # [linux]
-    - {{ cdt('libxcb') }}            # [linux]
+    - {{ cdt('libxcb') }}                # [linux]
 
     # For fontconfig + freetype
     - pkg-config                         # [unix]
@@ -175,6 +175,7 @@ requirements:
     - mysql-devel                        # [not win]
     - postgresql                         # [not win]
     - zlib
+    - libxcb                             # [linux]
     # We cannot install OpenSSL into the prefix when building qtwebengine
     # on linux as BoringSSL and OpenSSL then conflict with each other.
     - openssl                            # [win]
@@ -186,6 +187,7 @@ requirements:
     - libclang
   run:
     - openssl                            # [not osx]
+    - libxcb                             # [linux]
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
     - {{ pin_compatible("libclang") }}

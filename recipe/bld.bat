@@ -111,9 +111,7 @@ popd
 :SKIP_REBUILD_CONFIGURE_EXE
 
 :: qtwebengine needs python 2
-:: conda create -y --prefix "%SRC_DIR%\python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2 || echo "ok"
-curl -fSsLO https://repo.anaconda.com/miniconda/Miniconda2-latest-Windows-x86_64.exe
-Miniconda2-latest-Windows-x86_64.exe /InstallationType=JustMe /S /D=%SRC_DIR%\python2_hack
+conda.exe create -y --prefix "%SRC_DIR%\python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
 set "PATH=%SRC_DIR%\python2_hack;%PATH%"
 
 :: See http://doc-snapshot.qt-project.org/qt5-5.4/windows-requirements.html

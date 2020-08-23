@@ -43,6 +43,10 @@ fi
 # For QDoc
 export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 
+# Remove protobuf which is pulled in indirectly
+rm -rf $PREFIX/include/google/protobuf
+rm -rf $PREFIX/bin/protoc
+
 # Problems: https://bugreports.qt.io/browse/QTBUG-61158
 #           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
 # Something to do with BUILD.gn files and/or ninja
@@ -56,6 +60,10 @@ export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 # grep -R include_dirs . | grep ninja | grep -v _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
 # grep -R include_dirs . | grep ninja | grep    _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
 # Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
+
+# qtwebengine needs python 2
+conda create -y --prefix "${SRC_DIR}/python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
+export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
 
 if [[ ${HOST} =~ .*linux.* ]]; then
 
@@ -115,7 +123,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       SKIPS+=(-skip); SKIPS+=(qt3d)
     fi
     declare -A COS6_MISSING_DEFINES
-    if [[ ${HOST} == *cos6* ]]; then
+    if [[ ${_CONDA_PYTHON_SYSCONFIGDATA_NAME} == *cos6* ]]; then
       COS6_MISSING_DEFINES["SYN_DROPPED"]="3"
       COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY1"]="0x2c0"
       COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY2"]="0x2c1"
@@ -151,7 +159,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # LIBRARY_PATH=/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/../../../../x86_64-conda_cos6-linux-gnu/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib/../lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/bin/../lib/gcc/x86_64-conda_cos6-linux-gnu/7.3.0/../../../../x86_64-conda_cos6-linux-gnu/lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/lib/:/opt/conda/conda-bld/qt_1549795295295/_build_env/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib/
     # .. this is probably my fault.
     # Had been trying with:
-    #   -sysroot ${BUILD_PREFIX}/${HOST}/sysroot 
+    #   -sysroot ${BUILD_PREFIX}/${HOST}/sysroot
     # .. but it probably requires changing -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 to -L /usr/lib64
     ./configure -prefix ${PREFIX} \
                 -libdir ${PREFIX}/lib \
@@ -199,7 +207,10 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
                 -D GLX_GLXEXT_PROTOTYPES \
-                "${SKIPS[@]}"
+                "${SKIPS[@]}" \
+                QMAKE_LFLAGS+="-Wl,-rpath,$PREFIX/lib -Wl,-rpath-link,$PREFIX/lib -L$PREFIX/lib"
+
+
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
 #                -ltcg \

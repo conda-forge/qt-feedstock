@@ -1,61 +1,39 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.12'
 c_compiler:
-- gcc
+- clang
 c_compiler_version:
-- '7'
+- '10'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- gxx
+- clangxx
 cxx_compiler_version:
-- '7'
-dbus:
-- '1'
-docker_image:
-- condaforge/linux-anvil-comp7
-expat:
-- '2.2'
-fontconfig:
-- '2.13'
-freetype:
-- 2.9.1
-glib:
-- '2.58'
-gst_plugins_base:
-- 1.14.4
-gstreamer:
-- 1.14.4
+- '10'
 icu:
-- '64.2'
+- '67'
 jpeg:
 - '9'
 libpng:
 - '1.6'
-libxml2:
-- '2.9'
+macos_machine:
+- x86_64-apple-darwin13.4.0
+macos_min_version:
+- '10.9'
 nspr:
 - '4.20'
 nss:
 - '3.39'
 openssl:
-- 1.1.1a
+- 1.1.1
 pin_run_as_build:
-  dbus:
-    max_pin: x
-  expat:
-    max_pin: x.x
-  fontconfig:
-    max_pin: x
-  freetype:
-    max_pin: x
   icu:
     max_pin: x
   jpeg:
     max_pin: x
   libpng:
-    max_pin: x.x
-  libxml2:
     max_pin: x.x
   nspr:
     max_pin: x
@@ -63,15 +41,13 @@ pin_run_as_build:
     max_pin: x
   openssl:
     max_pin: x.x.x
-  readline:
-    max_pin: x
   sqlite:
     max_pin: x
   zlib:
     max_pin: x.x
-readline:
-- '8.0'
 sqlite:
 - '3'
+target_platform:
+- osx-64
 zlib:
 - '1.2'

@@ -238,6 +238,9 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     # Qt passes clang flags to LD (e.g. -stdlib=c++)
     export LD=${CXX}
     PATH=${PWD}:${PATH}
+    # Remove protobuf which is pulled in indirectly
+    rm -rf $PREFIX/include/google/protobuf
+    rm -rf $PREFIX/bin/protoc
 
     # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
     if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX10.12.sdk" ]]; then

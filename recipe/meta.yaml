@@ -221,7 +221,7 @@ test:
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
     - {{ cdt('libxcb') }}                # [linux]
-    - {{ cdt('libexpat-devel') }}        # [linux]
+    - {{ cdt('expat-devel') }}        # [linux]
   files:
     - test/hello.pro
     - test/main-qtwebengine.cpp

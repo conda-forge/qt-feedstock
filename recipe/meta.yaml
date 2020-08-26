@@ -83,10 +83,8 @@ build:
 
 requirements:
   build:
-    - {{ compiler('cxx') }}              # [not win]
-    - {{ compiler('c') }}                # [not win]
-    - vs2017_win-64                      # [win64]
-    - vs2017_win-32                      # [win32]
+    - {{ compiler('cxx') }}
+    - {{ compiler('c') }}
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
     - {{ cdt('libxext-devel') }}         # [linux]

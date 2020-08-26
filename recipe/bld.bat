@@ -2,6 +2,9 @@
 setlocal EnableDelayedExpansion
 set SHORT_VERSION=%PKG_VERSION:~0,-2%
 
+:: You might need to follow this advice if attempting to build on VS2019 against the v142 toolset:
+:: https://developercommunity.visualstudio.com/content/problem/518592/2019-fatal-error-c1083-cannot-open-include-file-at.html
+
 :: You may not always want this when doing dirty builds (debugging late stage
 :: problems, but if debugging configure time issues you probably do want this).
 if exist config.cache del config.cache
@@ -17,15 +20,16 @@ if exist config.cache del config.cache
 :: Webengine requires either working OpenGL drivers or
 :: Angle (therefore DirectX >= 11). This works on some
 :: VMs and not others.  Windows 7 VirtualBox instantly
-:: aborts when loading Spyder sSo we've had to disable
+:: aborts when loading Spyder so we've had to disable
 :: it globally.
 :: Using Mesa from MSYS2 is mentioned as a workaround:
-::  http://wiki.qt.io/Cross-compiling-Mesa-for-Windows
+::   http://wiki.qt.io/Cross-compiling-Mesa-for-Windows
 :: `set QT_OPENGL=software` forces Qt5 to use that but
 :: but when I tried it it was too buggy; Spyder crashed a
-:: little bit later, though it worked for Carlos.
+:: little bit later, though it worked for Carlos Cordoba.
 set WEBBACKEND=qtwebengine
 set QT_LIBINFIX=_conda
+:: set QT_LIBINFIX=
 
 where perl.exe
 if %ERRORLEVEL% neq 0 (
@@ -89,9 +93,12 @@ rem These must have trailing spaces to avoid misinterpretation as 5>>, etc.
 echo QT_MAJOR_VERSION = %QTVERMAJ% >> Makefile
 echo QT_MINOR_VERSION = %QTVERMIN% >> Makefile
 echo QT_PATCH_VERSION = %QTVERPAT% >> Makefile
-echo CXX = cl>>Makefile
+echo CXX = cl.exe>>Makefile
 :: This is a hack, CFLAGS_CRT becomes part of CFLAGS_EXTRA, overwriting it.
-echo CFLAGS_CRT = -DQT_LIBINFIX=\"%QT_LIBINFIX%\" >> Makefile
+if "%QT_LIBINFIX%" neq "" (
+  echo CFLAGS_CRT = -DQT_LIBINFIX=\"%QT_LIBINFIX%\" >> Makefile
+  set QTC_LIBINFIX=-qtlibinfix %QT_LIBINFIX%
+)
 echo EXTRA_CXXFLAGS =>>Makefile
 rem This must have a trailing space.
 echo QTSRC = %QTSRC% >> Makefile
@@ -110,9 +117,9 @@ popd
 popd
 :SKIP_REBUILD_CONFIGURE_EXE
 
-:: qtwebengine needs python 2
-conda.exe create -y --prefix "%SRC_DIR%\python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
-set "PATH=%SRC_DIR%\python2_hack;%PATH%"
+if "%MINIMAL_BUILD%"=="yes" (
+  set SKIPS=-skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d -skip qtcharts
+)
 
 :: See http://doc-snapshot.qt-project.org/qt5-5.4/windows-requirements.html
 :: this needs to be CALLed due to an exit statement at the end of configure:
@@ -121,7 +128,9 @@ set "PATH=%SRC_DIR%\python2_hack;%PATH%"
 :: ends up containing:
 :: QMAKE_PRL_TARGET = Qt5Bootstrap.condad.lib
 :: for some odd reason.
-call configure ^
+mkdir b
+pushd b
+call ../configure ^
      -prefix %LIBRARY_PREFIX% ^
      -libdir %LIBRARY_LIB% ^
      -bindir %LIBRARY_BIN% ^
@@ -152,40 +161,104 @@ call configure ^
      -system-sqlite ^
      -system-zlib ^
      -plugin-sql-sqlite ^
-     -qtlibinfix %QT_LIBINFIX% ^
-     -verbose
+     %SKIPS% ^
+     %QTC_LIBINFIX% ^
+     -verbose 2>&1 | tee configure.log
 
-if %errorlevel% neq 0 exit /b %errorlevel%
-
+if %errorlevel% neq 0 (
+  echo ERROR :: configure failed, see %PWD%\configure.log
+  exit /b %errorlevel%
+)
 :: re-enable echoing which is disabled by configure
 echo on
+
+:: We see this problem with qmake not getting installed (does not exist in the source location, is in bin instead)
+:: 	cd qmake\ && ( if not exist Makefile.qmake-aux C:\qt5b\qt-5.15.0_min_66\work\b\qtbase\bin\qmake.exe -o Makefile.qmake-aux C:\qt5b\qt-5.15.0_min_66\work\qtbase\qmake\qmake-aux.pro ) && C:\qt5b\qt-5.15.0_min_66\_build_env\jom.exe -f Makefile.qmake-aux install
+:: 	C:\qt5b\qt-5.15.0_min_66\_build_env\jom.exe -f Makefile.qmake-aux.Release install
+:: 	C:\qt5b\qt-5.15.0_min_66\work\b\qtbase\bin\qmake.exe -install qinstall -exe C:\qt5b\qt-5.15.0_min_66\work\b\qtbase\qmake\qmake.exe C:\qt5b\qt-5.15.0_min_66\_h_env\Library\bin\qmake.exe
+:: Error copying C:\qt5b\qt-5.15.0_min_66\work\b\qtbase\qmake\qmake.exe to C:\qt5b\qt-5.15.0_min_66\_h_env\Library\bin\qmake.exe: Cannot open C:\qt5b\qt-5.15.0_min_66\work\b\qtbase\qmake\qmake.exe for input
+if exist qtbase\qmake\qmake.exe goto ok_qmake_exists_build
+  echo WARNING :: qtbase\qmake\qmake.exe does not exist, and for some reason Qt thinks that is the source for installation here.
+  echo WARNING :: `jom -U install` will fail without this workaround of `copy qtbase\bin\qmake.exe qtbase\qmake\qmake.exe`
+  copy qtbase\bin\qmake.exe qtbase\qmake\qmake.exe
+:ok_qmake_exists_build
 
 :: To get a much quicker turnaround you can add this: (remember also to add the hat symbol after -plugin-sql-sqlite)
 ::     -skip %WEBBACKEND% -skip qtwebsockets -skip qtwebchannel -skip qtwayland -skip qtwinextras -skip qtsvg -skip qtsensors ^
 ::     -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools
 
-jom -U release
+jom -U release 2>&1 | tee build-release.1.log
 :: Hooray for racey build systems. You may get a failure about a QtWebengine .stamp file being missing. You may not. Who knows?
-jom -U release
-if %errorlevel% neq 0 exit /b %errorlevel%
+if %errorlevel% neq 0 (
+  echo WARNING :: jom -U release failed, see %PWD%\build-release.1.log
+  jom -U release 2>&1 | tee build-release.2.log
+:: Stupidy we see an attempt *by* C:\qt5b\qt-5.15.0_17\_h_env\Library\bin\qmake.exe to copy a non-existant C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake.exe on-top of itself!
+::  cd qmake\ && ( if not exist Makefile.qmake-aux C:\qt5b\qt-5.15.0_17\work\qtbase\bin\qmake.exe -o Makefile.qmake-aux C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake-aux.pro ) && C:\qt5b\qt-5.15.0_17\_build_env\jom.exe -f Makefile.qmake-aux install
+::  C:\qt5b\qt-5.15.0_17\_build_env\jom.exe -f Makefile.qmake-aux.Release install
+::  C:\qt5b\qt-5.15.0_17\work\qtbase\bin\qmake.exe -install qinstall -exe C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake.exe C:\qt5b\qt-5.15.0_17\_h_env\Library\bin\qmake.exe
+::    Error copying C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake.exe to C:\qt5b\qt-5.15.0_17\_h_env\Library\bin\qmake.exe: Cannot open C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\qmake.exe for input
+::    jom: C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\Makefile.qmake-aux.Release [install_qmake] Error 3
+::    jom: C:\qt5b\qt-5.15.0_17\work\qtbase\qmake\Makefile.qmake-aux [release-install] Error 2
+  if %errorlevel% neq 0 (
+    echo ERROR :: jom -U release failed, see %PWD%\build-release.1.log and %PWD%\build-release.2.log
+    exit /b %errorlevel%
+  )
+)
+
 echo Finished `jom -U release`
 jom -U install
 :: I expect raciness here too:
 jom -U install
-if %errorlevel% neq 0 exit /b %errorlevel%
-echo Finished `jom -U install`
+
+:: if %errorlevel% equ 0 goto ok_we_made_it
+::   echo ERROR :: Could not get a final `jom -U install` to work. Bailing ..
+::   exit /b %errorlevel%
+:: :ok_we_made_it
+
 pushd qtbase
+  jom -U install
   jom -U install_mkspecs
   if %errorlevel% neq 0 exit /b %errorlevel%
-  echo Finished `jom -U install_mkspecs`
+  echo Finished `jom -U install` and `jom -U install_mkspecs`
 popd
 
 if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
-echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. Copying it from qtbase\bin\qmake.exe
+echo WARNING :: %LIBRARY_BIN%\qmake.exe does not exist, `jom -U install` did not install it; very strange. Copying it from qtbase\bin\qmake.exe
 copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
 :ok_qmake_exists
+
+jom -U install 2>&1 | tee build-install.1.log
+if %errorlevel% neq 0 (
+  echo ERROR :: jom -U install failed, see %PWD%\build-install.1.log
+  jom -U install 2>&1 | tee build-install.2.log
+  if %errorlevel% neq 0 (
+    echo ERROR :: jom -U install failed, see %PWD%\build-install.1.log and %PWD%\build-install.2.log
+    exit /b %errorlevel%
+  )
+)
 
 :: To rewrite qt.conf contents per conda environment
 if not exist %PREFIX%\Scripts mkdir %PREFIX%\Scripts
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"
 if %errorlevel% neq 0 exit /b %errorlevel%
+
+:: On Windows, Qt seems to find and build this automatically. I am not sure
+:: it installs it. Either way, another build in the source dir fails with:
+:: ASSERT: "fileName.isEmpty() || isAbsolutePath(fileName)" in file C:\opt\conda\conda-bld\qt-5.15.0_min_14\work\qtbase\qmake\library\ioutils.cpp, line 54
+:: build. Still, an in-source build is more likely to succeed, so if we find
+:: one has not been done (for whatever reason), then prefer that.
+:: if exist qtcharts\Makefile (
+::  echo "INFO :: Found qtcharts\Makefile, trying to jom install it"
+::  pushd qtcharts
+::    jom install INSTALL_ROOT=%PREFIX%
+::  :: mkdir qtcharts-build
+::  :: pushd qtcharts-build
+::  ::  %LIBRARY_BIN%\qmake.exe -r ..\qtcharts\qtcharts.pro
+::  :: echo "INFO :: Did not find qtcharts\Makefile, building in qtcharts src dir"
+::) else (
+::  pushd qtcharts
+::    %LIBRARY_BIN%\qmake.exe -r .\qtcharts.pro
+::    jom
+::    jom install INSTALL_ROOT=%PREFIX%
+::  popd
+::)

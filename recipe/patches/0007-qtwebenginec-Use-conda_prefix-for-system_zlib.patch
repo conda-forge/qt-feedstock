@@ -1,0 +1,39 @@
+From 9fc9f0d37bd474fc55e5fdd815433997f097c4f8 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 12 Jul 2020 11:15:35 +0200
+Subject: [PATCH 07/17] qtwebenginec: Use conda_prefix for system_zlib
+
+---
+ chromium/build/linux/unbundle/zlib.gn            | 2 ++
+ chromium/third_party/pdfium/third_party/BUILD.gn | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/build/linux/unbundle/zlib.gn b/qtwebengine/src/3rdparty/chromium/build/linux/unbundle/zlib.gn
+index 020fc7e935a..0ddb5533dab 100644
+--- a/qtwebengine/src/3rdparty/chromium/build/linux/unbundle/zlib.gn
++++ b/qtwebengine/src/3rdparty/chromium/build/linux/unbundle/zlib.gn
+@@ -11,6 +11,8 @@ shim_headers("zlib_shim") {
+ 
+ config("system_zlib") {
+   defines = [ "USE_SYSTEM_ZLIB=1" ]
++  include_dirs = [ conda_prefix+"/include" ]
++  lib_dirs = [ conda_prefix+"/lib" ]
+ }
+ 
+ source_set("zlib") {
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/pdfium/third_party/BUILD.gn b/qtwebengine/src/3rdparty/chromium/third_party/pdfium/third_party/BUILD.gn
+index abc06049baf..bbed00d7233 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/pdfium/third_party/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/third_party/pdfium/third_party/BUILD.gn
+@@ -358,6 +358,8 @@ if (!build_with_chromium) {
+ config("system_zlib_config") {
+   libs = [ "z" ]
+   defines = [ "USE_SYSTEM_ZLIB" ]
++  include_dirs = [ conda_prefix+"/include" ]
++  lib_dirs = [ conda_prefix+"/lib" ]
+ }
+ 
+ group("zlib") {
+-- 
+2.23.0
+

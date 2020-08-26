@@ -3,7 +3,26 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.12.6" %}
+{% set version = "5.15.0" %}
+# Valid is release, debug, debug-and-release
+{% set libs_nature = os.environ.get('CONDA_BUILD_QT_LIBS_NATURE', '') %}
+{% if libs_nature == 'debug' %}
+  {% set libs_pkg_suffix = "_d" %}
+{% elif libs_nature == 'debug-and-release' %}
+  {% set libs_pkg_suffix = "_dr" %}
+{% else %}
+  {% set libs_nature = 'release' %}
+  {% set libs_pkg_suffix = "" %}
+{% endif %}
+# You can use this to cut down on the number of modules built. Of course the Qt package will not be of
+# much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
+# size of the libraries or when doing difficult (yearly!) updates.
+{% set minimal_build = os.environ.get('CONDA_BUILD_QT_MINIMAL_BUILD', '') %}
+{% if minimal_build == 'yes' %}
+  {% set libs_pkg_suffix = "_minimal" %}
+{% else %}
+  {% set minimal_build = 'no' %}
+{% endif %}
 
 package:
   name: qt
@@ -11,7 +30,7 @@ package:
 
 source:
   - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    md5: 287d71e71ebd97f77220873e7b131b1a
+    md5: 610a228dba6ef469d14d145b71ab3b88
     patches:
 
       # qtbase
@@ -23,30 +42,47 @@ source:
       - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
       - patches/0007-qtbase-Disable-kTLSProtocol13-for-macOS-10.12.patch
       - patches/0008-qtbase-Define-kIOSurfaceSuccess-if-it-is-not-defined.patch
-      - patches/0009-qtbase-fix-hardcoded-sysroot-path.patch
-      # - patches/9999-qtbase-use-better-gcc-optimize-size.patch
-      # https://bugreports.qt.io/browse/QTBUG-76777
-      - patches/qcore_for_sdk_10_13_1.patch
+      # I do not think this is the correct approach. Something needs fixing, but
+      # I think it is not just limited to GL which is all this patch handles.
+      # Pretty sure we need to rebuild all CDTs, rdonnelly channel has these.
+      # - patches/0009-qtbase-Fix-harcoded-sysroot-paths.patch
+      - patches/0010-qtbase-Add-DISABLE_WINRT_DEPRECATION-for-WinSDK-10.0.patch
+      - patches/0011-qtbase-Fix-QMAKE_LIBDIR_X11-and-QMAKE_LIBDIR_OPENGL-.patch
+      - patches/0012-qtbase-Add-hardcoded-for-now-to-centos6-64-bit-AMD64.patch
+      # - patches/0011-qtbase-Add-debugging-to-debug-qtConfResolveLibs-and-.patch
 
-      # qtwinextras
+      # qtwinextras (TODO :: Fix the commit msg to begin with "qtwinextras:"" then add apply/regen instructions)
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
-      # qtwebengine
-      - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
-      - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      - patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
-      - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
-      - patches/0006-qtwebengine-run-gn-verbosely.patch
-      # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
-      - patches/0008-qtwebengine-link-gn-to-librt.patch
-      - patches/0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
-      - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
-      - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
-      - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
-      - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
-      - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
+      # qtwebengine (Qt part)
+      # apply with `pushd qtwebengine && git am -3 -p2 ${RECIPE_DIR}/patches/*-qtwebengine-*.patch ; popd`
+      # regenerate with `git format-patch -2 --src-prefix=a/qtwebengine/ --dst-prefix=b/qtwebengine/`
+      - patches/0001-qtwebengine-run-gn-verbosely.patch
+      - patches/0002-qtwebengine-Relax-glibc-restriction-from-2.16-to-2.1.patch
 
-      # qtscript
+      # qtwebenginec (chromium submodule)
+      # apply with `pushd qtwebengine/src/3rdparty/ && git am -3 -p4 ${RECIPE_DIR}/patches/*-qtwebenginec-*.patch ; popd`
+      # regenerate with `git format-patch --src-prefix=a/qtwebengine/src/3rdparty/ --dst-prefix=b/qtwebengine/src/3rdparty/ -18`
+      - patches/0001-qtwebenginec-Fix-compilation-on-Windows-VSC.patch
+      - patches/0002-qtwebenginec-Fix-VS2017-builds.patch
+      - patches/0003-qtwebenginec-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
+      - patches/0004-qtwebenginec-use-CONDA_PREFIX-include-for-system_lib.patch
+      - patches/0005-qtwebenginec-Add-conda_prefix-to-gn.patch
+      - patches/0006-qtwebenginec-Use-conda_prefix-for-chromium-gpu.patch
+      - patches/0007-qtwebenginec-Use-conda_prefix-for-system_zlib.patch
+      - patches/0008-qtwebenginec-Use-conda_prefix-for-ui_gl.patch
+      - patches/0009-qtwebenginec-macOS-10.11-support-Define-NSEventTypeS.patch
+      - patches/0010-qtwebenginec-link-gn-to-librt.patch
+      - patches/0011-qtwebenginec-Add-missing-EVIOCGPROP.patch
+      - patches/0012-qtwebenginec-Define-HAVE_SENDMMSG-to-0-when-glibc-2..patch
+      - patches/0013-qtwebenginec-__NR_renameat2-requires-glibc-2.28.patch
+      - patches/0014-qtwebenginec-Define-PTRAGET_-G-S-ETREGSET-to-0x4204-.patch
+      - patches/0015-qtwebenginec-Some-glibc-kernel-define-hacks.patch
+      - patches/0016-qtwebenginec-Attempt-to-get-conda_prefix-include-int.patch
+      - patches/0017-qtwebenginec-include-m-p-i-b-native_struct.mojom.h-i.patch
+      - patches/0018-qtwebenginec-Define-V4L2_CID_AUTO_EXPOSURE_BIAS-if-n.patch
+
+      # qtwinextras (TODO :: Fix the commit msg to begin with "qtscript:"" then add apply/regen instructions)
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 
   - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
@@ -68,9 +104,8 @@ source:
 
 build:
   number: 0
+  skip: True  # [win and vc != 14]
   detect_binary_files_with_prefix: true
-  # QtWebEngine fails on Linux unless we merge
-  merge_build_host: true  # [linux]
   run_exports:
     - {{ pin_subpackage('qt', max_pin='x.x') }}
   missing_dso_whitelist:  # [osx]
@@ -79,11 +114,29 @@ build:
     - /usr/lib/libresolv.9.dylib  # [osx]
     - /usr/lib/libsandbox.1.dylib  # [osx]
     - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
+  {% if libs_pkg_suffix != '' %}
+  string: h{{ PKG_HASH }}{{ libs_pkg_suffix }}
+  {% endif %}
+  rpath_patcher: patchelf
+  script_env:
+    - CONDA_BUILD_QT_LIBS_NATURE
+    - MINIMAL_BUILD={{ minimal_build }}
 
 requirements:
   build:
+    # ccache might be causing an ICE on macOS.
+    # Stack dump:
+    #   0.	Program arguments: ../../../../../_build_env/bin/clang++ -MMD -MF obj/skia/skcms/skcms.o.d -DOFFICIAL_BUILD -DTOOLKIT_QT -D_LIBCPP_HAS_NO_ALIGNED_ALLOCATION -DCR_XCODE_VERSION=1030 -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES=0 -DNDEBUG -DNVALGRIND -DDYNAMIC_ANNOTATIONS_ENABLED=0 -I../../3rdparty/chromium/third_party/skia/include/third_party/skcms -Igen -I../../3rdparty/chromium -w -std=c11 -fno-strict-aliasing -fstack-protector -Wno-unknown-attributes -Wno-unknown-pragmas -Wno-unknown-warning-option -fcolor-diagnostics -fmerge-all-constants -arch x86_64 -Wall -Wextra -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -Wimplicit-fallthrough -Wthread-safety -Wextra-semi -Wunguarded-availability -Wno-missing-field-initializers -Wno-unused-parameter -Wno-c++11-narrowing -Wno-unneeded-internal-declaration -Wno-undefined-var-template -Wno-ignored-pragma-optimize -Wno-implicit-int-float-conversion -Wno-final-dtor-non-final-class -Wno-bitwise-conditional-parentheses -Wno-builtin-assume-aligned-alignment -Wno-deprecated-copy -Oz -fno-omit-frame-pointer -g0 -isysroot ../../../../../../../../MacOSX10.14.sdk -mmacosx-version-min=10.13 -fvisibility=hidden -Wheader-hygiene -Wstring-conversion -Wtautological-overlap-compare -Wno-parentheses-equality -Wno-tautological-compare -Wno-undefined-bool-conversion -Wno-tautological-undefined-compare -std=c++14 -stdlib=libc++ -fno-exceptions -fno-rtti -fvisibility-inlines-hidden -c ../../3rdparty/chromium/third_party/skia/third_party/skcms/skcms.cc -o obj/skia/skcms/skcms.o 
+    #   1.	<eof> parser at end of file
+    #   2.	Code generation
+    #   3.	Running pass 'Function Pass Manager' on module '../../3rdparty/chromium/third_party/skia/third_party/skcms/skcms.cc'.
+    #   4.	Running pass 'X86 DAG->DAG Instruction Selection' on function '@_ZN3skxL8exec_opsEPK2OpPPKvPKcPci'
+    - ccache
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
+    - patch                              # [not win]
+    - m2-patch                           # [win]
+    - m2-coreutils                       # [win]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
     - {{ cdt('libxext-devel') }}         # [linux]
@@ -111,13 +164,19 @@ requirements:
     - {{ cdt('libxxf86vm') }}            # [linux]
     - {{ cdt('libxxf86vm-devel') }}      # [linux]
     - {{ cdt('cups-devel') }}            # [linux]
-    - {{ cdt('libxcb') }}                # [linux]
-
+    - {{ cdt('libcom_err') }}            # [linux]
+    - {{ cdt('libcom_err') }}            # [linux]
+    - {{ cdt('gnutls') }}                # [linux]
+    - {{ cdt('avahi-libs') }}            # [linux]
+    - {{ cdt('libgpg-error') }}          # [linux]
+    - {{ cdt('libtasn1') }}              # [linux]
     # For fontconfig + freetype
-    - pkg-config                         # [unix]
+    - pkg-config                         # [linux]
     - make                               # [unix]
+    # Probably only needed for WebEngine
+    - python 2.7*
     - ninja
-    - ruby >=2.5                         # [linux]
+    - ruby                               # [linux]
     - bison                              # [linux]
     - flex                               # [linux]
     - gperf                              # [linux]
@@ -126,7 +185,6 @@ requirements:
     - m2-flex                            # [win]
     - m2-patch                           # [win]
     - jom                                # [win]
-    - curl                               # [win]
     - perl 5.*
     # Add readline here, so that newest readline is used.
     # Otherwise build and host might end up with two different versions
@@ -155,15 +213,17 @@ requirements:
     # - libopus                            # [unix]
     # - libvpx                             # [unix]
     # - ffmpeg                             # [unix]
-    - expat                              # [linux]
-    - libevent                           # [linux]
     - icu
     - jpeg
     - libpng
+{% if minimal_build == 'no' %}
+    - expat                              # [linux]
+    - libxml2                            # [linux]
     - nspr                               # [unix]
     - nss                                # [unix]
+{% endif %}
     - sqlite
-    - mysql-devel                        # [not win]
+    - mysql                              # [not win]
     - postgresql                         # [not win]
     - zlib
     - libxcb                             # [linux]
@@ -179,13 +239,18 @@ requirements:
   run:
     - openssl                            # [not osx]
     - libxcb                             # [linux]
+    {% if minimal_build == 'no' %}
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
+    {% endif %}
+    - {{ pin_compatible("mysql") }}  # [not win]
     - {{ pin_compatible("libclang") }}
-  run_constrained:                                            # [osx]
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
+  run_constrained:                                             # [osx]
+    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.14") }}  # [osx]
 
 test:
+  script_env:
+    - MINIMAL_BUILD={{ minimal_build }}
   requires:
     - {{ compiler('cxx') }}
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
@@ -213,21 +278,26 @@ test:
     - {{ cdt('libxfixes') }}             # [linux]
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
-    - {{ cdt('libxcb') }}                # [linux]
-    - {{ cdt('expat-devel') }}        # [linux]
+    - {{ cdt('at-spi-devel') }}          # [linux]
   files:
-    - test/hello.pro
-    - test/main-qtwebengine.cpp
+    - xcodebuild
+    - xcrun
     - test/main.cpp
     - test/main.qml
     - test/qml.qrc
     - test/qrc_qml.cpp
+{% if minimal_build == 'no' %}
+    - test/hello.pro
     - test/qtwebengine.pro
-    - xcodebuild
-    - xcrun
+    - test/main-qtwebengine.cpp
+{% else %}
+    - test/hello-minimal.pro
+{% endif %}
   commands:
+{% if minimal_build == 'no' %}
     - if not exist %LIBRARY_BIN%\\Qt5WebEngine.dll exit 1                  # [win]
     - test -f $PREFIX/lib/libQt5WebEngine${SHLIB_EXT}                      # [unix]
+{% endif %}
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]

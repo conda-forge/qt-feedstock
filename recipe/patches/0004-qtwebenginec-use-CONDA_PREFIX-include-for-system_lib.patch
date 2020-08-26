@@ -1,0 +1,26 @@
+From 8727c255fa37f1ea0c248720ee6941a80980879e Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Mon, 10 Dec 2018 15:05:47 -0600
+Subject: [PATCH 04/17] qtwebenginec: use CONDA_PREFIX/include for
+ system_libjpeg
+
+---
+ chromium/third_party/BUILD.gn | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn b/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn
+index 6fee0b3b33b..ccd029dd701 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/third_party/BUILD.gn
+@@ -32,6 +32,8 @@ if (use_system_libjpeg) {
+ }
+ 
+ config("system_libjpeg_config") {
++  include_dirs = [ getenv("CONDA_PREFIX")+"/include" ]
++  libs = [ "jpeg" ]
+   defines = [ "USE_SYSTEM_LIBJPEG" ]
+ }
+ 
+-- 
+2.23.0
+

@@ -1,0 +1,29 @@
+From 41366e9147d27f01b45e3c7dba58220f47d73a77 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 12 Jul 2020 10:52:09 +0200
+Subject: [PATCH 12/17] qtwebenginec: Define HAVE_SENDMMSG to 0 when glibc <
+ 2.14
+
+---
+ chromium/net/socket/udp_socket_posix.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/net/socket/udp_socket_posix.h b/qtwebengine/src/3rdparty/chromium/net/socket/udp_socket_posix.h
+index ce96046e720..9c77ca6bcb1 100644
+--- a/qtwebengine/src/3rdparty/chromium/net/socket/udp_socket_posix.h
++++ b/qtwebengine/src/3rdparty/chromium/net/socket/udp_socket_posix.h
+@@ -34,7 +34,11 @@
+ #if defined(__ANDROID__) && defined(__aarch64__)
+ #define HAVE_SENDMMSG 1
+ #elif defined(OS_LINUX)
++#if defined(__GLIBC__) && defined(__GLIBC_MINOR__) && (__GLIBC__ == 2) && (__GLIBC_MINOR__ < 14)
++#define HAVE_SENDMMSG 0
++#else
+ #define HAVE_SENDMMSG 1
++#endif
+ #else
+ #define HAVE_SENDMMSG 0
+ #endif
+-- 
+2.23.0
+

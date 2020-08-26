@@ -1,0 +1,139 @@
+From 5a14197d74cd7ee79977d4ca85d759fc93163f92 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Fri, 10 Jul 2020 12:08:08 +0200
+Subject: [PATCH 15/17] qtwebenginec: Some glibc/kernel define hacks
+
+---
+ .../crashpad/crashpad/compat/linux/sys/mman.cc       | 10 ++++++++++
+ .../crashpad/util/linux/exception_handler_client.cc  | 12 ++++++++++++
+ .../crashpad/crashpad/util/linux/ptracer.cc          |  8 ++++++++
+ .../crashpad/util/linux/scoped_pr_set_ptracer.cc     |  4 ++++
+ .../crashpad/crashpad/util/linux/thread_info.cc      |  2 ++
+ .../crashpad/crashpad/util/misc/time_linux.cc        |  4 ++++
+ .../perfetto/include/perfetto/base/time.h            |  4 ++++
+ 7 files changed, 44 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/compat/linux/sys/mman.cc b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/compat/linux/sys/mman.cc
+index 12aaa2c7dff..1066a4e0982 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/compat/linux/sys/mman.cc
++++ b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/compat/linux/sys/mman.cc
+@@ -22,6 +22,16 @@
+ 
+ extern "C" {
+ 
++#if !defined(SYS_memfd_create)
++#define __NR_memfd_create 319
++#define SYS_memfd_create __NR_memfd_create
++#endif
++
++#if !defined(SYS_timerfd_create)
++#define __NR_timerfd_create 322
++#define SYS_timerfd_create __NR_timerfd_create
++#endif
++
+ int memfd_create(const char* name, unsigned int flags) {
+   using MemfdCreateType = int (*)(const char*, int);
+   static const MemfdCreateType next_memfd_create =
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/exception_handler_client.cc b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/exception_handler_client.cc
+index 98edb306365..1bd890e17e7 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/exception_handler_client.cc
++++ b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/exception_handler_client.cc
+@@ -12,6 +12,18 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
++#if !defined(PR_SET_PTRACER)
++#define PR_SET_PTRACER 0x59616d61
++#endif
++
++#if !defined(PTRACE_GETREGSET)
++#define PTRACE_GETREGSET 0x4204
++#endif
++
++#if !defined(PTRACE_SETREGSET)
++#define PTRACE_SETREGSET 0x4205
++#endif
++
+ #include "util/linux/exception_handler_client.h"
+ 
+ #include <errno.h>
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/ptracer.cc b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/ptracer.cc
+index c6c92299464..e88d0057997 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/ptracer.cc
++++ b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/ptracer.cc
+@@ -12,6 +12,14 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
++#if !defined(PTRACE_GETREGSET)
++#define PTRACE_GETREGSET (__ptrace_request)0x4204
++#endif
++
++#if !defined(PTRACE_SETREGSET)
++#define PTRACE_SETREGSET (__ptrace_request)0x4205
++#endif
++
+ #include "util/linux/ptracer.h"
+ 
+ #include <errno.h>
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/scoped_pr_set_ptracer.cc b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/scoped_pr_set_ptracer.cc
+index c7aeefc6407..e883cde7308 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/scoped_pr_set_ptracer.cc
++++ b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/scoped_pr_set_ptracer.cc
+@@ -21,6 +21,10 @@
+ 
+ namespace crashpad {
+ 
++#if !defined(PR_SET_PTRACER)
++#define PR_SET_PTRACER 0x59616d61
++#endif
++
+ ScopedPrSetPtracer::ScopedPrSetPtracer(pid_t pid, bool may_log)
+     : success_(false), may_log_(may_log) {
+   success_ = prctl(PR_SET_PTRACER, pid, 0, 0, 0) == 0;
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/thread_info.cc b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/thread_info.cc
+index ec84f536040..83b1ed83bf3 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/thread_info.cc
++++ b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/linux/thread_info.cc
+@@ -12,6 +12,8 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
++#include <sys/types.h>
++#include <cstdint>
+ #include "util/linux/thread_info.h"
+ 
+ #include <string.h>
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/misc/time_linux.cc b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/misc/time_linux.cc
+index bc73533c972..d291842f151 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/misc/time_linux.cc
++++ b/qtwebengine/src/3rdparty/chromium/third_party/crashpad/crashpad/util/misc/time_linux.cc
+@@ -18,6 +18,10 @@
+ 
+ namespace crashpad {
+ 
++#if !defined(CLOCK_BOOTTIME)
++#define CLOCK_BOOTTIME 7
++#endif
++
+ bool GetBootTime(timespec* boot_time) {
+   timespec uptime;
+   if (clock_gettime(CLOCK_BOOTTIME, &uptime) != 0) {
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/perfetto/include/perfetto/base/time.h b/qtwebengine/src/3rdparty/chromium/third_party/perfetto/include/perfetto/base/time.h
+index b58c0eda0b5..e62cbea5e41 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/perfetto/include/perfetto/base/time.h
++++ b/qtwebengine/src/3rdparty/chromium/third_party/perfetto/include/perfetto/base/time.h
+@@ -19,6 +19,10 @@
+ 
+ #include <time.h>
+ 
++#if !defined(CLOCK_BOOTTIME)
++#define CLOCK_BOOTTIME 7
++#endif
++
+ #include <chrono>
+ 
+ #include "perfetto/base/build_config.h"
+-- 
+2.23.0
+

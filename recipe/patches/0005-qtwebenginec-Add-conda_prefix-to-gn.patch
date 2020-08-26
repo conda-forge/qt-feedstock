@@ -1,0 +1,55 @@
+From 79d8bd4c6798f60fdcd7b4c93f25784eab2d4cc7 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Tue, 23 Jun 2020 22:14:01 +0200
+Subject: [PATCH 05/17] qtwebenginec: Add conda_prefix to gn
+
+---
+ chromium/.gn                         | 2 ++
+ chromium/build/config/BUILDCONFIG.gn | 4 ++++
+ chromium/build/config/features.gni   | 2 ++
+ 3 files changed, 8 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/.gn b/qtwebengine/src/3rdparty/chromium/.gn
+index d342302f1d4..63d1948ded9 100644
+--- a/qtwebengine/src/3rdparty/chromium/.gn
++++ b/qtwebengine/src/3rdparty/chromium/.gn
+@@ -49,6 +49,8 @@ default_args = {
+   # Changes some setup for the Crashpad build to set them to build against
+   # Chromium's zlib, base, etc.
+   crashpad_dependencies = "chromium"
++#
++#  conda_prefix = ""
+ }
+ 
+ # These are the targets to check headers for by default. The files in targets
+diff --git a/qtwebengine/src/3rdparty/chromium/build/config/BUILDCONFIG.gn b/qtwebengine/src/3rdparty/chromium/build/config/BUILDCONFIG.gn
+index 340ea804e46..a864af8da34 100644
+--- a/qtwebengine/src/3rdparty/chromium/build/config/BUILDCONFIG.gn
++++ b/qtwebengine/src/3rdparty/chromium/build/config/BUILDCONFIG.gn
+@@ -172,6 +172,10 @@ declare_args() {
+ 
+ assert(!(is_debug && is_official_build), "Can't do official debug builds")
+ 
++declare_args() {
++  conda_prefix = ""
++}
++
+ # ==============================================================================
+ # TOOLCHAIN SETUP
+ # ==============================================================================
+diff --git a/qtwebengine/src/3rdparty/chromium/build/config/features.gni b/qtwebengine/src/3rdparty/chromium/build/config/features.gni
+index 390e9f00644..9c4cd3f10c9 100644
+--- a/qtwebengine/src/3rdparty/chromium/build/config/features.gni
++++ b/qtwebengine/src/3rdparty/chromium/build/config/features.gni
+@@ -33,6 +33,8 @@ declare_args() {
+   use_gio = is_linux && !is_chromeos && !is_chromecast
+ 
+   use_qt = false
++#
++#  conda_prefix = ""
+ }
+ #
+ # =============================================
+-- 
+2.23.0
+

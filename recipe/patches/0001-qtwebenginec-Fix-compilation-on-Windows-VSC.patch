@@ -1,0 +1,39 @@
+From 8ceac12dbb17025b868690271af2d53ac49ed4f9 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 28 Jun 2020 00:03:48 +0200
+Subject: [PATCH 01/17] qtwebenginec: Fix compilation on Windows/VSC.
+
+* add missing include <cctype> for std::isspace
+
+From: https://github.com/google/perfetto/commit/db8546e1b9735fb6b1203104122f9bc5eb453437
+---
+ .../importers/systrace/systrace_trace_parser.cc              | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc b/qtwebengine/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
+index 33d5cb1f6f6..bbadfc2e4d2 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
++++ b/qtwebengine/src/3rdparty/chromium/third_party/perfetto/src/trace_processor/importers/systrace/systrace_trace_parser.cc
+@@ -27,6 +27,7 @@
+ #include "src/trace_processor/track_tracker.h"
+ 
+ #include <inttypes.h>
++#include <cctype>
+ #include <string>
+ #include <unordered_map>
+ 
+@@ -37,9 +38,9 @@ namespace {
+ std::string SubstrTrim(const std::string& input) {
+   std::string s = input;
+   s.erase(s.begin(), std::find_if(s.begin(), s.end(),
+-                                  [](int ch) { return !std::isspace(ch); }));
++                                  [](char ch) { return !std::isspace(ch); }));
+   s.erase(std::find_if(s.rbegin(), s.rend(),
+-                       [](int ch) { return !std::isspace(ch); })
++                       [](char ch) { return !std::isspace(ch); })
+               .base(),
+           s.end());
+   return s;
+-- 
+2.23.0
+

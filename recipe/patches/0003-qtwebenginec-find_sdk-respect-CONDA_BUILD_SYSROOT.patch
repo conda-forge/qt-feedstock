@@ -1,0 +1,50 @@
+From 9aa060feab9e9996a975caf1a8224af1cf0e9b6c Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Tue, 23 Jun 2020 16:44:29 +0200
+Subject: [PATCH 03/17] qtwebenginec: find_sdk respect CONDA_BUILD_SYSROOT
+
+---
+ chromium/build/mac/find_sdk.py | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py b/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py
+index 38c28832250..68501f5d6eb 100755
+--- a/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py
++++ b/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py
+@@ -66,6 +66,25 @@ def main():
+   min_sdk_version = args[0]
+ 
+ 
++  # Avoid this nonsense, and it really is nonsense (options.sdk_path does nothing)
++  if 'CONDA_BUILD_SYSROOT' in os.environ:
++    sysroot = os.environ['CONDA_BUILD_SYSROOT']
++    if options.print_sdk_path:
++      print(sysroot)
++    conda_prefix = None
++    try:
++      conda_prefix = os.environ['PREFIX']
++      if not conda_prefix:
++        conda_prefix = osx.environ['CONDA_PREFIX']
++    except:
++      pass
++    if options.print_bin_path:
++      if conda_prefix:
++        print(conda_prefix+'/bin/')
++      else:
++        print('/usr/bin/')
++    return '10.14'
++ 
+   # If we are passed the developer dir, then we don't need to call xcode-select.
+   # This is important to avoid since we want to minimize dependencies on the
+   # xcode toolchain.
+@@ -122,7 +141,5 @@ def main():
+ 
+ 
+ if __name__ == '__main__':
+-  if sys.platform != 'darwin':
+-    raise Exception("This script only runs on Mac")
+   print(main())
+   sys.exit(0)
+-- 
+2.23.0
+

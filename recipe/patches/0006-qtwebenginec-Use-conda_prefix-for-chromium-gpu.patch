@@ -1,0 +1,50 @@
+From 011c5ddee7854d32d3a05550c8be01ff205416bb Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sat, 11 Jul 2020 21:01:47 +0200
+Subject: [PATCH 06/17] qtwebenginec: Use conda_prefix for chromium/gpu
+
+---
+ chromium/gpu/command_buffer/common/BUILD.gn | 1 +
+ chromium/gpu/ipc/client/BUILD.gn            | 2 ++
+ chromium/gpu/ipc/service/BUILD.gn           | 2 ++
+ 3 files changed, 5 insertions(+)
+
+diff --git a/qtwebengine/src/3rdparty/chromium/gpu/command_buffer/common/BUILD.gn b/qtwebengine/src/3rdparty/chromium/gpu/command_buffer/common/BUILD.gn
+index 8ebd59e38f2..326b91529cb 100644
+--- a/qtwebengine/src/3rdparty/chromium/gpu/command_buffer/common/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/gpu/command_buffer/common/BUILD.gn
+@@ -144,6 +144,7 @@ source_set("gles2_sources") {
+   public_deps = [
+     ":common",
+   ]
++  include_dirs = [ conda_prefix+"/include" ]
+ }
+ 
+ source_set("raster_sources") {
+diff --git a/qtwebengine/src/3rdparty/chromium/gpu/ipc/client/BUILD.gn b/qtwebengine/src/3rdparty/chromium/gpu/ipc/client/BUILD.gn
+index a0ce8932fdc..b8dc2e13bdb 100644
+--- a/qtwebengine/src/3rdparty/chromium/gpu/ipc/client/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/gpu/ipc/client/BUILD.gn
+@@ -46,4 +46,6 @@ source_set("ipc_client_sources") {
+   public_deps = [
+     "//ipc",
+   ]
++  # For xcb/xcb.h
++  include_dirs = [ conda_prefix+"/include" ]
+ }
+diff --git a/qtwebengine/src/3rdparty/chromium/gpu/ipc/service/BUILD.gn b/qtwebengine/src/3rdparty/chromium/gpu/ipc/service/BUILD.gn
+index 260f5016abb..f6b0b62f8b2 100644
+--- a/qtwebengine/src/3rdparty/chromium/gpu/ipc/service/BUILD.gn
++++ b/qtwebengine/src/3rdparty/chromium/gpu/ipc/service/BUILD.gn
+@@ -151,6 +151,8 @@ jumbo_component("service") {
+   if (enable_vulkan) {
+     deps += [ "//gpu/vulkan/init" ]
+   }
++  # For xcb/xcb.h (does nothing?)
++  include_dirs = [ conda_prefix+"/include" ]
+ }
+ 
+ source_set("test_support") {
+-- 
+2.23.0
+

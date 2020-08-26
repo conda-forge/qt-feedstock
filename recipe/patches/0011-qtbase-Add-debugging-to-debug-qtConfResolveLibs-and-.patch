@@ -1,0 +1,41 @@
+From be71951aef012a51b51d022baa84315eefb8c773 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 10 Feb 2019 11:23:34 +0100
+Subject: [PATCH 11/11] qtbase: Add debugging to debug qtConfResolveLibs and
+ also to configuring qtbase in general.
+
+Change-Id: I463e2990872e7156565d4d312ae2b7d8506f0761
+---
+ configure                         | 4 ++--
+ mkspecs/features/qt_configure.prf | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/qtbase/configure b/qtbase/configure
+index 35f273982d..4692668746 100755
+--- a/qtbase/configure
++++ b/qtbase/configure
+@@ -851,7 +851,7 @@ if [ -n "$CFG_TOPLEVEL" ]; then
+ fi
+ 
+ if [ -n "$CFG_HOST_QT_TOOLS_PATH" ]; then
+-    "$CFG_HOST_QT_TOOLS_PATH/qmake" -qtconf "$QTCONFFILE" "$relpathMangled" -- "$@"
++    "$CFG_HOST_QT_TOOLS_PATH/qmake" -qtconf "$QTCONFFILE" "$relpathMangled" -d -d -- "$@"
+ else
+-    "$outpath/bin/qmake" "$relpathMangled" -- "$@"
++    "$outpath/bin/qmake" "$relpathMangled" -d -d -- "$@"
+ fi
+diff --git a/qtbase/mkspecs/features/qt_configure.prf b/qtbase/mkspecs/features/qt_configure.prf
+index 6537d98c5d..b37bc83c29 100644
+--- a/qtbase/mkspecs/features/qt_configure.prf
++++ b/qtbase/mkspecs/features/qt_configure.prf
+@@ -540,6 +540,7 @@ defineReplace(qtGccSysrootifiedPaths) {
+ # libs-var, libs, in-paths
+ defineTest(qtConfResolveLibs) {
+     for (path, 3): \
++                qtLog("None of [$$val_escape(lcan)] found in [$$val_escape(paths)] and global paths. EXTRA_LIBDIR=[$$val_escape(EXTRA_LIBDIR)] QMAKE_DEFAULT_LIBDIRS=[$$val_escape(QMAKE_DEFAULT_LIBDIRS)] .. unused QMAKE_SYSROOT=[$$val_escape(QMAKE_SYSROOT)].")
+         pre_lflags += -L$$path
+     $$1 = $$pre_lflags $$2
+     export($$1)
+-- 
+2.27.0
+

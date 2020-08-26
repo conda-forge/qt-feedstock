@@ -1,0 +1,31 @@
+From d0595ab2b558dfe25eacfe9de0c2e07c2b473aee Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Sun, 5 Jul 2020 15:27:50 +0200
+Subject: [PATCH] qtbase: Add (hardcoded for now to centos6, 64-bit AMD64)
+ sysroot to QMAKE_LFLAGS
+
+I think I want to do this a different way though. The current goal is for config.tests/opengl to work. We will see what
+this breaks though.
+---
+ mkspecs/linux-g++-64/qmake.conf | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/qtbase/mkspecs/linux-g++-64/qmake.conf b/qtbase/mkspecs/linux-g++-64/qmake.conf
+index 1b52301451..9d2afc34f1 100644
+--- a/qtbase/mkspecs/linux-g++-64/qmake.conf
++++ b/qtbase/mkspecs/linux-g++-64/qmake.conf
+@@ -12,7 +12,10 @@ QMAKE_INCREMENTAL_STYLE = sublib
+ include(../common/linux.conf)
+ 
+ QMAKE_CFLAGS            = -m64
+-QMAKE_LFLAGS            = -m64
++# This is needed so that config.tests/opengl links correctly:
++# QMAKE_LFLAGS            = -m64 -Wl,-rpath-link,@BUILD_PREFIX@/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64
++# It also may work in some cases to use -Wl,-rpath-link,@PREFIX@/lib but if adding that I think preferring sysroot is best:
++QMAKE_LFLAGS            = -m64 -Wl,-rpath-link,@BUILD_PREFIX@/x86_64-conda_cos6-linux-gnu/sysroot/usr/lib64:@PREFIX@/lib
+ 
+ include(../common/gcc-base-unix.conf)
+ include(../common/g++-unix.conf)
+-- 
+2.27.0
+

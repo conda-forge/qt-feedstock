@@ -160,8 +160,10 @@ requirements:
     - icu
     - jpeg
     - libpng
-    - nspr                               # [unix]
-    - nss                                # [unix]
+    # Remove hard pinnings when a new version of conda-forge-pinnings is out
+    # https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/748
+    - nspr 4                             # [unix]
+    - nss 3                              # [unix]
     - sqlite
     - mysql-devel                        # [not win]
     - postgresql                         # [not win]
@@ -179,8 +181,6 @@ requirements:
   run:
     - openssl                            # [not osx]
     - libxcb                             # [linux]
-    - {{ pin_compatible("nss") }}        # [unix]
-    - {{ pin_compatible("nspr") }}       # [unix]
     - {{ pin_compatible("libclang") }}
   run_constrained:                                            # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]

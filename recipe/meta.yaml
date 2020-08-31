@@ -178,6 +178,8 @@ requirements:
     - libclang
   run:
     - openssl                            # [not osx]
+    - {{ pin_compatible("nss") }}        # [unix]
+    - {{ pin_compatible("nspr") }}       # [unix]
     - libxcb                             # [linux]
     - {{ pin_compatible("libclang") }}
   run_constrained:                                            # [osx]

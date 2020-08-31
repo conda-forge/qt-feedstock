@@ -37,9 +37,9 @@ libpng:
 libxml2:
 - '2.9'
 nspr:
-- '4.20'
+- '4'
 nss:
-- '3.39'
+- '3'
 openssl:
 - 1.1.1
 pin_run_as_build:

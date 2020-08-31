@@ -23,9 +23,9 @@ macos_machine:
 macos_min_version:
 - '10.9'
 nspr:
-- '4.20'
+- '4'
 nss:
-- '3.39'
+- '3'
 openssl:
 - 1.1.1
 pin_run_as_build:

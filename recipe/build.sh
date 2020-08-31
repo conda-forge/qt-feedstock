@@ -152,6 +152,13 @@ if [[ ${HOST} =~ .*linux.* ]]; then
       done
     fi
 
+    if [ ${target_platform} == "linux-aarch64" ] || [ ${target_platform} == "linux-ppc64le" ]; then
+        # The -reduce-relations option doesn't seem to pass for aarch64 and ppc64le
+        REDUCE_RELOCATIONS=
+    else
+        REDUCE_RELOCATIONS=-reduce-relocations
+    fi
+
     # ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 is because our compilers don't look in sysroot/usr/lib64
     # CentOS7 has:
     # LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/4.8.5/:/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../:/lib/:/usr/lib/
@@ -195,7 +202,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -no-avx \
                 -no-avx2 \
                 -optimize-size \
-                -reduce-relocations \
+                ${REDUCE_RELOCATIONS} \
                 -cups \
                 -openssl-linked \
                 -openssl \

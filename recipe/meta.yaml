@@ -3,7 +3,7 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.12.6" %}
+{% set version = "5.12.9" %}
 
 package:
   name: qt
@@ -11,7 +11,7 @@ package:
 
 source:
   - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    md5: 287d71e71ebd97f77220873e7b131b1a
+    md5: fa2646280cf38180689c29c393cddd05
     patches:
 
       # qtbase

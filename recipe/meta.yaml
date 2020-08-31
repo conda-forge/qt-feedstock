@@ -68,6 +68,8 @@ source:
 
 build:
   number: 0
+  # Reduce resources on CIs, build just for linux
+  skip: true  # [osx or win]
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
   merge_build_host: true  # [linux]

@@ -1,9 +1,15 @@
+BUILD:
+- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
 - '7'
+cdt_arch:
+- aarch64
+cdt_name:
+- cos7
 channel_sources:
-- conda-forge,defaults
+- conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -13,7 +19,7 @@ cxx_compiler_version:
 dbus:
 - '1'
 docker_image:
-- condaforge/linux-anvil-comp7
+- condaforge/linux-anvil-aarch64
 expat:
 - '2.2'
 fontconfig:
@@ -78,6 +84,6 @@ readline:
 sqlite:
 - '3'
 target_platform:
-- linux-64
+- linux-aarch64
 zlib:
 - '1.2'

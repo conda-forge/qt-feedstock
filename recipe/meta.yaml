@@ -84,6 +84,7 @@ requirements:
   build:
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
+    - ld64                               # [osx]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
     - {{ cdt('libxext-devel') }}         # [linux]

@@ -49,8 +49,6 @@ source:
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1385667
       # https://github.com/google/breakpad/commit/bddcc58860f522a0d4cbaa7e9d04058caee0db9d
       # Patches were adapted to qt's organization
-      # it **should** be safe to apply to all, but really it is only needed
-      # for aarch64
       - patches/google_breakpad_aarch.patch
 
       # qtscript

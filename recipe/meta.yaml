@@ -47,6 +47,8 @@ source:
       - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
       # Patches from looking at this poist
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1385667
+      # sed -i 's,gecko-dev-22f1bfd79da322bd1d3130a2af93c32cf9e7c4ba/toolkit/crashreporter/breakpad-client/linux,a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux,g' mozilla-1385667.patch
+      - patches/mozilla-1385667.patch
       # https://github.com/google/breakpad/commit/bddcc58860f522a0d4cbaa7e9d04058caee0db9d
       # Patches were adapted to qt's organization
       - patches/google_breakpad_aarch.patch

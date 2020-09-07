@@ -51,7 +51,7 @@ source:
       # Patches were adapted to qt's organization
       # it **should** be safe to apply to all, but really it is only needed
       # for aarch64
-      - patches/google_breakpad_aarch.patch  # [aarch64]
+      - patches/google_breakpad_aarch.patch
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch

@@ -1,6 +1,6 @@
-diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/dump_writer_common/ucontext_reader.cc b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/dump_writer_common/ucontext_reader.cc
---- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/dump_writer_common/ucontext_reader.cc	2017-07-30 11:36:27.462932271 +0200
-+++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/dump_writer_common/ucontext_reader.cc	2017-07-30 11:47:43.773081060 +0200
+diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.cc b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.cc
+--- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.cc	2017-07-30 11:36:27.462932271 +0200
++++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.cc	2017-07-30 11:47:43.773081060 +0200
 @@ -40,6 +40,7 @@ namespace google_breakpad {
  
  #if defined(__i386__)
@@ -131,9 +131,9 @@ diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/l
  #if _MIPS_SIM == _ABI64
    out->context_flags = MD_CONTEXT_MIPS64_FULL;
  #elif _MIPS_SIM == _ABIO32
-diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/dump_writer_common/ucontext_reader.h b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/dump_writer_common/ucontext_reader.h
---- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/dump_writer_common/ucontext_reader.h	2017-07-30 12:52:32.988349241 +0200
-+++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/dump_writer_common/ucontext_reader.h	2017-07-30 12:52:11.316408145 +0200
+diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.h b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.h
+--- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.h	2017-07-30 12:52:32.988349241 +0200
++++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.h	2017-07-30 12:52:11.316408145 +0200
 @@ -41,6 +41,7 @@ namespace google_breakpad {
  
  // Wraps platform-dependent implementations of accessors to ucontext structs.
@@ -167,9 +167,9 @@ diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/l
  };
  
  }  // namespace google_breakpad
-diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/handler/exception_handler.cc b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/handler/exception_handler.cc
---- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/handler/exception_handler.cc	2017-07-30 09:59:19.746657142 +0200
-+++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/handler/exception_handler.cc	2017-07-30 12:53:44.195140285 +0200
+diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.cc b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.cc
+--- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.cc	2017-07-30 09:59:19.746657142 +0200
++++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.cc	2017-07-30 12:53:44.195140285 +0200
 @@ -439,9 +439,17 @@ bool ExceptionHandler::HandleSignal(int
    // Fill in all the holes in the struct to make Valgrind happy.
    memset(&g_crash_context_, 0, sizeof(g_crash_context_));
@@ -212,9 +212,9 @@ diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/l
    getcontext(&context);
    return HandleSignal(sig, &siginfo, &context);
  }
-diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/handler/exception_handler.h b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/handler/exception_handler.h
---- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/handler/exception_handler.h	2017-07-30 09:55:57.967193268 +0200
-+++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/handler/exception_handler.h	2017-07-30 12:53:12.544233911 +0200
+diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.h b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.h
+--- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.h	2017-07-30 09:55:57.967193268 +0200
++++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.h	2017-07-30 12:53:12.544233911 +0200
 @@ -191,7 +191,11 @@ class ExceptionHandler {
    struct CrashContext {
      siginfo_t siginfo;
@@ -227,9 +227,9 @@ diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/l
  #if !defined(__ARM_EABI__) && !defined(__mips__)
      // #ifdef this out because FP state is not part of user ABI for Linux ARM.
      // In case of MIPS Linux FP state is already part of struct
-diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/microdump_writer/microdump_writer.cc b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/microdump_writer/microdump_writer.cc
---- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/microdump_writer/microdump_writer.cc	2017-07-30 11:35:29.191089683 +0200
-+++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/microdump_writer/microdump_writer.cc	2017-07-30 11:40:19.410305697 +0200
+diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer.cc b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer.cc
+--- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer.cc	2017-07-30 11:35:29.191089683 +0200
++++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer.cc	2017-07-30 11:40:19.410305697 +0200
 @@ -571,7 +571,11 @@ class MicrodumpWriter {
  
    void* Alloc(unsigned bytes) { return dumper_->allocator()->Alloc(bytes); }
@@ -242,9 +242,9 @@ diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/l
  #if !defined(__ARM_EABI__) && !defined(__mips__)
    const google_breakpad::fpstate_t* const float_state_;
  #endif
-diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/minidump_writer/minidump_writer.cc b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/minidump_writer/minidump_writer.cc
---- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/minidump_writer/minidump_writer.cc	2017-07-30 11:35:09.831141982 +0200
-+++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux/minidump_writer/minidump_writer.cc	2017-07-30 11:38:46.527556607 +0200
+diff -up a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.cc b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.cc
+--- a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.cc	2017-07-30 11:35:09.831141982 +0200
++++ b/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.cc	2017-07-30 11:38:46.527556607 +0200
 @@ -1247,7 +1247,11 @@ class MinidumpWriter {
    const int fd_;  // File descriptor where the minidum should be written.
    const char* path_;  // Path to the file where the minidum should be written.

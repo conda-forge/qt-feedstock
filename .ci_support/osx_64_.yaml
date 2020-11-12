@@ -20,8 +20,6 @@ libpng:
 - '1.6'
 macos_machine:
 - x86_64-apple-darwin13.4.0
-macos_min_version:
-- '10.9'
 nspr:
 - '4'
 nss:
@@ -29,8 +27,6 @@ nss:
 openssl:
 - 1.1.1
 pin_run_as_build:
-  icu:
-    max_pin: x
   jpeg:
     max_pin: x
   libpng:
@@ -49,5 +45,8 @@ sqlite:
 - '3'
 target_platform:
 - osx-64
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
 zlib:
 - '1.2'

@@ -19,8 +19,6 @@ openssl:
 pin_run_as_build:
   curl:
     max_pin: x
-  icu:
-    max_pin: x
   jpeg:
     max_pin: x
   libpng:

@@ -22,8 +22,6 @@ fontconfig:
 - '2.13'
 freetype:
 - '2'
-glib:
-- 2.64.6
 gst_plugins_base:
 - 1.14.4
 gstreamer:

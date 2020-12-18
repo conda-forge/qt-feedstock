@@ -32,6 +32,8 @@ jpeg:
 - '9'
 libevent:
 - 2.1.10
+libglib:
+- 2.64.6
 libpng:
 - '1.6'
 libxml2:

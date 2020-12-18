@@ -142,7 +142,7 @@ requirements:
     - gstreamer                          # [linux]
     # glib migration is too strict
     # https://github.com/conda-forge/conda-forge-pinning-feedstock/issues/1026
-    - glib 2                             # [linux]
+    - libglib                            # [linux]
     - libxml2                            # [linux]
     - libxkbcommon                       # [linux]
     # For WebEngine, but for compatiblity we want to restrict

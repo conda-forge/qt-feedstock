@@ -9,7 +9,7 @@ curl:
 cxx_compiler:
 - vs2017
 icu:
-- '67'
+- '68'
 jpeg:
 - '9'
 libpng:
@@ -18,8 +18,6 @@ openssl:
 - 1.1.1
 pin_run_as_build:
   curl:
-    max_pin: x
-  icu:
     max_pin: x
   jpeg:
     max_pin: x

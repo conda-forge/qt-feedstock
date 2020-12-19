@@ -1,11 +1,8 @@
-migrator_ts: 1
+migrator_ts:  1605149853.4046257
 __migrator:
-  kind:
-    version
-  migration_number:
-    1
-  build_number:
-    1
+  kind: version
+  migration_number: 1
+  build_number: 1
 
 glib:
   - 2.66

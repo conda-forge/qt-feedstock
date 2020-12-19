@@ -140,8 +140,6 @@ requirements:
     - freetype                           # [linux]
     - gst-plugins-base                   # [linux]
     - gstreamer                          # [linux]
-    # glib migration is too strict
-    # https://github.com/conda-forge/conda-forge-pinning-feedstock/issues/1026
     - libglib                            # [linux]
     - libxml2                            # [linux]
     - libxkbcommon                       # [linux]

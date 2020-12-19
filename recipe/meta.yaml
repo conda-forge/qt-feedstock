@@ -140,7 +140,7 @@ requirements:
     - freetype                           # [linux]
     - gst-plugins-base                   # [linux]
     - gstreamer                          # [linux]
-    - glib                               # [linux]
+    - libglib                            # [linux]
     - libxml2                            # [linux]
     - libxkbcommon                       # [linux]
     # For WebEngine, but for compatiblity we want to restrict

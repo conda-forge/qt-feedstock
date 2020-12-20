@@ -294,6 +294,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
+                -no-use-gold-linker \
                 -sdk macosx10.12
 
 # For quicker turnaround when e.g. checking compilers optimizations

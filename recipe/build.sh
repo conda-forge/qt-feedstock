@@ -254,6 +254,8 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
         exit 1
       fi
     fi
+    
+    sed -i.bak "s/-Wno-c++11-narrowing'/-Wno-c++11-narrowing', '-Wno-elaborated-enum-base'" qtwebengine/src/3rdparty/gn/build/gen.py
 
     # Move VERSION file which conflicts with version in libc++ headers in case-insensitive files
     mv qtwebengine/src/3rdparty/chromium/third_party/libsrtp/VERSION qtwebengine/src/3rdparty/chromium/third_party/libsrtp/LIBSRTP_VERSION || true;
@@ -294,7 +296,6 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                QMAKE_CXXFLAGS+="-Wno-error=elaborated-enum-base" \
                 -sdk macosx10.12
 
 # For quicker turnaround when e.g. checking compilers optimizations

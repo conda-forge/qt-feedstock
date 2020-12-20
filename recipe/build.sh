@@ -294,7 +294,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                -no-use-gold-linker \
+                QMAKE_CXXFLAGS+="-Wno-error=elaborated-enum-base" \
                 -sdk macosx10.12
 
 # For quicker turnaround when e.g. checking compilers optimizations

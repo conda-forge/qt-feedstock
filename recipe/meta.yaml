@@ -67,7 +67,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 0
+  number: 1
   detect_binary_files_with_prefix: true
   # QtWebEngine fails on Linux unless we merge
   merge_build_host: true  # [linux]
@@ -140,7 +140,7 @@ requirements:
     - freetype                           # [linux]
     - gst-plugins-base                   # [linux]
     - gstreamer                          # [linux]
-    - glib                               # [linux]
+    - libglib                            # [linux]
     - libxml2                            # [linux]
     - libxkbcommon                       # [linux]
     # For WebEngine, but for compatiblity we want to restrict

@@ -13,7 +13,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '11'
 icu:
-- '67'
+- '68'
 jpeg:
 - '9'
 libpng:

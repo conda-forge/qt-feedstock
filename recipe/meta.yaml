@@ -3,61 +3,15 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.12.9" %}
+{% set version = "6.2.0" %}
 
 package:
   name: qt
   version: {{ version }}
 
 source:
-  - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    md5: fa2646280cf38180689c29c393cddd05
-    patches:
-
-      # qtbase
-      - patches/0001-qtbase-osx-xctest-check.patch
-      - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
-      - patches/0003-qtbase-use-better-clang-optimize-size.patch
-      - patches/0004-qtbase-never-enable-new-dtags.patch
-      - patches/0005-qtbase-link-xcb-shm.patch
-      - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
-      - patches/0007-qtbase-Disable-kTLSProtocol13-for-macOS-10.12.patch
-      - patches/0008-qtbase-Define-kIOSurfaceSuccess-if-it-is-not-defined.patch
-      - patches/0009-qtbase-fix-hardcoded-sysroot-path.patch
-      # - patches/9999-qtbase-use-better-gcc-optimize-size.patch
-      # https://bugreports.qt.io/browse/QTBUG-76777
-      - patches/qcore_for_sdk_10_13_1.patch
-
-      # qtwinextras
-      - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
-
-      # qtwebengine
-      - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
-      - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      - patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
-      - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
-      - patches/0006-qtwebengine-run-gn-verbosely.patch
-      # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
-      - patches/0008-qtwebengine-link-gn-to-librt.patch
-      - patches/0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
-      - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
-      - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
-      - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
-      - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
-      - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
-      - patches/google_breakpad_aarch_include.patch
-
-      # qtscript
-      - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
-
-  - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
-    sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']
-    folder: qtwebkit                                                                                              # [qtwebkit == 'true']
-    patches:                                                                                                      # [qtwebkit == 'true']
-      - patches/0001-qtwebkit-old-ld-compat.patch                                                                         # [qtwebkit == 'true']
-      - patches/0002-qtwebkit-ruby-1.8.patch                                                                              # [qtwebkit == 'true']
-      - patches/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [qtwebkit == 'true']
-      - patches/0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
+  - url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtbase-everywhere-src-{{ version }}.tar.xz
+    md5: cbf791d95bf742fd225c09e22101efd3
 
   - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-32-mesa_12_0_rc2.7z      # [win32]
     sha256: 656015ab03a6686854b920a0a0bf77b4e46525ee8d5396bf04a49ef80a53427d                                      # [win32]
@@ -68,21 +22,13 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 4
+  number: 0
   detect_binary_files_with_prefix: true
-  # QtWebEngine fails on Linux unless we merge
-  merge_build_host: true  # [linux]
   run_exports:
-    - {{ pin_subpackage('qt', max_pin='x.x') }}
-  missing_dso_whitelist:  # [osx]
-    - /usr/lib/libbsm.0.dylib  # [osx]
-    - /usr/lib/libcups.2.dylib  # [osx]
-    - /usr/lib/libresolv.9.dylib  # [osx]
-    - /usr/lib/libsandbox.1.dylib  # [osx]
-    - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
 
 requirements:
   build:
+    - cmake
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
@@ -142,23 +88,9 @@ requirements:
     - dbus                               # [linux]
     - fontconfig                         # [linux]
     - freetype                           # [linux]
-    - gst-plugins-base                   # [linux]
-    - gstreamer                          # [linux]
     - libglib                            # [linux]
     - libxml2                            # [linux]
     - libxkbcommon                       # [linux]
-    # For WebEngine, but for compatiblity we want to restrict
-    # usage of our own libraries. It seems Chromium prefers
-    # expat to libxml2 and we will try to force it to use the
-    # bundled one.
-    # Other than that (and esp. for Google developed libs) we
-    # avoid our own packagess. FFMPEG was not detected anyway,
-    # and neither was libvpx (AFAICT).
-    # - libxml2                            # [unix]
-    # - libxslt                            # [unix]
-    # - libopus                            # [unix]
-    # - libvpx                             # [unix]
-    # - ffmpeg                             # [unix]
     - expat                              # [linux]
     - libevent                           # [linux]
     - icu
@@ -170,25 +102,15 @@ requirements:
     - mysql-devel                        # [not win]
     - postgresql                         # [not win]
     - zlib
+    - zstd-static                        # [not win]
     - libxcb                             # [linux]
-    # We cannot install OpenSSL into the prefix when building qtwebengine
-    # on linux as BoringSSL and OpenSSL then conflict with each other.
-    - openssl                            # [win]
-    # For QDoc
-    # http://doc.qt.io/Qt-5/qdoc-guide-clang.html
-    # Only libclang is needed, but needs the full package for detection.
-    - llvmdev
-    - clangdev
-    - libclang
+    - openssl
     - xorg-libxfixes                     # [linux]
   run:
     - openssl                            # [not osx]
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
     - libxcb                             # [linux]
-    - {{ pin_compatible("libclang") }}
-  run_constrained:                                            # [osx]
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
 
 test:
   requires:
@@ -222,22 +144,6 @@ test:
     - {{ cdt('expat-devel') }}           # [linux]
     - {{ cdt('pcre') }}                  # [linux and cdt_name != 'cos6']
     - {{ cdt('libglvnd-glx') }}          # [linux and cdt_name != 'cos6']
-  files:
-    - test/hello.pro
-    - test/main-qtwebengine.cpp
-    - test/main.cpp
-    - test/main.qml
-    - test/qml.qrc
-    - test/qrc_qml.cpp
-    - test/qtwebengine.pro
-    - xcodebuild
-    - xcrun
-  commands:
-    - if not exist %LIBRARY_BIN%\\Qt5WebEngine.dll exit 1                  # [win]
-    - test -f $PREFIX/lib/libQt5WebEngine${SHLIB_EXT}                      # [unix]
-    # sql plugin
-    - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]
-    - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]
 
 about:
   home: http://qt-project.org

@@ -3,7 +3,7 @@ BUILD:
 c_compiler:
 - gcc
 c_compiler_version:
-- '7.5'
+- '9'
 cdt_arch:
 - aarch64
 cdt_name:
@@ -15,25 +15,23 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '7.5'
+- '9'
 dbus:
 - '1'
 docker_image:
-- condaforge/linux-anvil-aarch64
+- quay.io/condaforge/linux-anvil-aarch64
 expat:
 - '2.2'
 fontconfig:
 - '2.13'
 freetype:
-- 2.9.1
-glib:
-- '2.58'
+- '2'
 gst_plugins_base:
 - 1.14.4
 gstreamer:
 - 1.14.4
 icu:
-- '67'
+- '68'
 jpeg:
 - '9'
 libevent:
@@ -56,8 +54,6 @@ pin_run_as_build:
   fontconfig:
     max_pin: x
   freetype:
-    max_pin: x
-  icu:
     max_pin: x
   jpeg:
     max_pin: x
@@ -85,5 +81,8 @@ sqlite:
 - '3'
 target_platform:
 - linux-aarch64
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
 zlib:
 - '1.2'

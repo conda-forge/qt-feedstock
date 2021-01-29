@@ -1,0 +1,12 @@
+--- qtwebengine/src/3rdparty/chromium/third_party/skia/BUILD.orig.gn	2021-01-29 12:32:34.170130986 +1000
++++ qtwebengine/src/3rdparty/chromium/third_party/skia/BUILD.gn	2021-01-29 12:32:46.629934812 +1000
+@@ -18,7 +18,7 @@
+ declare_args() {
+   skia_use_angle = false
+   skia_use_egl = false
+-  skia_use_expat = true
++  skia_use_expat = false
+   skia_use_fontconfig = is_linux
+   skia_use_freetype = is_android || is_fuchsia || is_linux
+   skia_use_icu = !is_fuchsia && !is_ios && !is_win  # TODO: Windows
+

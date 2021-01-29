@@ -48,10 +48,12 @@ source:
       # Patches from looking at this poist
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1385667
       # sed -i 's,gecko-dev-22f1bfd79da322bd1d3130a2af93c32cf9e7c4ba/toolkit/crashreporter/breakpad-client/linux,a/qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/src/linux,g' mozilla-1385667.patch
-      - patches/mozilla-1385667.patch
+      # - patches/mozilla-1385667.patch
       # https://github.com/google/breakpad/commit/bddcc58860f522a0d4cbaa7e9d04058caee0db9d
       # Patches were adapted to qt's organization
-      - patches/google_breakpad_aarch.patch
+      # - patches/google_breakpad_aarch.patch
+      - patches/google_breakpad_aarch_include.patch
+      - patches/disable_skia_use_expat.patch  # [aarch64]
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
@@ -154,7 +156,7 @@ requirements:
     - libxkbcommon                       # [linux]
     # For WebEngine, but for compatiblity we want to restrict
     # usage of our own libraries. It seems Chromium prefers
-    # expat to libxml2 and we will try to froce it to use the
+    # expat to libxml2 and we will try to force it to use the
     # bundled one.
     # Other than that (and esp. for Google developed libs) we
     # avoid our own packagess. FFMPEG was not detected anyway,

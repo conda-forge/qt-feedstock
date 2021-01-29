@@ -5,9 +5,13 @@ Home: http://qt-project.org
 
 Package license: LGPL-3.0-only
 
-Feedstock license: BSD-3-Clause
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/qt-feedstock/blob/master/LICENSE.txt)
 
 Summary: Qt is a cross-platform application and UI framework.
+
+Development: https://github.com/qtproject
+
+Documentation: http://doc.qt.io/
 
 Qt helps you create connected devices, UIs & applications that run
 anywhere on any device, on any operating system at any time.

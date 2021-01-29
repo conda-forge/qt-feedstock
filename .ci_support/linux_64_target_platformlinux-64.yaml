@@ -1,7 +1,9 @@
 c_compiler:
 - gcc
 c_compiler_version:
-- '7'
+- '9'
+cdt_name:
+- cos6
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -9,29 +11,29 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '7'
+- '9'
 dbus:
 - '1'
 docker_image:
-- condaforge/linux-anvil-comp7
+- quay.io/condaforge/linux-anvil-comp7
 expat:
 - '2.2'
 fontconfig:
 - '2.13'
 freetype:
-- 2.9.1
-glib:
-- '2.58'
+- '2'
 gst_plugins_base:
 - 1.14.4
 gstreamer:
-- 1.14.4
+- '1.18'
 icu:
-- '67'
+- '68'
 jpeg:
 - '9'
 libevent:
 - 2.1.10
+libglib:
+- '2.66'
 libpng:
 - '1.6'
 libxml2:
@@ -50,8 +52,6 @@ pin_run_as_build:
   fontconfig:
     max_pin: x
   freetype:
-    max_pin: x
-  icu:
     max_pin: x
   jpeg:
     max_pin: x
@@ -79,5 +79,8 @@ sqlite:
 - '3'
 target_platform:
 - linux-64
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
 zlib:
 - '1.2'

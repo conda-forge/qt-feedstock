@@ -76,7 +76,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 0
+  number: 4
   # Reduce resources on CIs, build just for linux
   skip: true  # [osx or win]
   detect_binary_files_with_prefix: true
@@ -151,7 +151,7 @@ requirements:
     - freetype                           # [linux]
     - gst-plugins-base                   # [linux]
     - gstreamer                          # [linux]
-    - glib                               # [linux]
+    - libglib                            # [linux]
     - libxml2                            # [linux]
     - libxkbcommon                       # [linux]
     # For WebEngine, but for compatiblity we want to restrict

@@ -1,5 +1,6 @@
-conda_forge_output_validation: true
 azure:
   settings_win:
-    variables:
-      CONDA_BLD_PATH: "C:\\bld\\"
+    variables: {CONDA_BLD_PATH: C:\bld\}
+build_platform: {osx_arm64: osx_64}
+conda_forge_output_validation: true
+test_on_native_only: true

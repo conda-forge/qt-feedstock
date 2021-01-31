@@ -82,6 +82,7 @@ build:
 
 requirements:
   build:
+    - gnuconfig  # [unix]
     - {{ compiler('cxx') }}
     - {{ compiler('c') }}
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]

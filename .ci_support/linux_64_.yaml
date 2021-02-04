@@ -23,9 +23,9 @@ fontconfig:
 freetype:
 - '2'
 gst_plugins_base:
-- 1.14.4
+- '1.18'
 gstreamer:
-- 1.14.4
+- '1.18'
 icu:
 - '68'
 jpeg:

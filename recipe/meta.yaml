@@ -124,6 +124,7 @@ requirements:
     - {{ cdt('cups-devel') }}            # [linux]
     - {{ cdt('libxcb') }}                # [linux]
     - {{ cdt('expat-devel') }}           # [linux]
+    - {{ cdt('pcre') }}                  # [linux and cdt_name != 'cos6']
 
     # For fontconfig + freetype
     - pkg-config                         # [unix]

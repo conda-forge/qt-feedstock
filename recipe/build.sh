@@ -28,6 +28,7 @@ USED_BUILD_PREFIX=${BUILD_PREFIX:-${PREFIX}}
 echo USED_BUILD_PREFIX=${BUILD_PREFIX}
 
 MAKE_JOBS=8
+export NINJAFLAGS="-j8"
 # You can use this to cut down on the number of modules built. Of course the Qt package will not be of
 # much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
 # size of the libraries.

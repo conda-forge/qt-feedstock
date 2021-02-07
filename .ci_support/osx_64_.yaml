@@ -1,0 +1,52 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.12'
+c_compiler:
+- clang
+c_compiler_version:
+- '11'
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+cxx_compiler:
+- clangxx
+cxx_compiler_version:
+- '11'
+icu:
+- '68'
+jpeg:
+- '9'
+libpng:
+- '1.6'
+macos_machine:
+- x86_64-apple-darwin13.4.0
+nspr:
+- '4'
+nss:
+- '3'
+openssl:
+- 1.1.1
+pin_run_as_build:
+  jpeg:
+    max_pin: x
+  libpng:
+    max_pin: x.x
+  nspr:
+    max_pin: x
+  nss:
+    max_pin: x
+  openssl:
+    max_pin: x.x.x
+  sqlite:
+    max_pin: x
+  zlib:
+    max_pin: x.x
+sqlite:
+- '3'
+target_platform:
+- osx-64
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
+zlib:
+- '1.2'

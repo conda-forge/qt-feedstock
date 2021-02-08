@@ -1,3 +1,9 @@
+alsa-lib
+libXScrnSaver
+libXtst
+libXi
+libXcursor
+libXcomposite
 mesa-libGL
 mesa-dri-drivers
 libselinux

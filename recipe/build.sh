@@ -194,7 +194,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
                 -plugin-sql-sqlite \
                 -plugin-sql-mysql \
                 -plugin-sql-psql \
-                -system-pcre \
+                -qt-pcre \
                 -qt-xcb \
                 -xkbcommon \
                 -dbus \

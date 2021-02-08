@@ -179,6 +179,7 @@ requirements:
     - llvmdev
     - clangdev
     - libclang
+    - xorg-libxfixes                     # [linux]
   run:
     - openssl                            # [not osx]
     - {{ pin_compatible("nss") }}        # [unix]
@@ -217,7 +218,9 @@ test:
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
     - {{ cdt('libxcb') }}                # [linux]
-    - {{ cdt('expat-devel') }}        # [linux]
+    - {{ cdt('expat-devel') }}           # [linux]
+    - {{ cdt('pcre') }}                  # [linux and cdt_name != 'cos6']
+    - {{ cdt('libglvnd-glx') }}          # [linux and cdt_name != 'cos6']
   files:
     - test/hello.pro
     - test/main-qtwebengine.cpp

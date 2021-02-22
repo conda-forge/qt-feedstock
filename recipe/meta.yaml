@@ -45,6 +45,7 @@ source:
       - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
       - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
       - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
+      - patches/google_breakpad_aarch_include.patch
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
@@ -112,6 +113,9 @@ requirements:
     - {{ cdt('libxxf86vm-devel') }}      # [linux]
     - {{ cdt('cups-devel') }}            # [linux]
     - {{ cdt('libxcb') }}                # [linux]
+    - {{ cdt('expat-devel') }}           # [linux]
+    - {{ cdt('pcre') }}                  # [linux and cdt_name != 'cos6']
+    - {{ cdt('libglvnd-glx') }}          # [linux and cdt_name != 'cos6']
 
     # For fontconfig + freetype
     - pkg-config                         # [unix]
@@ -145,7 +149,7 @@ requirements:
     - libxkbcommon                       # [linux]
     # For WebEngine, but for compatiblity we want to restrict
     # usage of our own libraries. It seems Chromium prefers
-    # expat to libxml2 and we will try to froce it to use the
+    # expat to libxml2 and we will try to force it to use the
     # bundled one.
     # Other than that (and esp. for Google developed libs) we
     # avoid our own packagess. FFMPEG was not detected anyway,
@@ -176,11 +180,12 @@ requirements:
     - llvmdev
     - clangdev
     - libclang
+    - xorg-libxfixes                     # [linux]
   run:
     - openssl                            # [not osx]
-    - libxcb                             # [linux]
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
+    - libxcb                             # [linux]
     - {{ pin_compatible("libclang") }}
   run_constrained:                                            # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
@@ -214,7 +219,9 @@ test:
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
     - {{ cdt('libxcb') }}                # [linux]
-    - {{ cdt('expat-devel') }}        # [linux]
+    - {{ cdt('expat-devel') }}           # [linux]
+    - {{ cdt('pcre') }}                  # [linux and cdt_name != 'cos6']
+    - {{ cdt('libglvnd-glx') }}          # [linux and cdt_name != 'cos6']
   files:
     - test/hello.pro
     - test/main-qtwebengine.cpp
@@ -252,3 +259,4 @@ extra:
     - msarahan
     - ocefpaf
     - stuarteberg
+    - Tobias-Fischer

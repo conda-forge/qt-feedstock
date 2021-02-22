@@ -171,6 +171,7 @@ Feedstock Maintainers
 
 * [@Tobias-Fischer](https://github.com/Tobias-Fischer/)
 * [@ccordoba12](https://github.com/ccordoba12/)
+* [@duncanmmacleod](https://github.com/duncanmmacleod/)
 * [@gillins](https://github.com/gillins/)
 * [@mingwandroid](https://github.com/mingwandroid/)
 * [@msarahan](https://github.com/msarahan/)

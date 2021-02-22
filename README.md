@@ -169,6 +169,7 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
+* [@Tobias-Fischer](https://github.com/Tobias-Fischer/)
 * [@ccordoba12](https://github.com/ccordoba12/)
 * [@gillins](https://github.com/gillins/)
 * [@mingwandroid](https://github.com/mingwandroid/)

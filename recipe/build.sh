@@ -63,7 +63,7 @@ rm -rf $PREFIX/bin/protoc
 # Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
 
 # qtwebengine needs python 2
-conda create -y --prefix "${SRC_DIR}/python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
+conda create -y --prefix "${SRC_DIR}/python2_hack" --no-deps python=2
 export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
 
 if [[ ${HOST} =~ .*linux.* ]]; then

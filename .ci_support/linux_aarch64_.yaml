@@ -21,7 +21,7 @@ dbus:
 docker_image:
 - quay.io/condaforge/linux-anvil-aarch64
 expat:
-- '2.2'
+- '2.3'
 fontconfig:
 - '2.13'
 freetype:

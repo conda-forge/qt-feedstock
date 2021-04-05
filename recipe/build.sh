@@ -63,8 +63,11 @@ rm -rf $PREFIX/bin/protoc
 # Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
 
 # qtwebengine needs python 2
-conda create -y --prefix "${SRC_DIR}/python2_hack" --no-deps python=2
-export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
+# conda create -y --prefix "${SRC_DIR}/python2_hack" --no-deps python=2
+# export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
+mkdir -p ${SRC_DIR}/python2_hack/
+ln -s /usr/bin/python ${SRC_DIR}/python2_hack/
+export PATH=${SRC_DIR}/python2_hack/:${PATH}
 
 if [[ ${HOST} =~ .*linux.* ]]; then
 
@@ -261,11 +264,11 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     PATH=${PWD}:${PATH}
 
     # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
-    if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX10.12.sdk" ]]; then
+    if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX11.0.sdk" ]]; then
       echo "WARNING: You asked me to use $CONDA_BUILD_SYSROOT as the MacOS SDK"
       echo "         But because of the use of Objective-C Generics we need at"
-      echo "         least MacOSX10.12.sdk"
-      CONDA_BUILD_SYSROOT=/opt/MacOSX10.12.sdk
+      echo "         least MacOSX11.0.sdk"
+      CONDA_BUILD_SYSROOT=/opt/MacOSX11.0.sdk
       if [[ ! -d $CONDA_BUILD_SYSROOT ]]; then
         echo "ERROR: $CONDA_BUILD_SYSROOT is not a directory"
         exit 1
@@ -314,7 +317,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                -sdk macosx10.12
+                -sdk macosx11.0
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d
@@ -361,7 +364,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     # https://bugreports.qt.io/browse/QTBUG-41238
     sed -i '' 's/macosx.*$/macosx/g' mkspecs/qdevice.pri
     # We allow macOS SDK 10.12 while upstream requires 10.13 (as of Qt 5.12.1).
-    sed -i '' 's/QT_MAC_SDK_VERSION_MIN = 10\..*/QT_MAC_SDK_VERSION_MIN = 10\.12/g' mkspecs/common/macx.conf
+    sed -i '' 's/QT_MAC_SDK_VERSION_MIN = 10\..*/QT_MAC_SDK_VERSION_MIN = 10\.15/g' mkspecs/common/macx.conf
     # We may want to replace these with \$\${QMAKE_MAC_SDK_PATH}/ instead?
     sed -i '' "s|${CONDA_BUILD_SYSROOT}/|/|g" mkspecs/modules/*.pri
     CMAKE_FILES=$(find lib/cmake -name "Qt*.cmake")

@@ -21,7 +21,7 @@ dbus:
 docker_image:
 - quay.io/condaforge/linux-anvil-aarch64
 expat:
-- '2.2'
+- '2'
 fontconfig:
 - '2.13'
 freetype:
@@ -49,8 +49,6 @@ openssl:
 pin_run_as_build:
   dbus:
     max_pin: x
-  expat:
-    max_pin: x.x
   fontconfig:
     max_pin: x
   freetype:

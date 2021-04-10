@@ -264,15 +264,14 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     PATH=${PWD}:${PATH}
 
     # Because of the use of Objective-C Generics we need at least MacOSX10.11.sdk
-    if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX11.0.sdk" ]]; then
-      echo "WARNING: You asked me to use $CONDA_BUILD_SYSROOT as the MacOS SDK"
-      echo "         But because of the use of Objective-C Generics we need at"
-      echo "         least MacOSX11.0.sdk"
-      CONDA_BUILD_SYSROOT=/opt/MacOSX11.0.sdk
-      if [[ ! -d $CONDA_BUILD_SYSROOT ]]; then
-        echo "ERROR: $CONDA_BUILD_SYSROOT is not a directory"
-        exit 1
-      fi
+    if [[ ${MACOSX_SDK_VERSION:-10.13} != "10.13" && ${MACOSX_SDK_VERSION:-10.13} != "10.14" && ${MACOSX_SDK_VERSION:-10.13} != "10.15" ]]; then
+      echo "WARNING: You asked me to use ${MACOSX_SDK_VERSION:-10.13} as the MacOS SDK"
+      echo "         But we need at least 10.13 and at most 10.15"
+    fi
+    
+    if [[ $(basename $CONDA_BUILD_SYSROOT) != "MacOSX${MACOSX_SDK_VERSION:-10.13}.sdk" ]]; then
+      echo "ERROR: mismatch between MACOSX_SDK_VERSION(${MACOSX_SDK_VERSION:-10.13}) and CONDA_BUILD_SYSROOT($(basename $CONDA_BUILD_SYSROOT))"
+      exit 1
     fi
     
     sed -i.bak "s/-Wno-c++11-narrowing'/-Wno-c++11-narrowing', '-Wno-elaborated-enum-base'/g" qtwebengine/src/3rdparty/gn/build/gen.py
@@ -317,7 +316,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                 -no-egl \
                 -no-openssl \
                 -optimize-size \
-                -sdk macosx11.0
+                -sdk macosx${MACOSX_SDK_VERSION:-10.13}
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d

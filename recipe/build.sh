@@ -62,15 +62,10 @@ rm -rf $PREFIX/bin/protoc
 # grep -R include_dirs . | grep ninja | grep    _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
 # Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
 
-# qtwebengine needs python 2
-# conda create -y --prefix "${SRC_DIR}/python2_hack" --no-deps python=2
-# export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
-mkdir -p ${SRC_DIR}/python2_hack/
-ln -s /usr/bin/python ${SRC_DIR}/python2_hack/
-export PATH=${SRC_DIR}/python2_hack/:${PATH}
-
 if [[ ${HOST} =~ .*linux.* ]]; then
-
+    # qtwebengine compilation needs python2
+    conda create -y --prefix "${SRC_DIR}/python2_hack" --no-deps python=2
+    export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
     if ! which ruby > /dev/null 2>&1; then
         echo "You need ruby to build qtwebkit"
         exit 1
@@ -248,6 +243,11 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 fi
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
+    # qtwebengine compilation needs python2
+    # System python is python2 on Mac, so we hack around that
+    mkdir -p ${SRC_DIR}/python2_hack/
+    ln -s /usr/bin/python ${SRC_DIR}/python2_hack/
+    export PATH=${SRC_DIR}/python2_hack/:${PATH}
 
     # Avoid Xcode
     cp "${RECIPE_DIR}"/xcrun .

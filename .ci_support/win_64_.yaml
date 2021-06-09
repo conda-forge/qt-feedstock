@@ -1,0 +1,37 @@
+c_compiler:
+- vs2017
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+curl:
+- '7'
+cxx_compiler:
+- vs2017
+icu:
+- '68'
+jpeg:
+- '9'
+libpng:
+- '1.6'
+openssl:
+- 1.1.1
+pin_run_as_build:
+  curl:
+    max_pin: x
+  jpeg:
+    max_pin: x
+  libpng:
+    max_pin: x.x
+  openssl:
+    max_pin: x.x.x
+  sqlite:
+    max_pin: x
+  zlib:
+    max_pin: x.x
+sqlite:
+- '3'
+target_platform:
+- win-64
+zlib:
+- '1.2'

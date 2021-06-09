@@ -179,8 +179,8 @@ requirements:
     # http://doc.qt.io/Qt-5/qdoc-guide-clang.html
     # Only libclang is needed, but needs the full package for detection.
     - llvmdev
-    - clangdev=11
-    - libclang=11
+    - clangdev =11
+    - libclang =11
     - xorg-libxfixes                     # [linux]
   run:
     - openssl                            # [not osx]

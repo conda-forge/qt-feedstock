@@ -1,7 +1,7 @@
-About qt
-========
+About qt-main
+=============
 
-Home: http://qt-project.org
+Home: http://qt.io
 
 Package license: LGPL-3.0-only
 
@@ -9,7 +9,7 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/qt-feedstock/bl
 
 Summary: Qt is a cross-platform application and UI framework.
 
-Development: https://github.com/qtproject
+Development: https://github.com/qt
 
 Documentation: http://doc.qt.io/
 
@@ -82,27 +82,28 @@ Current release info
 
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-qt-green.svg)](https://anaconda.org/conda-forge/qt) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/qt.svg)](https://anaconda.org/conda-forge/qt) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/qt.svg)](https://anaconda.org/conda-forge/qt) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/qt.svg)](https://anaconda.org/conda-forge/qt) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-qt--main-green.svg)](https://anaconda.org/conda-forge/qt-main) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/qt-main.svg)](https://anaconda.org/conda-forge/qt-main) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/qt-main.svg)](https://anaconda.org/conda-forge/qt-main) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/qt-main.svg)](https://anaconda.org/conda-forge/qt-main) |
 
-Installing qt
-=============
+Installing qt-main
+==================
 
-Installing `qt` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
+Installing `qt-main` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
 ```
 conda config --add channels conda-forge
+conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `qt` can be installed with:
+Once the `conda-forge` channel has been enabled, `qt-main` can be installed with:
 
 ```
-conda install qt
+conda install qt-main
 ```
 
-It is possible to list all of the versions of `qt` available on your platform with:
+It is possible to list all of the versions of `qt-main` available on your platform with:
 
 ```
-conda search qt --channel conda-forge
+conda search qt-main --channel conda-forge
 ```
 
 
@@ -144,37 +145,31 @@ Terminology
                   produce the finished article (built conda distributions)
 
 
-Updating qt-feedstock
-=====================
+Updating qt-main-feedstock
+==========================
 
-If you would like to improve the qt recipe or build a new
+If you would like to improve the qt-main recipe or build a new
 package version, please fork this repository and submit a PR. Upon submission,
 your changes will be run on the appropriate platforms to give the reviewer an
 opportunity to confirm that the changes result in a successful build. Once
 merged, the recipe will be re-built and uploaded automatically to the
 `conda-forge` channel, whereupon the built conda packages will be available for
 everybody to install and use from the `conda-forge` channel.
-Note that all branches in the conda-forge/qt-feedstock are
+Note that all branches in the conda-forge/qt-main-feedstock are
 immediately built and any created packages are uploaded, so PRs should be based
 on branches in forks and branches in the main repository should only be used to
 build distinct package versions.
 
 In order to produce a uniquely identifiable distribution:
  * If the version of a package **is not** being increased, please add or increase
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string).
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string).
  * If the version of a package **is** being increased, please remember to return
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string)
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string)
    back to 0.
 
 Feedstock Maintainers
 =====================
 
-* [@Tobias-Fischer](https://github.com/Tobias-Fischer/)
+* [@andfoy](https://github.com/andfoy/)
 * [@ccordoba12](https://github.com/ccordoba12/)
-* [@duncanmmacleod](https://github.com/duncanmmacleod/)
-* [@gillins](https://github.com/gillins/)
-* [@mingwandroid](https://github.com/mingwandroid/)
-* [@msarahan](https://github.com/msarahan/)
-* [@ocefpaf](https://github.com/ocefpaf/)
-* [@stuarteberg](https://github.com/stuarteberg/)
 

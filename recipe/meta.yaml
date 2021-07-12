@@ -116,19 +116,46 @@ requirements:
     - zstd
     - freetype
 
-# test:
-#   # Some packages might need a `test/commands` key to check CLI.
-#   # List all the packages/modules that `run_test.py` imports.
-#   imports:
-#     - simplejson
-#     - simplejson.tests
-#   # For python packages, it is useful to run pip check. However, sometimes the
-#   # metadata used by pip is out of date. Thus this section is optional if it is
-#   # failing.
-#   requires:
-#     - pip
-#   commands:
-#     - pip check
+test:
+  requires:
+    - {{ compiler('cxx') }}
+    - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
+    - {{ cdt('libx11-devel') }}          # [linux]
+    - {{ cdt('libxext-devel') }}         # [linux]
+    - {{ cdt('libxrender-devel') }}      # [linux]
+    - {{ cdt('mesa-libgl-devel') }}      # [linux]
+    - {{ cdt('mesa-libegl-devel') }}     # [linux]
+    - {{ cdt('mesa-dri-drivers') }}      # [linux]
+    - {{ cdt('libxau-devel') }}          # [linux]
+    - {{ cdt('alsa-lib-devel') }}        # [linux]
+    - {{ cdt('gtk2-devel') }}            # [linux]
+    - {{ cdt('gtkmm24-devel') }}         # [linux]
+    - {{ cdt('libdrm-devel') }}          # [linux]
+    - {{ cdt('libxcomposite-devel') }}   # [linux]
+    - {{ cdt('libxcursor-devel') }}      # [linux]
+    - {{ cdt('libxi-devel') }}           # [linux]
+    - {{ cdt('libxrandr-devel') }}       # [linux]
+    - {{ cdt('pciutils-devel') }}        # [linux]
+    - {{ cdt('libxscrnsaver-devel') }}   # [linux]
+    - {{ cdt('libxtst-devel') }}         # [linux]
+    - {{ cdt('libselinux-devel') }}      # [linux]
+    - {{ cdt('libxdamage') }}            # [linux]
+    - {{ cdt('libxdamage-devel') }}      # [linux]
+    - {{ cdt('libxfixes') }}             # [linux]
+    - {{ cdt('libxfixes-devel') }}       # [linux]
+    - {{ cdt('libxxf86vm') }}            # [linux]
+    - {{ cdt('libxcb') }}                # [linux]
+    - {{ cdt('expat-devel') }}           # [linux]
+    - {{ cdt('pcre') }}                  # [linux]
+    - {{ cdt('libglvnd-glx') }}          # [linux]
+  files:
+    - test/hello.pro
+    - test/main-qtwebengine.cpp
+    - test/main.cpp
+    - test/main.qml
+    - test/qml.qrc
+    - test/qrc_qml.cpp
+    - test/qtwebengine.pro
 
 about:
   home: http://qt.io

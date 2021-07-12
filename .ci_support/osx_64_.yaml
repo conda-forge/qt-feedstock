@@ -1,5 +1,7 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.12'
+- '10.14'
+MACOSX_SDK_VERSION:
+- '10.14'
 c_compiler:
 - clang
 c_compiler_version:
@@ -12,10 +14,16 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '11'
+gst_plugins_base:
+- '1.18'
+gstreamer:
+- '1.18'
 icu:
 - '68'
-jpeg:
-- '9'
+libiconv:
+- '1.16'
+libjpeg_turbo:
+- '2'
 libpng:
 - '1.6'
 macos_machine:
@@ -24,10 +32,10 @@ nspr:
 - '4'
 nss:
 - '3'
-openssl:
-- 1.1.1
 pin_run_as_build:
-  jpeg:
+  libiconv:
+    max_pin: x.x
+  libjpeg_turbo:
     max_pin: x
   libpng:
     max_pin: x.x
@@ -35,8 +43,6 @@ pin_run_as_build:
     max_pin: x
   nss:
     max_pin: x
-  openssl:
-    max_pin: x.x.x
   sqlite:
     max_pin: x
   zlib:

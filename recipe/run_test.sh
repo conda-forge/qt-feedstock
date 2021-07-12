@@ -2,6 +2,7 @@
 
 set -e
 
+ls
 cd test
 ln -s ${GXX} g++
 cp ../xcrun .

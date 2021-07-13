@@ -6,9 +6,9 @@ nmake
 if %ErrorLevel% neq 0 exit /b 1
 :: Only test that this builds
 nmake clean
-if %ErrorLevel% neq 0 exit /b 1
-qmake qtwebengine.pro
-if %ErrorLevel% neq 0 exit /b 1
-nmake
-if %ErrorLevel% neq 0 exit /b 1
+::if %ErrorLevel% neq 0 exit /b 1
+::qmake qtwebengine.pro
+::if %ErrorLevel% neq 0 exit /b 1
+::nmake
+::if %ErrorLevel% neq 0 exit /b 1
 popd

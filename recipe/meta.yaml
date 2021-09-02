@@ -3,17 +3,17 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.12.9" %}
+{% set name = "qt" %}
+{% set version = "5.15.2" %}
 
 package:
-  name: qt
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
   - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    md5: fa2646280cf38180689c29c393cddd05
+    sha256: 3a530d1b243b5dec00bc54937455471aaa3e56849d2593edb8ded07228202240
     patches:
-
       # qtbase
       - patches/0001-qtbase-osx-xctest-check.patch
       - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
@@ -31,33 +31,8 @@ source:
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
-      # qtwebengine
-      - patches/0001-qtwebengine-allow-any-xcblah-in-PATH.patch
-      - patches/0002-qtwebengine-find_sdk-respect-CONDA_BUILD_SYSROOT.patch
-      - patches/0004-qtwebengine-use-CONDA_PREFIX_include-for-system_libjpeg.patch
-      - patches/0005-qtwebengine-jpeg-codec-cannot-convert-bool-to-boolean.patch
-      - patches/0006-qtwebengine-run-gn-verbosely.patch
-      # - patches/0007-qtwebengine-macOS-10.11-support-Define-NSEventTypeScrollWheel-as.patch
-      - patches/0008-qtwebengine-link-gn-to-librt.patch
-      - patches/0009-qtwebengine-Add-conda_prefix-to-features-gni-declare_args.patch
-      - patches/0010-qtwebengine-Use-conda_prefix-for-system-zlib.patch
-      - patches/0011-qtwebengine-Use-conda_prefix-for-ui-gl.patch
-      - patches/0012-qtwebengine-Ignore-glibc-2-17-min-version-check.patch
-      - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
-      - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
-      - patches/google_breakpad_aarch_include.patch
-
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
-
-  - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
-    sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']
-    folder: qtwebkit                                                                                              # [qtwebkit == 'true']
-    patches:                                                                                                      # [qtwebkit == 'true']
-      - patches/0001-qtwebkit-old-ld-compat.patch                                                                         # [qtwebkit == 'true']
-      - patches/0002-qtwebkit-ruby-1.8.patch                                                                              # [qtwebkit == 'true']
-      - patches/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [qtwebkit == 'true']
-      - patches/0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
 
   - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-32-mesa_12_0_rc2.7z      # [win32]
     sha256: 656015ab03a6686854b920a0a0bf77b4e46525ee8d5396bf04a49ef80a53427d                                      # [win32]

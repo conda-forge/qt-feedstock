@@ -1,8 +1,3 @@
-# Note, you cannot build this with macOS SDK < 10.12, despite there being a few patches
-# to add back support. QtWebengine scuppers us with:
-#   error: unknown type name 'SecKeyAlgorithm'
-# .. these 10.11 support patches should be removed anyway as they could break some things.
-# .. such as pop-up Window mouse-events.
 {% set name = "qt" %}
 {% set version = "5.15.2" %}
 
@@ -15,7 +10,7 @@ source:
     sha256: 3a530d1b243b5dec00bc54937455471aaa3e56849d2593edb8ded07228202240
     patches:
       # qtbase
-      - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
+      # - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
       - patches/0003-qtbase-use-better-clang-optimize-size.patch
       - patches/0004-qtbase-never-enable-new-dtags.patch
       - patches/0005-qtbase-link-xcb-shm.patch

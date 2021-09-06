@@ -32,6 +32,10 @@ source:
     sha256: 2a0d2f92c60e0962ef5f6039d3793424c6f39e49ba27ac04a5b21ca4ae012e15                                      # [win64]
     folder: opengl32sw                                                                                            # [win64]
 
+  - url: https://download.qt.io/official_releases/jom/jom.zip  # [win]
+    folder: jom  # [win]
+    md5: f960efa8dc1e99df088d32bc1bc2157c  # [win]
+
 build:
   number: 0
   detect_binary_files_with_prefix: true

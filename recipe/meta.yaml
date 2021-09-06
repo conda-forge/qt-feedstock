@@ -20,7 +20,7 @@ source:
       - patches/0009-qtbase-fix-hardcoded-sysroot-path.patch
       # - patches/9999-qtbase-use-better-gcc-optimize-size.patch
       # https://bugreports.qt.io/browse/QTBUG-76777
-      - patches/qcore_for_sdk_10_13_1.patch
+      # - patches/qcore_for_sdk_10_13_1.patch
 
       # qtwinextras
       - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch

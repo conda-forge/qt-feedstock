@@ -1,12 +1,17 @@
 set -exou
 
-# Clean config for dirty builds
-# -----------------------------
-rm -f .qmake.stash .qmake.cache || true
-
 # Compile
 # -------
 chmod +x configure
+
+# Clean config for dirty builds
+# -----------------------------
+if [[ -d qt-build ]]; then
+  rm -rf qt-build
+fi
+
+mkdir qt-build
+pushd qt-build
 
 # Remove the full path from CXX etc. If we don't do this
 # then the full path at build time gets put into

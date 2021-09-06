@@ -205,7 +205,7 @@ test:
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]
 
 about:
-  home: http://qt-project.org
+  home: http://qt.io
   license: LGPL-3.0-only
   license_file: LICENSE.LGPLv3
   summary: 'Qt is a cross-platform application and UI framework.'
@@ -213,7 +213,7 @@ about:
     Qt helps you create connected devices, UIs & applications that run
     anywhere on any device, on any operating system at any time.
   doc_url: http://doc.qt.io/
-  dev_url: https://github.com/qtproject
+  dev_url: https://github.com/qt
 
 extra:
   recipe-maintainers:

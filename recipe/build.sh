@@ -41,13 +41,6 @@ export NINJAFLAGS="-j${MAKE_JOBS}"
 # size of the libraries.
 MINIMAL_BUILD=no
 
-if [[ -d qtwebkit ]]; then
-  # From: http://www.linuxfromscratch.org/blfs/view/svn/x/qtwebkit5.html
-  # Should really be a patch:
-  sed -i.bak -e '/CONFIG/a\
-    QMAKE_CXXFLAGS += -Wno-expansion-to-defined' qtwebkit/Tools/qmake/mkspecs/features/unix/default_pre.prf
-fi
-
 # For QDoc
 export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 

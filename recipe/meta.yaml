@@ -23,7 +23,7 @@ source:
       # - patches/qcore_for_sdk_10_13_1.patch
 
       # qtwinextras
-      - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
+      # - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch                                                                                      # [win32]

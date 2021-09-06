@@ -26,7 +26,7 @@ source:
       # - patches/0001-shobjidl-Fix-compile-guard-around-SHARDAPPIDINFOLINK.patch
 
       # qtscript
-      - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch                                                                                      # [win32]
+      # - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch                                    # [win32]
 
   - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-64-mesa_12_0_rc2.7z      # [win64]
     sha256: 2a0d2f92c60e0962ef5f6039d3793424c6f39e49ba27ac04a5b21ca4ae012e15                                      # [win64]

@@ -120,15 +120,17 @@ requirements:
     - dbus                               # [linux]
     - fontconfig                         # [linux]
     - freetype                           # [linux]
-    - gst-plugins-base                   # [linux]
-    - gstreamer                          # [linux]
+    - gst-plugins-base                   # [not arm64]
+    - gstreamer                          # [not arm64]
+    - pulseaudio                         # [linux and not aarch64]
     - libglib                            # [linux]
     - libxml2                            # [linux]
     - libxkbcommon                       # [linux]
     - expat                              # [linux]
     - libevent                           # [linux]
     - icu
-    - jpeg
+    # - jpeg
+    - libjpeg-turbo
     - libpng
     - nspr                               # [unix]
     - nss                                # [unix]
@@ -137,8 +139,6 @@ requirements:
     - postgresql                         # [not win]
     - zlib
     - libxcb                             # [linux]
-    # We cannot install OpenSSL into the prefix when building qtwebengine
-    # on linux as BoringSSL and OpenSSL then conflict with each other.
     - openssl                            # [win]
     # For QDoc
     # http://doc.qt.io/Qt-5/qdoc-guide-clang.html

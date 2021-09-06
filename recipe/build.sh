@@ -1,3 +1,5 @@
+set -exou
+
 # Clean config for dirty builds
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true

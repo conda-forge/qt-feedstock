@@ -67,13 +67,7 @@ rm -rf $PREFIX/bin/protoc
 conda create -y --prefix "${SRC_DIR}/python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
 export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
 
-if [[ ${HOST} =~ .*linux.* ]]; then
-
-    if ! which ruby > /dev/null 2>&1; then
-        echo "You need ruby to build qtwebkit"
-        exit 1
-    fi
-
+if [[ $(uname) == "Linux" ]]; then
     ln -s ${GXX} g++ || true
     ln -s ${GCC} gcc || true
     # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}

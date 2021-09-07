@@ -101,10 +101,10 @@ if [[ $(uname) == "Linux" ]]; then
                 -headerdir ${PREFIX}/include/qt \
                 -archdatadir ${PREFIX} \
                 -datadir ${PREFIX} \
-                -I ${SRC_DIR}/openssl_hack/include \
                 -I ${PREFIX}/include \
                 -L ${PREFIX}/lib \
                 -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
+                QMAKE_LFLAGS+="-Wl,-rpath,$PREFIX/lib -Wl,-rpath-link,$PREFIX/lib -L$PREFIX/lib" \
                 -release \
                 -opensource \
                 -confirm-license \
@@ -113,6 +113,8 @@ if [[ $(uname) == "Linux" ]]; then
                 -nomake tests \
                 -verbose \
                 -skip wayland \
+                -skip qtwebengine \
+                -gstreamer 1.0 \
                 -system-libjpeg \
                 -system-libpng \
                 -system-zlib \
@@ -120,14 +122,16 @@ if [[ $(uname) == "Linux" ]]; then
                 -plugin-sql-sqlite \
                 -plugin-sql-mysql \
                 -plugin-sql-psql \
+                -xcb \
+                -xcb-xlib \
+                -bundled-xcb-xinput \
                 -qt-pcre \
-                -qt-xcb \
                 -xkbcommon \
                 -dbus \
                 -no-linuxfb \
                 -no-libudev \
-                -no-avx \
-                -no-avx2 \
+                # -no-avx \
+                # -no-avx2 \
                 -optimize-size \
                 ${REDUCE_RELOCATIONS} \
                 -cups \
@@ -141,33 +145,14 @@ if [[ $(uname) == "Linux" ]]; then
                 -D FC_WEIGHT_EXTRABLACK=215 \
                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
                 -D GLX_GLXEXT_PROTOTYPES \
-                "${SKIPS[@]}" \
-                QMAKE_LFLAGS+="-Wl,-rpath,$PREFIX/lib -Wl,-rpath-link,$PREFIX/lib -L$PREFIX/lib"
-
-
+                "${SKIPS[@]}"
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
 #                -ltcg \
 #                --disable-new-dtags \
 
-    if [[ ${MINIMAL_BUILD} != yes ]]; then
-      CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebengine || exit 1
-      if find . -name "libQt5WebEngine*so" -exec false {} +; then
-        echo "Did not build qtwebengine, exiting"
-        exit 1
-      fi
-    fi
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebsockets || exit 1
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtwebchannel || exit 1
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtsvg || exit 1
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtsensors || exit 1
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtcanvas3d || exit 1
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtconnectivity || exit 1
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qttools || exit 1
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qtlocation || exit 1
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} module-qt3d || exit 1
-    CPATH=$PREFIX/include LD_LIBRARY_PATH=$PREFIX/lib make -j${MAKE_JOBS} || exit 1
-    make install
+  make -j${MAKE_JOBS}
+  make install
 fi
 
 if [[ ${HOST} =~ .*darwin.* ]]; then

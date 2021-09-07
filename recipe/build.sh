@@ -49,24 +49,6 @@ MINIMAL_BUILD=no
 rm -rf $PREFIX/include/google/protobuf
 rm -rf $PREFIX/bin/protoc
 
-# Problems: https://bugreports.qt.io/browse/QTBUG-61158
-#           (same thing happens for libyuv, it does not pickup the -I$PREFIX/include)
-# Something to do with BUILD.gn files and/or ninja
-# To find the files that do not include $PREFIX/include:
-# pushd /opt/conda/conda-bld/qt_1520013782031/work/qtwebengine/src
-# grep -R include_dirs . | grep ninja | grep -v _h_env_ | cut -d':' -f 1 | sort | uniq
-# To find the files that do:
-# pushd /opt/conda/conda-bld/qt_1520013782031/work/qtwebengine/src
-# grep -R include_dirs . | grep ninja | grep _h_env_ | cut -d':' -f 1 | sort | uniq
-# Need to figure out what in the BUILD.gn files is different, so compare the smallest file from each?
-# grep -R include_dirs . | grep ninja | grep -v _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
-# grep -R include_dirs . | grep ninja | grep    _h_env_ | cut -d':' -f 1 | sort | uniq | xargs stat -c "%s %n" 2>/dev/null | sort -h | head -n 10
-# Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
-
-# qtwebengine needs python 2
-conda create -y --prefix "${SRC_DIR}/python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
-export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
-
 if [[ $(uname) == "Linux" ]]; then
     ln -s ${GXX} g++ || true
     ln -s ${GCC} gcc || true

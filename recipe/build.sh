@@ -130,8 +130,6 @@ if [[ $(uname) == "Linux" ]]; then
                  -dbus \
                  -no-linuxfb \
                  -no-libudev \
-                 # -no-avx \
-                 # -no-avx2 \
                  -optimize-size \
                  ${REDUCE_RELOCATIONS} \
                  -cups \

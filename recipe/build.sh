@@ -46,8 +46,8 @@ done
 MINIMAL_BUILD=no
 
 # Remove protobuf which is pulled in indirectly
-rm -rf $PREFIX/include/google/protobuf
-rm -rf $PREFIX/bin/protoc
+# rm -rf $PREFIX/include/google/protobuf
+# rm -rf $PREFIX/bin/protoc
 
 if [[ $(uname) == "Linux" ]]; then
     ln -s ${GXX} g++ || true

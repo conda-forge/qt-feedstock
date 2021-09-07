@@ -13,6 +13,17 @@ fi
 mkdir qt-build
 pushd qt-build
 
+echo PREFIX=${PREFIX}
+echo BUILD_PREFIX=${BUILD_PREFIX}
+USED_BUILD_PREFIX=${BUILD_PREFIX:-${PREFIX}}
+echo USED_BUILD_PREFIX=${BUILD_PREFIX}
+
+MAKE_JOBS=$CPU_COUNT
+export NINJAFLAGS="-j${MAKE_JOBS}"
+
+# For QDoc
+export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
+
 # Remove the full path from CXX etc. If we don't do this
 # then the full path at build time gets put into
 # mkspecs/qmodule.pri and qmake attempts to use this.
@@ -29,20 +40,10 @@ do
     unset $x
 done
 
-echo PREFIX=${PREFIX}
-echo BUILD_PREFIX=${BUILD_PREFIX}
-USED_BUILD_PREFIX=${BUILD_PREFIX:-${PREFIX}}
-echo USED_BUILD_PREFIX=${BUILD_PREFIX}
-
-MAKE_JOBS=$CPU_COUNT
-export NINJAFLAGS="-j${MAKE_JOBS}"
 # You can use this to cut down on the number of modules built. Of course the Qt package will not be of
 # much use, but it is useful if you are iterating on e.g. figuring out compiler flags to reduce the
 # size of the libraries.
 MINIMAL_BUILD=no
-
-# For QDoc
-export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
 
 # Remove protobuf which is pulled in indirectly
 rm -rf $PREFIX/include/google/protobuf

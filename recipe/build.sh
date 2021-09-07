@@ -54,11 +54,14 @@ if [[ $(uname) == "Linux" ]]; then
     ln -s ${GCC} gcc || true
     # Needed for -ltcg, it we merge build and host again, change to ${PREFIX}
     ln -s ${USED_BUILD_PREFIX}/bin/${HOST}-gcc-ar gcc-ar || true
-    chmod +x g++ gcc gcc-ar
-    export PATH=${PWD}:${PATH}
+
     export LD=${GXX}
     export CC=${GCC}
     export CXX=${GXX}
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/lib64/pkgconfig/"
+
+    chmod +x g++ gcc gcc-ar
+    export PATH=${PWD}:${PATH}
 
     conda create -y --prefix "${SRC_DIR}/openssl_hack" -c https://repo.continuum.io/pkgs/main  \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack"  \

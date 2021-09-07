@@ -64,13 +64,10 @@ if [[ $(uname) == "Linux" ]]; then
     chmod +x g++ gcc gcc-ar
     export PATH=${PWD}:${PATH}
 
-
-    export PATH=${PWD}:${PATH}
     declare -a SKIPS
     if [[ ${MINIMAL_BUILD} == yes ]]; then
       SKIPS+=(-skip); SKIPS+=(qtwebsockets)
       SKIPS+=(-skip); SKIPS+=(qtwebchannel)
-      SKIPS+=(-skip); SKIPS+=(qtwebengine)
       SKIPS+=(-skip); SKIPS+=(qtsvg)
       SKIPS+=(-skip); SKIPS+=(qtsensors)
       SKIPS+=(-skip); SKIPS+=(qtcanvas3d)
@@ -80,35 +77,6 @@ if [[ $(uname) == "Linux" ]]; then
       SKIPS+=(-skip); SKIPS+=(qttools)
       SKIPS+=(-skip); SKIPS+=(qtlocation)
       SKIPS+=(-skip); SKIPS+=(qt3d)
-    fi
-    declare -A COS6_MISSING_DEFINES
-    if [[ ${_CONDA_PYTHON_SYSCONFIGDATA_NAME} == *cos6* ]]; then
-      COS6_MISSING_DEFINES["SYN_DROPPED"]="3"
-      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY1"]="0x2c0"
-      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY2"]="0x2c1"
-      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY3"]="0x2c2"
-      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY4"]="0x2c3"
-      COS6_MISSING_DEFINES["BTN_TRIGGER_HAPPY17"]="0x2d0"
-      COS6_MISSING_DEFINES["INPUT_PROP_POINTER"]="0x00"
-      COS6_MISSING_DEFINES["INPUT_PROP_DIRECT"]="0x01"
-      COS6_MISSING_DEFINES["INPUT_PROP_BUTTONPAD"]="0x02"
-      COS6_MISSING_DEFINES["INPUT_PROP_SEMI_MT"]="0x03"
-      COS6_MISSING_DEFINES["INPUT_PROP_MAX"]="0x1f"
-      COS6_MISSING_DEFINES["INPUT_PROP_CNT"]="0x20"
-      COS6_MISSING_DEFINES["ABS_MT_SLOT"]="0x2f"
-      COS6_MISSING_DEFINES["ABS_MT_PRESSURE"]="0x3a"
-      COS6_MISSING_DEFINES["ABS_MT_DISTANCE"]="0x3b"
-
-      # MAJOR HACK ahead!!!!!!
-      # The above macros are missing in cos6 and there are a few files that I have to patch to make it work
-      # Tried giving this as macros to ./configure, but the configure script doesn't pass them to ninja when building chromium.
-      for key in ${!COS6_MISSING_DEFINES[@]}; do
-        mv ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h.bak
-        cp ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h.bak ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
-        echo "#ifndef ${key}"                                 >> ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
-        echo "#define ${key} ${COS6_MISSING_DEFINES[${key}]}" >> ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
-        echo "#endif" >> ${BUILD_PREFIX}/${HOST}/sysroot/usr/include/linux/input.h
-      done
     fi
 
     if [ ${target_platform} == "linux-aarch64" ] || [ ${target_platform} == "linux-ppc64le" ]; then

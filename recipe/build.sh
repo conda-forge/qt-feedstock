@@ -59,8 +59,6 @@ if [[ $(uname) == "Linux" ]]; then
     export CC=${GCC}
     export CXX=${GXX}
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/lib64/pkgconfig/"
-    export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
-
     chmod +x g++ gcc gcc-ar
     export PATH=${PWD}:${PATH}
 
@@ -104,6 +102,7 @@ if [[ $(uname) == "Linux" ]]; then
                  -I ${PREFIX}/include \
                  -L ${PREFIX}/lib \
                  -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
+                 -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib \
                  QMAKE_LFLAGS+="-Wl,-rpath,$PREFIX/lib -Wl,-rpath-link,$PREFIX/lib -L$PREFIX/lib" \
                  -release \
                  -opensource \
@@ -149,7 +148,7 @@ if [[ $(uname) == "Linux" ]]; then
 #                -ltcg \
 #                --disable-new-dtags \
 
-  make -j${MAKE_JOBS}
+  make -j$(nproc)
   make install
 fi
 

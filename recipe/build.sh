@@ -105,7 +105,6 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # https://codereview.qt-project.org/#/c/157817/
     #
     sed -i "s/-isystem//g" "qtbase/mkspecs/common/gcc-base.conf"
-    export PKG_CONFIG_LIBDIR=$(${USED_BUILD_PREFIX}/bin/pkg-config --pclibdir)
 
     export PATH=${PWD}:${PATH}
     declare -a SKIPS
@@ -271,7 +270,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
         exit 1
       fi
     fi
-    
+
     sed -i.bak "s/-Wno-c++11-narrowing'/-Wno-c++11-narrowing', '-Wno-elaborated-enum-base'/g" qtwebengine/src/3rdparty/gn/build/gen.py
     sed -i.bak 's/-Wno-address-of-packed-member"/-Wno-address-of-packed-member", "-Wno-elaborated-enum-base"/g' qtwebengine/src/3rdparty/chromium/build/config/compiler/BUILD.gn
 

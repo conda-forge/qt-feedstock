@@ -80,7 +80,6 @@ requirements:
     - {{ cdt('libxfixes-devel') }}       # [linux]
     - {{ cdt('libxxf86vm') }}            # [linux]
     - {{ cdt('libxxf86vm-devel') }}      # [linux]
-    - {{ cdt('cups-devel') }}            # [linux]
     - {{ cdt('libsm-devel') }}           # [linux]
     - {{ cdt('libice-devel') }}          # [linux]
     - {{ cdt('libxcb') }}                # [linux]
@@ -149,6 +148,7 @@ requirements:
     - clangdev
     - libclang
     - xorg-libxfixes                     # [linux]
+    - libcups                            # [linux]
   run:
     - openssl                            # [not osx]
     - {{ pin_compatible("nss") }}        # [unix]

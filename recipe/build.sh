@@ -153,41 +153,48 @@ if [[ $(uname) == "Linux" ]]; then
 fi
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
-    ./configure -prefix $PREFIX \
-                -libdir $PREFIX/lib \
-                -bindir $PREFIX/bin \
-                -headerdir $PREFIX/include/qt \
-                -archdatadir $PREFIX \
-                -datadir $PREFIX \
-                -L $PREFIX/lib \
-                -I $PREFIX/include \
-                -R $PREFIX/lib \
-                -release \
-                -opensource \
-                -confirm-license \
-                -shared \
-                -nomake examples \
-                -nomake tests \
-                -verbose \
-                -skip wayland \
-                -system-libjpeg \
-                -system-libpng \
-                -system-zlib \
-                -system-sqlite \
-                -plugin-sql-sqlite \
-                -plugin-sql-mysql \
-                -plugin-sql-psql \
-                -qt-freetype \
-                -qt-pcre \
-                -no-framework \
-                -dbus \
-                -no-mtdev \
-                -no-harfbuzz \
-                -no-libudev \
-                -no-egl \
-                -no-openssl \
-                -optimize-size \
-                -sdk macosx10.12
+    PLATFORM=""
+    if [[ $(arch) == "arm64" ]]; then
+      PLATFORM="-device-option QMAKE_APPLE_DEVICE_ARCHS=arm64"
+    fi
+
+    ../configure -prefix ${PREFIX} \
+                 -libdir ${PREFIX}/lib \
+                 -bindir ${PREFIX}/bin \
+                 -headerdir ${PREFIX}/include/qt \
+                 -archdatadir ${PREFIX} \
+                 -datadir ${PREFIX} \
+                 $PLATFORM \
+                 -I ${PREFIX}/include \
+                 -L ${PREFIX}/lib \
+                 -R $PREFIX/lib \
+                 -release \
+                 -opensource \
+                 -confirm-license \
+                 -shared \
+                 -nomake examples \
+                 -nomake tests \
+                 -verbose \
+                 -skip wayland \
+                 -skip qtwebengine \
+                 -system-libjpeg \
+                 -system-libpng \
+                 -system-zlib \
+                 -system-sqlite \
+                 -plugin-sql-sqlite \
+                 -plugin-sql-mysql \
+                 -plugin-sql-psql \
+                 -qt-freetype \
+                 -qt-pcre \
+                 -no-framework \
+                 -dbus \
+                 -no-mtdev \
+                 -no-harfbuzz \
+                 -no-libudev \
+                 -no-egl \
+                 -no-openssl \
+                 -optimize-size \
+                 -sdk macosx10.14
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d

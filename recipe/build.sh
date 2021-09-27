@@ -100,6 +100,7 @@ if [[ $(uname) == "Linux" ]]; then
                  -archdatadir ${PREFIX} \
                  -datadir ${PREFIX} \
                  -I ${PREFIX}/include \
+                 -I ${PREFIX}/include/mysql \
                  -L ${PREFIX}/lib \
                  -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
                  -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib \

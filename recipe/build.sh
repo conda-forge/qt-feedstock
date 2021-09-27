@@ -194,8 +194,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                  -no-libudev \
                  -no-egl \
                  -no-openssl \
-                 -optimize-size \
-                 -sdk macosx10.14
+                 -optimize-size
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d

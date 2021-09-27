@@ -202,11 +202,6 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
 #                -ltcg \
 
     ####
-    make -j${MAKE_JOBS} module-qtwebengine || exit 1
-    if find . -name "libQt5WebEngine*dylib" -exec false {} +; then
-      echo "Did not build qtwebengine, exiting"
-      exit 1
-    fi
     make -j${MAKE_JOBS} || exit 1
     make install
 

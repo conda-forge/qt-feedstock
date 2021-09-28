@@ -22,6 +22,16 @@ for /F "usebackq delims=" %%F in (`dir /b /ad-h`) do (
 popd
 endlocal
 
+:: Make sure jom is picked up
+set PATH=%cd%\jom;%PATH%
+SET PATH=%cd%\qtbase\bin;%_ROOT%\gnuwin32\bin;%PATH%
+
+:: Compilation fails due to long path names in the case of angle
+:: We create a symlink to the actual folder and then instruct Qt
+:: to locate angle under our symlink
+mklink /D %cd%\angle %cd%\qtbase\src\3rdparty\angle
+set ANGLE_DIR=%cd%\angle
+
 :: Webengine requires either working OpenGL drivers or
 :: Angle (therefore DirectX >= 11). This works on some
 :: VMs and not others.  Windows 7 VirtualBox instantly

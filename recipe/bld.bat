@@ -1,5 +1,5 @@
 @echo on
-setlocal EnableDelayedExpansion
+setlocal EnableExtensions EnableDelayedExpansion
 set SHORT_VERSION=%PKG_VERSION:~0,-2%
 
 :: You may not always want this when doing dirty builds (debugging late stage
@@ -13,6 +13,14 @@ if exist config.cache del config.cache
 ::   echo this message, please open a new console to refresh your environment variables.
 ::   exit /b 1
 :: )
+
+:: Set each include folder as a include flag to MSVC
+pushd %LIBRARY_INC%
+for /F "usebackq delims=" %%F in (`dir /b /ad-h`) do (
+    set LIBRARY_PATHS=!LIBRARY_PATHS! -I %LIBRARY_INC%\%%F
+)
+popd
+endlocal
 
 :: Webengine requires either working OpenGL drivers or
 :: Angle (therefore DirectX >= 11). This works on some

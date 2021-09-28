@@ -32,17 +32,6 @@ SET PATH=%cd%\qtbase\bin;%_ROOT%\gnuwin32\bin;%PATH%
 mklink /D %cd%\angle %cd%\qtbase\src\3rdparty\angle
 set ANGLE_DIR=%cd%\angle
 
-:: Webengine requires either working OpenGL drivers or
-:: Angle (therefore DirectX >= 11). This works on some
-:: VMs and not others.  Windows 7 VirtualBox instantly
-:: aborts when loading Spyder sSo we've had to disable
-:: it globally.
-:: Using Mesa from MSYS2 is mentioned as a workaround:
-::  http://wiki.qt.io/Cross-compiling-Mesa-for-Windows
-:: `set QT_OPENGL=software` forces Qt5 to use that but
-:: but when I tried it it was too buggy; Spyder crashed a
-:: little bit later, though it worked for Carlos.
-set WEBBACKEND=qtwebengine
 set QT_LIBINFIX=_conda
 
 where perl.exe
@@ -51,23 +40,12 @@ if %ERRORLEVEL% neq 0 (
   exit /b 1
 )
 
-:: make sure we can find ICU and openssl:
-set "INCLUDE=%LIBRARY_INC%;%INCLUDE%"
-set "LIB=%LIBRARY_LIB%;%LIB%"
-
 :: Support systems with neither capable OpenGL (desktop mode) nor DirectX 11 (ANGLE mode) drivers
 :: https://github.com/ContinuumIO/anaconda-issues/issues/9142
 if not exist "%LIBRARY_BIN%" mkdir "%LIBRARY_BIN%"
 copy opengl32sw\opengl32sw.dll  %LIBRARY_BIN%\opengl32sw.dll
 if errorlevel 1 exit /b 1
 if not exist %LIBRARY_BIN%\opengl32sw.dll exit /b 1
-
-:: WebEngine (Chromium) specific definitions.  Only build this with VS 2015 (no support for python < 3.5)
-if "%WEBBACKEND%" == "qtwebengine" (
-  echo "Building qtwebengine"
-) else (
-  rmdir /s /q qtwebengine
-)
 
 set OPENGLVER=dynamic
 

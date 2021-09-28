@@ -49,9 +49,8 @@ if not exist %LIBRARY_BIN%\opengl32sw.dll exit /b 1
 
 set OPENGLVER=dynamic
 
-:: qtwebengine needs python 2
-conda.exe create -y --prefix "%SRC_DIR%\python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
-set "PATH=%SRC_DIR%\python2_hack;%PATH%"
+mkdir b
+pushd b
 
 :: See http://doc-snapshot.qt-project.org/qt5-5.4/windows-requirements.html
 :: this needs to be CALLed due to an exit statement at the end of configure:
@@ -60,7 +59,7 @@ set "PATH=%SRC_DIR%\python2_hack;%PATH%"
 :: ends up containing:
 :: QMAKE_PRL_TARGET = Qt5Bootstrap.condad.lib
 :: for some odd reason.
-call configure ^
+call "../configure" ^
      -prefix %LIBRARY_PREFIX% ^
      -libdir %LIBRARY_LIB% ^
      -bindir %LIBRARY_BIN% ^
@@ -68,6 +67,7 @@ call configure ^
      -archdatadir %LIBRARY_PREFIX% ^
      -datadir %LIBRARY_PREFIX% ^
      -optimized-tools ^
+     %LIBRARY_PATHS% ^
      -L %LIBRARY_LIB% ^
      -I %LIBRARY_INC% ^
      -confirm-license ^
@@ -78,6 +78,7 @@ call configure ^
      -nomake examples ^
      -nomake tests ^
      -no-warnings-are-errors ^
+     -skip qtwebengine ^
      -opengl %OPENGLVER% ^
      -opensource ^
      -openssl ^

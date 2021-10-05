@@ -116,6 +116,13 @@ echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very 
 copy qtbase\bin\qmake.exe %LIBRARY_BIN%\qmake.exe
 :ok_qmake_exists
 
+popd
+pushd qtcharts
+%LIBRARY_BIN%\qmake.exe qtcharts.pro PREFIX=%PREFIX%
+jom
+jom install
+popd
+
 :: To rewrite qt.conf contents per conda environment
 if not exist %PREFIX%\Scripts mkdir %PREFIX%\Scripts
 copy "%RECIPE_DIR%\write_qtconf.bat" "%PREFIX%\Scripts\.qt-post-link.bat"

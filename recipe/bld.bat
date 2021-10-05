@@ -110,11 +110,6 @@ echo Finished `jom -U release`
 jom install
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo Finished `jom -U install`
-pushd qtbase
-  jom -U install_mkspecs
-  if %errorlevel% neq 0 exit /b %errorlevel%
-  echo Finished `jom -U install_mkspecs`
-popd
 
 if exist %LIBRARY_BIN%\qmake.exe goto ok_qmake_exists
 echo Warning %LIBRARY_BIN%\qmake.exe does not exist jom -U install failed, very strange. Copying it from qtbase\bin\qmake.exe

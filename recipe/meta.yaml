@@ -121,6 +121,7 @@ requirements:
     - dbus                               # [linux]
     - fontconfig                         # [linux]
     - freetype                           # [linux]
+    - glib                               # [not arm64]
     - gst-plugins-base                   # [not arm64]
     - gstreamer                          # [not arm64]
     - pulseaudio                         # [linux and not aarch64]

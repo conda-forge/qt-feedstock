@@ -154,8 +154,10 @@ fi
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
     PLATFORM=""
+    EXTRA_FLAGS="-gstreamer 1.0"
     if [[ $(arch) == "arm64" ]]; then
       PLATFORM="-device-option QMAKE_APPLE_DEVICE_ARCHS=arm64"
+      EXTRA_FLAGS=""
     fi
 
     ../configure -prefix ${PREFIX} \
@@ -167,6 +169,9 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                  $PLATFORM \
                  -I ${PREFIX}/include \
                  -I ${PREFIX}/include/mysql \
+                 -I ${PREFIX}/include/gstreamer-1.0 \
+                 -I ${PREFIX}/include/glib-2.0 \
+                 -I ${PREFIX}/lib/glib-2.0/include \
                  -L ${PREFIX}/lib \
                  -R $PREFIX/lib \
                  -release \
@@ -178,6 +183,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
                  -verbose \
                  -skip wayland \
                  -skip qtwebengine \
+                 $EXTRA_FLAGS \
                  -system-libjpeg \
                  -system-libpng \
                  -system-zlib \

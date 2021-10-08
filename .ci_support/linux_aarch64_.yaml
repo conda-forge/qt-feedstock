@@ -21,10 +21,12 @@ dbus:
 docker_image:
 - quay.io/condaforge/linux-anvil-aarch64
 expat:
-- '2.2'
+- '2'
 fontconfig:
 - '2.13'
 freetype:
+- '2'
+glib:
 - '2'
 gst_plugins_base:
 - '1.18'
@@ -32,10 +34,10 @@ gstreamer:
 - '1.18'
 icu:
 - '68'
-jpeg:
-- '9'
 libevent:
 - 2.1.10
+libjpeg_turbo:
+- '2'
 libpng:
 - '1.6'
 libxml2:
@@ -44,21 +46,17 @@ nspr:
 - '4'
 nss:
 - '3'
-openssl:
-- 1.1.1
 pin_run_as_build:
   dbus:
     max_pin: x
-  expat:
-    max_pin: x.x
   fontconfig:
     max_pin: x
   freetype:
     max_pin: x
-  jpeg:
-    max_pin: x
   libevent:
     max_pin: x.x.x
+  libjpeg_turbo:
+    max_pin: x
   libpng:
     max_pin: x.x
   libxml2:
@@ -67,8 +65,6 @@ pin_run_as_build:
     max_pin: x
   nss:
     max_pin: x
-  openssl:
-    max_pin: x.x.x
   readline:
     max_pin: x
   sqlite:
@@ -76,7 +72,7 @@ pin_run_as_build:
   zlib:
     max_pin: x.x
 readline:
-- '8.0'
+- '8'
 sqlite:
 - '3'
 target_platform:

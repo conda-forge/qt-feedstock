@@ -1,7 +1,5 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.14'
-MACOSX_SDK_VERSION:
-- '10.14'
+- '11.0'
 c_compiler:
 - clang
 c_compiler_version:
@@ -16,12 +14,6 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '11'
-glib:
-- '2'
-gst_plugins_base:
-- '1.18'
-gstreamer:
-- '1.18'
 icu:
 - '68'
 libjpeg_turbo:
@@ -29,7 +21,7 @@ libjpeg_turbo:
 libpng:
 - '1.6'
 macos_machine:
-- x86_64-apple-darwin13.4.0
+- arm64-apple-darwin20.0.0
 nspr:
 - '4'
 nss:
@@ -50,7 +42,7 @@ pin_run_as_build:
 sqlite:
 - '3'
 target_platform:
-- osx-64
+- osx-arm64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version

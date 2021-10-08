@@ -153,9 +153,13 @@ if [[ $(uname) == "Linux" ]]; then
 fi
 
 if [[ ${HOST} =~ .*darwin.* ]]; then
+    # Avoid Xcode
+    cp "${RECIPE_DIR}"/xcrun .
+    cp "${RECIPE_DIR}"/xcodebuild .
+
     PLATFORM=""
     EXTRA_FLAGS="-gstreamer 1.0"
-    if [[ $(arch) == "arm64" ]]; then
+    if [[ $(arch) == "arm64" || ${HOST} =~ arm64.* ]]; then
       PLATFORM="-device-option QMAKE_APPLE_DEVICE_ARCHS=arm64"
       EXTRA_FLAGS=""
     fi
@@ -210,6 +214,11 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     ####
     make -j${MAKE_JOBS} || exit 1
     make install
+
+    # Avoid Xcode (2)
+    mkdir -p "${PREFIX}"/bin/xc-avoidance || true
+    cp "${RECIPE_DIR}"/xcrun "${PREFIX}"/bin/xc-avoidance/
+    cp "${RECIPE_DIR}"/xcodebuild "${PREFIX}"/bin/xc-avoidance/
 fi
 
 # Qt Charts

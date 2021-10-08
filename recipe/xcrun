@@ -43,7 +43,7 @@ case ${1} in
     ;;
 
   *-show-sdk-version)
-    echo 10.12
+    echo 10.14
     exit 0
     ;;
 
@@ -53,7 +53,7 @@ case ${1} in
     ;;
 
   *-show-sdk-build-version)
-    echo 16C58
+    echo 18G74
     exit 0
     ;;
 

@@ -9,10 +9,10 @@ if [[ ${1} == --sdk || ${1} == -sdk ]]; then
 elif [[ ${1} == -version ]]; then
   # If Qt uses this to determine C++ features then we need to
   # pretend to be a very recent Xcode.
-  echo "Xcode 8.3.3" >> /tmp/xcodebuild-$$.log
-  echo "Build version 8E3004b" >> /tmp/xcodebuild-$$.log
-  echo "Xcode 8.3.3"
-  echo "Build version 8E3004b"
+  echo "Xcode 10.3" >> /tmp/xcodebuild-$$.log
+  echo "Build version 10G8" >> /tmp/xcodebuild-$$.log
+  echo "Xcode 10.3"
+  echo "Build version 10G8"
   exit 0
 fi
 
@@ -34,8 +34,8 @@ case ${1} in
       echo "TODO :: Implement fallback for xcodebuild --show-sdk-path"
       exit 1
     elif [[ ${1} == SDKVersion ]]; then
-      echo "10.12" >> /tmp/xcodebuild-$$.log
-      echo "10.12"
+      echo "10.14" >> /tmp/xcodebuild-$$.log
+      echo "10.14"
       exit 0
     elif [[ ${1} == PlatformPath ]]; then
       echo "Making this one up entirely, you may need a real Xcode" >> /tmp/xcodebuild-$$.log
@@ -43,7 +43,7 @@ case ${1} in
       echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform"
       exit 0
     elif [[ ${1} == ProductVersion ]]; then
-      echo "10.12"
+      echo "10.14"
       exit 0
     fi
     ;;

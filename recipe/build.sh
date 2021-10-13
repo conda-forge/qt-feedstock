@@ -175,6 +175,10 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
       PATH=${PWD}:${PATH}
     fi
 
+    if [[ ${HOST} =~ arm64.* ]]; then
+      PLATFORM="$PLATFORM -device-option CROSS_COMPILE=${HOST}-"
+    fi
+
     ../configure -prefix ${PREFIX} \
                  -libdir ${PREFIX}/lib \
                  -bindir ${PREFIX}/bin \

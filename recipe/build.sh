@@ -169,7 +169,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
 
     PLATFORM=""
     EXTRA_FLAGS="-gstreamer 1.0"
-    if [[ $(arch) == "arm64" || ${HOST} =~ arm64.* ]]; then
+    if [[ $(arch) == "arm64" ]]; then
       PLATFORM="-device-option QMAKE_APPLE_DEVICE_ARCHS=arm64"
       EXTRA_FLAGS=""
     fi

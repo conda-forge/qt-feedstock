@@ -165,17 +165,16 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     chmod +x ${HOST}-clang libtool strip
     # Qt passes clang flags to LD (e.g. -stdlib=c++)
     export LD=${CXX}
+    PATH=${PWD}:${PATH}
 
-    PLATFORM=""
+    PLATFORM="-sdk macosx10.14"
     EXTRA_FLAGS="-gstreamer 1.0"
     if [[ $(arch) == "arm64" || ${HOST} =~ arm64.* ]]; then
-      PLATFORM="-device-option QMAKE_APPLE_DEVICE_ARCHS=arm64"
+      PLATFORM="-device-option QMAKE_APPLE_DEVICE_ARCHS=arm64 -sdk macosx11.0"
       EXTRA_FLAGS=""
-    else
-      PATH=${PWD}:${PATH}
     fi
 
-    if [[ ${HOST} =~ arm64.* ]]; then
+    if [[ ${HOST} =~ arm64.* && $CONDA_BUILD_CROSS_COMPILATION == "1" ]]; then
       PLATFORM="$PLATFORM -device-option CROSS_COMPILE=${HOST}-"
     fi
 

@@ -10,7 +10,7 @@ source:
     sha256: 3a530d1b243b5dec00bc54937455471aaa3e56849d2593edb8ded07228202240
     patches:
       # qtbase
-      # - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
+      - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
       - patches/0003-qtbase-use-better-clang-optimize-size.patch
       - patches/0004-qtbase-never-enable-new-dtags.patch
       # - patches/0005-qtbase-link-xcb-shm.patch
@@ -157,7 +157,7 @@ requirements:
     - {{ pin_compatible("nspr") }}       # [unix]
     - libxcb                             # [linux]
     - {{ pin_compatible("libclang") }}
-    - libjpeg-turbo
+    - jpeg
     - libpng
     - pulseaudio                         # [linux and not aarch64]
     - gstreamer                          # [not arm64]

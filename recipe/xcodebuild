@@ -9,10 +9,17 @@ if [[ ${1} == --sdk || ${1} == -sdk ]]; then
 elif [[ ${1} == -version ]]; then
   # If Qt uses this to determine C++ features then we need to
   # pretend to be a very recent Xcode.
-  echo "Xcode 10.3" >> /tmp/xcodebuild-$$.log
-  echo "Build version 10G8" >> /tmp/xcodebuild-$$.log
-  echo "Xcode 10.3"
-  echo "Build version 10G8"
+  if [[ ${HOST} =~ arm64.* ]]; then
+    echo "Xcode 12.2" >> /tmp/xcodebuild-$$.log
+    echo "Build version 12B45b" >> /tmp/xcodebuild-$$.log
+    echo "Xcode 12.2"
+    echo "Build version 12B45b"
+  else
+    echo "Xcode 10.3" >> /tmp/xcodebuild-$$.log
+    echo "Build version 10G8" >> /tmp/xcodebuild-$$.log
+    echo "Xcode 10.3"
+    echo "Build version 10G8"
+  fi
   exit 0
 fi
 
@@ -34,8 +41,13 @@ case ${1} in
       echo "TODO :: Implement fallback for xcodebuild --show-sdk-path"
       exit 1
     elif [[ ${1} == SDKVersion ]]; then
-      echo "10.14" >> /tmp/xcodebuild-$$.log
-      echo "10.14"
+      if [[ ${HOST} =~ arm64.* ]]; then
+        echo "11.0" >> /tmp/xcodebuild-$$.log
+        echo "11.0"
+      else
+        echo "10.14" >> /tmp/xcodebuild-$$.log
+        echo "10.14"
+      fi
       exit 0
     elif [[ ${1} == PlatformPath ]]; then
       echo "Making this one up entirely, you may need a real Xcode" >> /tmp/xcodebuild-$$.log
@@ -43,7 +55,11 @@ case ${1} in
       echo "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform"
       exit 0
     elif [[ ${1} == ProductVersion ]]; then
-      echo "10.14"
+      if [[ ${HOST} =~ arm64.* ]]; then
+        echo "11.0"
+      else
+        echo "10.14"
+      fi
       exit 0
     fi
     ;;

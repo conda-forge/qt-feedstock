@@ -43,7 +43,11 @@ case ${1} in
     ;;
 
   *-show-sdk-version)
-    echo 10.14
+    if [[ ${HOST} =~ arm64.* ]]; then
+      echo 11.0
+    else
+      echo 10.14
+    fi
     exit 0
     ;;
 
@@ -53,7 +57,11 @@ case ${1} in
     ;;
 
   *-show-sdk-build-version)
-    echo 18G74
+    if [[ ${HOST} =~ arm64.* ]]; then
+      echo 20A2408
+    else
+      echo 18G74
+    fi
     exit 0
     ;;
 

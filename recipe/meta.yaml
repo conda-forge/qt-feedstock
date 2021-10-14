@@ -204,6 +204,8 @@ test:
     - test/qml.qrc
     - test/qrc_qml.cpp
     - test/qtwebengine.pro
+    - xcodebuild
+    - xcrun
   commands:
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]

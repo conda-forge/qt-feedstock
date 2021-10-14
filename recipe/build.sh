@@ -150,7 +150,7 @@ if [[ $(uname) == "Linux" ]]; then
 #                -ltcg \
 #                --disable-new-dtags \
 
-  make -j$(nproc)
+  make -j${MAKE_JOBS}
   make install
 fi
 

@@ -30,10 +30,10 @@ gstreamer:
 - '1.18'
 icu:
 - '68'
+jpeg:
+- '9'
 libevent:
 - 2.1.10
-libjpeg_turbo:
-- '2'
 libpng:
 - '1.6'
 libxml2:
@@ -49,10 +49,10 @@ pin_run_as_build:
     max_pin: x
   freetype:
     max_pin: x
+  jpeg:
+    max_pin: x
   libevent:
     max_pin: x.x.x
-  libjpeg_turbo:
-    max_pin: x
   libpng:
     max_pin: x.x
   libxml2:

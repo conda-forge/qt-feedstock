@@ -18,8 +18,8 @@ gstreamer:
 - '1.18'
 icu:
 - '68'
-libjpeg_turbo:
-- '2'
+jpeg:
+- '9'
 libpng:
 - '1.6'
 openssl:
@@ -27,7 +27,7 @@ openssl:
 pin_run_as_build:
   curl:
     max_pin: x
-  libjpeg_turbo:
+  jpeg:
     max_pin: x
   libpng:
     max_pin: x.x

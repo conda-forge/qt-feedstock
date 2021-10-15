@@ -16,8 +16,8 @@ cxx_compiler_version:
 - '11'
 icu:
 - '68'
-libjpeg_turbo:
-- '2'
+jpeg:
+- '9'
 libpng:
 - '1.6'
 macos_machine:
@@ -27,7 +27,7 @@ nspr:
 nss:
 - '3'
 pin_run_as_build:
-  libjpeg_turbo:
+  jpeg:
     max_pin: x
   libpng:
     max_pin: x.x

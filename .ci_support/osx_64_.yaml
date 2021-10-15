@@ -5,7 +5,7 @@ MACOSX_SDK_VERSION:
 c_compiler:
 - clang
 c_compiler_version:
-- '12'
+- '11'
 cdt_name:
 - cos7
 channel_sources:
@@ -15,7 +15,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '12'
+- '11'
 glib:
 - '2'
 gst_plugins_base:
@@ -24,8 +24,8 @@ gstreamer:
 - '1.18'
 icu:
 - '68'
-libjpeg_turbo:
-- '2'
+jpeg:
+- '9'
 libpng:
 - '1.6'
 macos_machine:
@@ -35,7 +35,7 @@ nspr:
 nss:
 - '3'
 pin_run_as_build:
-  libjpeg_turbo:
+  jpeg:
     max_pin: x
   libpng:
     max_pin: x.x

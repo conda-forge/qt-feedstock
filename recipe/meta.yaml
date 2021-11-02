@@ -192,6 +192,7 @@ test:
     - {{ cdt('expat-devel') }}           # [linux]
     - {{ cdt('pcre') }}                  # [linux]
     - {{ cdt('libglvnd-glx') }}          # [linux]
+    - make                               # [unix]
   files:
     - test/hello.pro
     - test/main-qtwebengine.cpp

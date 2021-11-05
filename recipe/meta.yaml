@@ -117,10 +117,11 @@ requirements:
     - dbus                               # [linux]
     - fontconfig                         # [linux]
     - freetype                           # [linux]
+    - glib                               # [osx and not arm64]
+    - libglib
     - gst-plugins-base
     - gstreamer
     - pulseaudio                         # [linux]
-    - libglib
     - libxml2                            # [linux]
     - libxkbcommon                       # [linux]
     - expat                              # [linux]

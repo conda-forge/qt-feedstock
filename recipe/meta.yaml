@@ -117,8 +117,7 @@ requirements:
     - dbus                               # [linux]
     - fontconfig                         # [linux]
     - freetype                           # [linux]
-    - glib                               # [osx and not arm64]
-    - libglib
+    - glib
     - gst-plugins-base
     - gstreamer
     - pulseaudio                         # [linux]
@@ -127,7 +126,6 @@ requirements:
     - expat                              # [linux]
     - libevent                           # [linux]
     - icu
-    - libfido2                           # [osx and arm64]
     # jpeg-turbo currently has some conflicting issues in conda-forge
     # see: https://github.com/conda-forge/conda-forge.github.io/issues/673
     - jpeg

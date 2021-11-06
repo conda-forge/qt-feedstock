@@ -284,3 +284,7 @@ for f in $(find * -iname "*LICENSE*" -or -iname "*COPYING*" -or -iname "*COPYRIG
   rm -rf "$LICENSE_DIR/qtwebengine/src/3rdparty/chromium/tools/checklicenses"
   rm -rf "$LICENSE_DIR/qtwebengine/src/3rdparty/chromium/third_party/skia/tools/copyright"
 done
+
+if [[ $CONDA_BUILD_CROSS_COMPILATION == "1" ]]; then
+  rm -rf $PREFIX/bin/python
+fi

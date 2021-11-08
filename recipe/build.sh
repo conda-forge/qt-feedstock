@@ -285,6 +285,10 @@ for f in $(find * -iname "*LICENSE*" -or -iname "*COPYING*" -or -iname "*COPYRIG
   rm -rf "$LICENSE_DIR/qtwebengine/src/3rdparty/chromium/third_party/skia/tools/copyright"
 done
 
-if [[ "${CONDA_BUILD_CROSSCOMPILATION:-}" == "1" ]]; then
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" == "1" ]]; then
+  # For some reason conda-build tries to pick the prefix Python, which is
+  # for native arm64 and not for x86_64, cross-python seems to disable the
+  # mkspecs installation and it constrains the recipe, since python would be
+  # needed during runtime.
   rm -rf $PREFIX/bin/python
 fi

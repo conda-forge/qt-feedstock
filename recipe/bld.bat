@@ -26,6 +26,9 @@ endlocal
 set PATH=%cd%\jom;%PATH%
 SET PATH=%cd%\qtbase\bin;%_ROOT%\gnuwin32\bin;%PATH%
 
+:: Set LLVM path in order to build docs
+set LLVM_INSTALL_DIR=%BUILD_PREFIX%\Library
+
 :: Compilation fails due to long path names in the case of angle
 :: We create a symlink to the actual folder and then instruct Qt
 :: to locate angle under our symlink

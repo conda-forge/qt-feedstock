@@ -111,6 +111,9 @@ requirements:
     # If they do, merge_build_host will fail.
     - readline                           # [linux]
     - llvm                               # [osx]
+    - llvmdev
+    - clangdev
+    - libclang
   host:
     # For pkg-config gl, fontconfig + freetype
     - pthread-stubs                      # [linux]

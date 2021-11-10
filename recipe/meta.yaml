@@ -93,7 +93,6 @@ requirements:
     # For fontconfig + freetype
     - pkg-config                         # [unix]
     - make                               # [unix]
-    - cmake
     - ninja
     - ruby >=2.5                         # [linux]
     - bison                              # [linux]
@@ -110,7 +109,7 @@ requirements:
     # Otherwise build and host might end up with two different versions
     # If they do, merge_build_host will fail.
     - readline                           # [linux]
-    - llvm                               # [osx]
+    - llvm
     - llvmdev
     - clangdev
     - libclang

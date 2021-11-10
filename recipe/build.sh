@@ -178,7 +178,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
 
     if [[ ${HOST} =~ arm64.* && $CONDA_BUILD_CROSS_COMPILATION == "1" ]]; then
       # GLib pulls arm64 python as part of its distribution, which cannot be executed on x86_64 CIs
-      CONDA_SUBDIR="osx-64" conda create -y --prefix "${SRC_DIR}/osx_64_python" python -c conda-forge
+      CONDA_SUBDIR="osx-64" conda create -y --prefix "${SRC_DIR}/osx_64_python" python zstd -c conda-forge
       export PATH="${SRC_DIR}/osx_64_python/bin":$PATH
       PLATFORM="$PLATFORM -device-option CROSS_COMPILE=${HOST}-"
     fi

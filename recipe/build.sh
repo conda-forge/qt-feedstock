@@ -169,14 +169,14 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     export LD=${CXX}
     PATH=${PWD}:${PATH}
 
-    PLATFORM="-sdk macosx10.14"
+    PLATFORM="-sdk macosx${MACOSX_SDK_VERSION:-10.14}"
     EXTRA_FLAGS="-gstreamer 1.0"
-    if [[ $(arch) == "arm64" || ${HOST} =~ arm64.* ]]; then
-      PLATFORM="-device-option QMAKE_APPLE_DEVICE_ARCHS=arm64 -sdk macosx11.0"
+    if [[ "${target_platform}" == "osx-arm64" ]]; then
+      PLATFORM="-device-option QMAKE_APPLE_DEVICE_ARCHS=arm64 -sdk macosx${MACOSX_SDK_VERSION:-11.0}"
       EXTRA_FLAGS=""
     fi
 
-    if [[ ${HOST} =~ arm64.* && $CONDA_BUILD_CROSS_COMPILATION == "1" ]]; then
+    if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" == "1" ]]; then
       # GLib pulls arm64 python as part of its distribution, which cannot be executed on x86_64 CIs
       CONDA_SUBDIR="osx-64" conda create -y --prefix "${SRC_DIR}/osx_64_python" python zstd -c conda-forge
       export PATH="${SRC_DIR}/osx_64_python/bin":$PATH
@@ -265,8 +265,6 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     # force users to also build their Qt apps with SDK 10.10
     # https://bugreports.qt.io/browse/QTBUG-41238
     sed -i '' 's/macosx.*$/macosx/g' mkspecs/qdevice.pri
-    # We allow macOS SDK 10.12 while upstream requires 10.13 (as of Qt 5.12.1).
-    sed -i '' 's/QT_MAC_SDK_VERSION_MIN = 10\..*/QT_MAC_SDK_VERSION_MIN = 10\.13/g' mkspecs/common/macx.conf
     # We may want to replace these with \$\${QMAKE_MAC_SDK_PATH}/ instead?
     sed -i '' "s|${CONDA_BUILD_SYSROOT}/|/|g" mkspecs/modules/*.pri
     CMAKE_FILES=$(find lib/cmake -name "Qt*.cmake")

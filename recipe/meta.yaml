@@ -154,10 +154,10 @@ requirements:
     - {{ pin_compatible("nspr") }}       # [unix]
     - libxcb                             # [linux]
     - {{ pin_compatible("libclang") }}
-    - jpeg
-    - libpng
-    - pulseaudio                         # [linux and not aarch64]
-    - gstreamer                          # [not arm64]
+    - {{ pin_compatible("jpeg") }}
+    - {{ pin_compatible("libpng") }}
+    - {{ pin_compatible("pulseaudio") }}  # [linux and not aarch64]
+    - {{ pin_compatible("gstreamer") }}   # [not arm64]
   run_constrained:                                            # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.14") }}  # [osx]
 

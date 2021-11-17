@@ -94,57 +94,57 @@ if [[ $(uname) == "Linux" ]]; then
     #   -sysroot ${BUILD_PREFIX}/${HOST}/sysroot
     # .. but it probably requires changing -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 to -L /usr/lib64
     ../configure -prefix ${PREFIX} \
-                 -libdir ${PREFIX}/lib \
-                 -bindir ${PREFIX}/bin \
-                 -headerdir ${PREFIX}/include/qt \
-                 -archdatadir ${PREFIX} \
-                 -datadir ${PREFIX} \
-                 -I ${PREFIX}/include \
-                 -L ${PREFIX}/lib \
-                 -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
-                 -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib \
-                 QMAKE_LFLAGS+="-Wl,-rpath,$PREFIX/lib -Wl,-rpath-link,$PREFIX/lib -L$PREFIX/lib" \
-                 -release \
-                 -opensource \
-                 -confirm-license \
-                 -shared \
-                 -nomake examples \
-                 -nomake tests \
-                 -verbose \
-                 -skip wayland \
-                 -skip qtwebengine \
-                 -gstreamer 1.0 \
-                 -system-libjpeg \
-                 -system-libpng \
-                 -system-zlib \
-                 -system-sqlite \
-                 -plugin-sql-sqlite \
-                 -plugin-sql-mysql \
-                 -plugin-sql-psql \
-                 -xcb \
-                 -xcb-xlib \
-                 -bundled-xcb-xinput \
-                 -qt-pcre \
-                 -xkbcommon \
-                 -dbus \
-                 -no-linuxfb \
-                 -no-libudev \
-                 -no-avx \
-                 -no-avx2 \
-                 -optimize-size \
-                 ${REDUCE_RELOCATIONS} \
-                 -cups \
-                 -openssl-linked \
-                 -openssl \
-                 -Wno-expansion-to-defined \
-                 -D _X_INLINE=inline \
-                 -D XK_dead_currency=0xfe6f \
-                 -D _FORTIFY_SOURCE=2 \
-                 -D XK_ISO_Level5_Lock=0xfe13 \
-                 -D FC_WEIGHT_EXTRABLACK=215 \
-                 -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
-                 -D GLX_GLXEXT_PROTOTYPES \
-                 "${SKIPS[@]+"${SKIPS[@]}"}"
+                -libdir ${PREFIX}/lib \
+                -bindir ${PREFIX}/bin \
+                -headerdir ${PREFIX}/include/qt \
+                -archdatadir ${PREFIX} \
+                -datadir ${PREFIX} \
+                -I ${PREFIX}/include \
+                -L ${PREFIX}/lib \
+                -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib64 \
+                -L ${BUILD_PREFIX}/${HOST}/sysroot/usr/lib \
+                QMAKE_LFLAGS+="-Wl,-rpath,$PREFIX/lib -Wl,-rpath-link,$PREFIX/lib -L$PREFIX/lib" \
+                -release \
+                -opensource \
+                -confirm-license \
+                -shared \
+                -nomake examples \
+                -nomake tests \
+                -verbose \
+                -skip wayland \
+                -skip qtwebengine \
+                -gstreamer 1.0 \
+                -system-libjpeg \
+                -system-libpng \
+                -system-zlib \
+                -system-sqlite \
+                -plugin-sql-sqlite \
+                -plugin-sql-mysql \
+                -plugin-sql-psql \
+                -xcb \
+                -xcb-xlib \
+                -bundled-xcb-xinput \
+                -qt-pcre \
+                -xkbcommon \
+                -dbus \
+                -no-linuxfb \
+                -no-libudev \
+                -no-avx \
+                -no-avx2 \
+                -optimize-size \
+                ${REDUCE_RELOCATIONS} \
+                -cups \
+                -openssl-linked \
+                -openssl \
+                -Wno-expansion-to-defined \
+                -D _X_INLINE=inline \
+                -D XK_dead_currency=0xfe6f \
+                -D _FORTIFY_SOURCE=2 \
+                -D XK_ISO_Level5_Lock=0xfe13 \
+                -D FC_WEIGHT_EXTRABLACK=215 \
+                -D FC_WEIGHT_ULTRABLACK=FC_WEIGHT_EXTRABLACK \
+                -D GLX_GLXEXT_PROTOTYPES \
+                "${SKIPS[@]+"${SKIPS[@]}"}"
 
 # ltcg bloats a test tar.bz2 from 24524263 to 43257121 (built with the following skips)
 #                -ltcg \
@@ -184,46 +184,46 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
     fi
 
     ../configure -prefix ${PREFIX} \
-                 -libdir ${PREFIX}/lib \
-                 -bindir ${PREFIX}/bin \
-                 -headerdir ${PREFIX}/include/qt \
-                 -archdatadir ${PREFIX} \
-                 -datadir ${PREFIX} \
-                 $PLATFORM \
-                 -I ${PREFIX}/include \
-                 -I ${PREFIX}/include/mysql \
-                 -I ${PREFIX}/include/gstreamer-1.0 \
-                 -I ${PREFIX}/include/glib-2.0 \
-                 -I ${PREFIX}/lib/glib-2.0/include \
-                 -L ${PREFIX}/lib \
-                 -R $PREFIX/lib \
-                 -release \
-                 -opensource \
-                 -confirm-license \
-                 -shared \
-                 -nomake examples \
-                 -nomake tests \
-                 -verbose \
-                 -skip wayland \
-                 -skip qtwebengine \
-                 $EXTRA_FLAGS \
-                 -system-libjpeg \
-                 -system-libpng \
-                 -system-zlib \
-                 -system-sqlite \
-                 -plugin-sql-sqlite \
-                 -plugin-sql-mysql \
-                 -plugin-sql-psql \
-                 -qt-freetype \
-                 -qt-pcre \
-                 -no-framework \
-                 -dbus \
-                 -no-mtdev \
-                 -no-harfbuzz \
-                 -no-libudev \
-                 -no-egl \
-                 -no-openssl \
-                 -optimize-size
+                -libdir ${PREFIX}/lib \
+                -bindir ${PREFIX}/bin \
+                -headerdir ${PREFIX}/include/qt \
+                -archdatadir ${PREFIX} \
+                -datadir ${PREFIX} \
+                $PLATFORM \
+                -I ${PREFIX}/include \
+                -I ${PREFIX}/include/mysql \
+                -I ${PREFIX}/include/gstreamer-1.0 \
+                -I ${PREFIX}/include/glib-2.0 \
+                -I ${PREFIX}/lib/glib-2.0/include \
+                -L ${PREFIX}/lib \
+                -R $PREFIX/lib \
+                -release \
+                -opensource \
+                -confirm-license \
+                -shared \
+                -nomake examples \
+                -nomake tests \
+                -verbose \
+                -skip wayland \
+                -skip qtwebengine \
+                $EXTRA_FLAGS \
+                -system-libjpeg \
+                -system-libpng \
+                -system-zlib \
+                -system-sqlite \
+                -plugin-sql-sqlite \
+                -plugin-sql-mysql \
+                -plugin-sql-psql \
+                -qt-freetype \
+                -qt-pcre \
+                -no-framework \
+                -dbus \
+                -no-mtdev \
+                -no-harfbuzz \
+                -no-libudev \
+                -no-egl \
+                -no-openssl \
+                -optimize-size
 
 # For quicker turnaround when e.g. checking compilers optimizations
 #                -skip qtwebsockets -skip qtwebchannel -skip qtwebengine -skip qtsvg -skip qtsensors -skip qtcanvas3d -skip qtconnectivity -skip declarative -skip multimedia -skip qttools -skip qtlocation -skip qt3d

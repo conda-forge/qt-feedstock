@@ -123,7 +123,6 @@ if [[ $(uname) == "Linux" ]]; then
                 -plugin-sql-psql \
                 -xcb \
                 -xcb-xlib \
-                -bundled-xcb-xinput \
                 -qt-pcre \
                 -xkbcommon \
                 -dbus \

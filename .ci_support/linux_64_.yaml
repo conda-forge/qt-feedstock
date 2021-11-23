@@ -80,3 +80,5 @@ zip_keys:
   - docker_image
 zlib:
 - '1.2'
+openssl:
+- 1.1.1

@@ -56,3 +56,5 @@ zip_keys:
   - cxx_compiler_version
 zlib:
 - '1.2'
+openssl:
+- 1.1.1

@@ -149,7 +149,6 @@ requirements:
     - xorg-libxfixes                     # [linux]
     - libcups                            # [linux]
   run:
-    - openssl                            # [not osx]
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
     - libxcb                             # [linux]

@@ -22,7 +22,7 @@ MAKE_JOBS=$CPU_COUNT
 export NINJAFLAGS="-j${MAKE_JOBS}"
 
 # For QDoc
-export LLVM_INSTALL_DIR=${USED_BUILD_PREFIX}
+export LLVM_INSTALL_DIR=${PREFIX}
 
 # Remove the full path from CXX etc. If we don't do this
 # then the full path at build time gets put into
@@ -179,7 +179,16 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
       # GLib pulls arm64 python as part of its distribution, which cannot be executed on x86_64 CIs
       CONDA_SUBDIR="osx-64" conda create -y --prefix "${SRC_DIR}/osx_64_python" python zstd -c conda-forge
       export PATH="${SRC_DIR}/osx_64_python/bin":$PATH
-      PLATFORM="$PLATFORM -device-option CROSS_COMPILE=${HOST}-"
+
+      # The CROSS_COMPILE option can be used if the x86_64 compiler is used. However, since the arm64
+      # cross compiler can also produce x86_64 binaries, there is no need for it. This is commented out
+      # in order to reference how it could be used.
+      # PLATFORM="$PLATFORM -device-option CROSS_COMPILE=${HOST}-"
+
+      # We need to merge both libc++ and libclang in order to compile QDoc to have both x86_64 and arm64
+      # compatibility
+      lipo -create $BUILD_PREFIX/lib/libc++.dylib $PREFIX/lib/libc++.dylib -output $PREFIX/lib/libc++.dylib
+      lipo -create $BUILD_PREFIX/lib/libclang.dylib $PREFIX/lib/libclang.dylib -output $PREFIX/lib/libclang.dylib
     fi
 
     ../configure -prefix ${PREFIX} \
@@ -231,7 +240,7 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
 
     ####
     make -j${MAKE_JOBS} || exit 1
-    make install
+    make install -j${MAKE_JOBS}
 
     # Avoid Xcode (2)
     mkdir -p "${PREFIX}"/bin/xc-avoidance || true
@@ -244,7 +253,7 @@ fi
 popd
 pushd qtcharts
 ${PREFIX}/bin/qmake qtcharts.pro PREFIX=${PREFIX}
-make || exit 1
+make -j${MAKE_JOBS} || exit 1
 make install || exit 1
 popd
 

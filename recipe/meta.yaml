@@ -13,12 +13,21 @@ source:
       - patches/0002-qtbase-osx-allow-any-xcrun-in-PATH.patch
       - patches/0003-qtbase-use-better-clang-optimize-size.patch
       - patches/0004-qtbase-never-enable-new-dtags.patch
+      - patches/0009-qtbase-fix-hardcoded-sysroot-path.patch
       # - patches/0005-qtbase-link-xcb-shm.patch
       # - patches/0006-qtbase-Do-not-set-PKG_CONFIG_SYSROOT_DIR-when-sysroo.patch
       # - patches/0007-qtbase-Disable-kTLSProtocol13-for-macOS-10.12.patch
       # - patches/0008-qtbase-Define-kIOSurfaceSuccess-if-it-is-not-defined.patch
-      - patches/0009-qtbase-fix-hardcoded-sysroot-path.patch
       # - patches/9999-qtbase-use-better-gcc-optimize-size.patch
+
+      # The following patches are required to cross-compile Qt host tools (osx)
+      # to work both on x86_64 and arm64
+      - patches/0005-Add-arm64-support-for-host-tools.patch             # [arm64]
+      - patches/0006-Enable-arm64-x86_64-support-for-qttools.patch      # [arm64]
+      - patches/0007-Make-qml-host-tools-to-be-arm64-compatiible.patch  # [arm64]
+      - patches/0008-Make-repc-arm64-compatible.patch                   # [arm64]
+      - patches/0009-Enable-arm64-support-for-qgltf.patch               # [arm64]
+      - patches/0010-Enable-arm64-support-for-qtscxmlc.patch            # [arm64]
       # https://bugreports.qt.io/browse/QTBUG-76777
       # - patches/qcore_for_sdk_10_13_1.patch
 
@@ -110,9 +119,9 @@ requirements:
     # If they do, merge_build_host will fail.
     - readline                           # [linux]
     - llvm
-    - llvmdev
-    - clangdev
-    - libclang
+    # libclang is required in order to enable simultaneous x86_64 and
+    # arm64 support for QDoc
+    - libclang                           # [arm64]
   host:
     # For pkg-config gl, fontconfig + freetype
     - pthread-stubs                      # [linux]

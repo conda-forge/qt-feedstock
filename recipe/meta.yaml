@@ -122,6 +122,11 @@ requirements:
     # libclang is required in order to enable simultaneous x86_64 and
     # arm64 support for QDoc
     - libclang                           # [arm64]
+    # Although these should be host-only dependencies, they are needed when
+    # cross-compiling arm64 binaries on x86_64 since llvm-config (host/arm64)
+    # cannot be executed on x86_64 to locate libclang successfully
+    - llvmdev                           # [build_platform != target_platform]
+    - clangdev                          # [build_platform != target_platform]
   host:
     # For pkg-config gl, fontconfig + freetype
     - pthread-stubs                      # [linux]

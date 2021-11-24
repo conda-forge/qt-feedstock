@@ -185,10 +185,13 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
       # in order to reference how it could be used.
       # PLATFORM="$PLATFORM -device-option CROSS_COMPILE=${HOST}-"
 
+      # llvm-config in x86_64 host lies in BUILD_PREFIX
+      export LLVM_INSTALL_DIR=${BUILD_PREFIX}
+
       # We need to merge both libc++ and libclang in order to compile QDoc to have both x86_64 and arm64
       # compatibility
-      lipo -create $BUILD_PREFIX/lib/libc++.dylib $PREFIX/lib/libc++.dylib -output $PREFIX/lib/libc++.dylib
-      lipo -create $BUILD_PREFIX/lib/libclang.dylib $PREFIX/lib/libclang.dylib -output $PREFIX/lib/libclang.dylib
+      lipo -create $BUILD_PREFIX/lib/libc++.dylib $PREFIX/lib/libc++.dylib -output $BUILD_PREFIX/lib/libc++.dylib
+      lipo -create $BUILD_PREFIX/lib/libclang.dylib $PREFIX/lib/libclang.dylib -output $BUILD_PREFIX/lib/libclang.dylib
     fi
 
     ../configure -prefix ${PREFIX} \

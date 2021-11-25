@@ -26,6 +26,8 @@ icu:
 - '68'
 jpeg:
 - '9'
+libclang:
+- '12'
 libpng:
 - '1.6'
 macos_machine:

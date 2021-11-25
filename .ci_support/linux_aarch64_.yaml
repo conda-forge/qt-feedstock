@@ -46,6 +46,8 @@ nspr:
 - '4'
 nss:
 - '3'
+openssl:
+- 1.1.1
 pin_run_as_build:
   dbus:
     max_pin: x
@@ -82,5 +84,3 @@ zip_keys:
   - cxx_compiler_version
 zlib:
 - '1.2'
-openssl:
-- 1.1.1

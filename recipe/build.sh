@@ -190,9 +190,6 @@ if [[ ${HOST} =~ .*darwin.* ]]; then
       rm $PREFIX/bin/llvm-config
       cp $BUILD_PREFIX/bin/llvm-config $PREFIX/bin/llvm-config
       rm $BUILD_PREFIX/bin/llvm-config
-      if [[ "$build_platform" == osx-* ]]; then
-          $INSTALL_NAME_TOOL -add_rpath "$BUILD_PREFIX/lib" $PREFIX/bin/llvm-config
-      fi
 
       # We need to merge both libc++ and libclang in order to compile QDoc to have both x86_64 and arm64
       # compatibility

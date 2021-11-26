@@ -118,7 +118,6 @@ requirements:
     # Otherwise build and host might end up with two different versions
     # If they do, merge_build_host will fail.
     - readline                           # [linux]
-    - llvm
     # libclang is required in order to enable simultaneous x86_64 and
     # arm64 support for QDoc
     - libclang                           # [arm64]

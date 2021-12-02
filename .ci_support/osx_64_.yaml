@@ -5,7 +5,7 @@ MACOSX_SDK_VERSION:
 c_compiler:
 - clang
 c_compiler_version:
-- '12'
+- '11'
 cdt_name:
 - cos7
 channel_sources:
@@ -15,7 +15,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '12'
+- '11'
 glib:
 - '2'
 gst_plugins_base:
@@ -26,8 +26,6 @@ icu:
 - '68'
 jpeg:
 - '9'
-libclang:
-- '12'
 libpng:
 - '1.6'
 macos_machine:

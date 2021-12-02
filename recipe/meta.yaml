@@ -3,7 +3,7 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.12.10" %}
+{% set version = "5.12.12" %}
 
 package:
   name: qt
@@ -11,7 +11,7 @@ package:
 
 source:
   - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    sha256: 3e0ee1e57f5cf3eeb038d0b4b22c7eb442285c62639290756b39dc93a1d0e14f
+    sha256: 1979a3233f689cb8b3e2783917f8f98f6a2e1821a70815fb737f020cd4b6ab06
     patches:
 
       # qtbase
@@ -177,16 +177,12 @@ requirements:
     # For QDoc
     # http://doc.qt.io/Qt-5/qdoc-guide-clang.html
     # Only libclang is needed, but needs the full package for detection.
-    - llvmdev
-    - clangdev
-    - libclang
     - xorg-libxfixes                     # [linux]
   run:
     - openssl                            # [not osx]
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
     - libxcb                             # [linux]
-    - {{ pin_compatible("libclang") }}
   run_constrained:                                            # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
 

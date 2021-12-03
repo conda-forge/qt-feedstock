@@ -1,7 +1,5 @@
 c_compiler:
 - vs2017
-cdt_name:
-- cos7
 channel_sources:
 - conda-forge
 channel_targets:

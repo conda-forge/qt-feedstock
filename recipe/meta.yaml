@@ -159,7 +159,6 @@ requirements:
     - llvmdev
     - clangdev
     - libclang
-    - xorg-libxfixes                     # [linux]
     - libcups                            # [linux]
   run:
     - {{ pin_compatible("nss") }}        # [unix]

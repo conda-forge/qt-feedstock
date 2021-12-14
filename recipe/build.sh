@@ -82,7 +82,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     export LD=${GXX}
     export CC=${GCC}
     export CXX=${GXX}
-
+    # openssl conflicts with boringssl for qtwebengine
+    # so we hack....
+    conda uninstall openssl --force --offline --yes
     conda create -y --prefix "${SRC_DIR}/openssl_hack" -c https://repo.continuum.io/pkgs/main  \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack"  \
                   openssl=${openssl}

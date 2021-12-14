@@ -1,2 +1,4 @@
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
   - '10.12'                # [osx]
+channel_sources:
+  - mark.harfouche,conda-forge

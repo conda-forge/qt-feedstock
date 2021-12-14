@@ -46,6 +46,11 @@ source:
       - patches/0013-qtwebengine-missing_EVIOCGPROP.diff
       - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
       - patches/google_breakpad_aarch_include.patch
+      # Seems like bison 3.7 breaks qt
+      # Patch found in surrounding discussion
+      # https://bugs.gentoo.org/734356#c16
+      # Backported this specific version by izahn
+      - patches/0015-qtwebengine-fix-bison-gt-36.patch
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
@@ -139,6 +144,7 @@ requirements:
   host:
     # For pkg-config gl, fontconfig + freetype
     - pthread-stubs                      # [linux]
+    # Needs dbus that depends on libglib not glib
     - dbus                               # [linux]
     - fontconfig                         # [linux]
     - freetype                           # [linux]
@@ -171,18 +177,23 @@ requirements:
     - postgresql                         # [not win]
     - zlib
     - libxcb                             # [linux]
-    # We cannot install OpenSSL into the prefix when building qtwebengine
-    # on linux as BoringSSL and OpenSSL then conflict with each other.
-    - openssl                            # [win]
+    - openssl  1                         # [not osx]
     # For QDoc
     # http://doc.qt.io/Qt-5/qdoc-guide-clang.html
     # Only libclang is needed, but needs the full package for detection.
     - llvmdev
     - clangdev
     - libclang
+    # 2021/12/14: hmaarrfk
+    # While conda-forge is going through the gcc 9->11 migration
+    # merge build host makes llvm converge to a different version of
+    # of the gcc implementation
+    # We add the pin here to ensure that both versions
+    # converge to the same before "merging"
+    - gcc_impl_linux-64       {{ c_compiler_version }}   # [linux64]
+    - gcc_impl_linux-aarch64  {{ c_compiler_version }}   # [linux and aarch64]
     - xorg-libxfixes                     # [linux]
   run:
-    - openssl                            # [not osx]
     - {{ pin_compatible("nss") }}        # [unix]
     - {{ pin_compatible("nspr") }}       # [unix]
     - libxcb                             # [linux]
@@ -193,6 +204,7 @@ requirements:
 test:
   requires:
     - {{ compiler('cxx') }}
+    - make                               # [unix]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
     - {{ cdt('libxext-devel') }}         # [linux]

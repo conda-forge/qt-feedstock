@@ -6,3 +6,5 @@ azure:
 # qt 5.12 claims to not support ppc64le. It likely needs patching
 # to get it through the build process
 provider: {linux_aarch64: default}
+os_version:
+  linux_64: cos7

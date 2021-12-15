@@ -1,7 +1,7 @@
 c_compiler:
 - vs2017
 channel_sources:
-- conda-forge,defaults
+- mark.harfouche,conda-forge
 channel_targets:
 - conda-forge main
 curl:
@@ -9,7 +9,7 @@ curl:
 cxx_compiler:
 - vs2017
 icu:
-- '68'
+- '69'
 jpeg:
 - '9'
 libpng:
@@ -23,8 +23,6 @@ pin_run_as_build:
     max_pin: x
   libpng:
     max_pin: x.x
-  openssl:
-    max_pin: x.x.x
   sqlite:
     max_pin: x
   zlib:

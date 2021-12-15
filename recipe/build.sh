@@ -63,7 +63,7 @@ rm -rf $PREFIX/bin/protoc
 # Then find the .gn or .gni files that these ninja files were created from and figure out wtf is going on.
 
 # qtwebengine needs python 2
-mamba create -y --prefix "${SRC_DIR}/python2_hack" -c https://repo.continuum.io/pkgs/conda-forge --no-deps python=2
+conda create -y --prefix "${SRC_DIR}/python2_hack" -c https://repo.continuum.io/pkgs/conda-forge --no-deps python=2
 export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
 
 if [[ ${HOST} =~ .*linux.* ]]; then
@@ -85,7 +85,7 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     # openssl conflicts with boringssl for qtwebengine
     # so we hack....
     conda uninstall openssl --force --offline --yes
-    mamba create -y --prefix "${SRC_DIR}/openssl_hack" -c https://repo.continuum.io/pkgs/conda-forge \
+    conda create -y --prefix "${SRC_DIR}/openssl_hack" -c https://repo.continuum.io/pkgs/conda-forge \
                   --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack"  \
                   openssl=${openssl}
     export OPENSSL_LIBS="-L${SRC_DIR}/openssl_hack/lib -lssl -lcrypto"

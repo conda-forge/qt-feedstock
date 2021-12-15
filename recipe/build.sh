@@ -64,6 +64,7 @@ rm -rf $PREFIX/bin/protoc
 
 # qtwebengine needs python 2
 conda create -y --prefix "${SRC_DIR}/python2_hack" -c https://repo.continuum.io/pkgs/main --no-deps python=2
+mamba create --yes --prefix "${SRC_DIR}/python2_hack" --channel conda-forge --no-deps python=2
 export PATH=${SRC_DIR}/python2_hack/bin:${PATH}
 
 if [[ ${HOST} =~ .*linux.* ]]; then
@@ -83,8 +84,8 @@ if [[ ${HOST} =~ .*linux.* ]]; then
     export CC=${GCC}
     export CXX=${GXX}
 
-    conda create -y --prefix "${SRC_DIR}/openssl_hack" -c https://repo.continuum.io/pkgs/main  \
-                  --no-deps --yes --copy --prefix "${SRC_DIR}/openssl_hack"  \
+    mamba create --yes --prefix "${SRC_DIR}/openssl_hack" --channel conda-forge \
+                  --no-deps --copy --prefix "${SRC_DIR}/openssl_hack"  \
                   openssl=${openssl}
     export OPENSSL_LIBS="-L${SRC_DIR}/openssl_hack/lib -lssl -lcrypto"
     rm -rf ${PREFIX}/include/openssl

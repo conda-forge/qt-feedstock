@@ -1,2 +1,10 @@
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
   - '10.12'                # [osx]
+# 2021/12/31 hmaarrfk
+# bugs with gcc 9.4 stopped us from
+# using the latest version of gcc 9 available
+# at the time in conda-forge
+c_compiler_version:        # [linux and aarch64]
+  - 9.3                    # [linux and aarch64]
+cxx_compiler_version:      # [linux and aarch64]
+  - 9.3                    # [linux and aarch64]

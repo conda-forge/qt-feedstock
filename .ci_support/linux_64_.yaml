@@ -37,7 +37,7 @@ libpng:
 libxml2:
 - '2.9'
 nspr:
-- '4'
+- '4.30'
 nss:
 - '3'
 openssl:

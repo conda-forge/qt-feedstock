@@ -47,6 +47,7 @@ source:
       - patches/0014-qtwebengine-HAVE_SENDMMSG.diff
       - patches/google_breakpad_aarch_include.patch
       - patches/0015-qtwebengine-fix-bison-gt-36.patch
+      - patches/0016-fix-gcc-11.patch  # [linux and aarch64]
 
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
@@ -135,6 +136,7 @@ requirements:
     # Otherwise build and host might end up with two different versions
     # If they do, merge_build_host will fail.
     - readline                           # [linux]
+    - git
   host:
     # For pkg-config gl, fontconfig + freetype
     - pthread-stubs                      # [linux]

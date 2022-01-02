@@ -5,8 +5,6 @@ MACOSX_DEPLOYMENT_TARGET:  # [osx]
 # using the latest version of gcc 9 available
 # at the time in conda-forge
 c_compiler_version:        # [linux and aarch64]
-  - 9.3                    # [linux and aarch64]
+  - 11                     # [linux and aarch64]
 cxx_compiler_version:      # [linux and aarch64]
-  - 9.3                    # [linux and aarch64]
-sqlite:                    # [linux and aarch64]
-  - '3.36'                 # [linux and aarch64]
+  - 11                     # [linux and aarch64]

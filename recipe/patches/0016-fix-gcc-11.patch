@@ -1,0 +1,21 @@
+--- a/qtbase/src/corelib/global/qendian.h	2022-01-02 00:49:13.784545917 +0000
++++ b/qtbase/src/corelib/global/qendian.h	2022-01-02 00:48:59.668504423 +0000
+@@ -47,6 +47,7 @@
+ // include stdlib.h and hope that it defines __GLIBC__ for glibc-based systems
+ #include <stdlib.h>
+ #include <string.h>
++#include <limits>
+ 
+ #ifdef min // MSVC
+ #undef min
+
+--- a/qtbase/src/corelib/global/qglobal.h	2022-01-02 01:58:58.756922732 +0000
++++ b/qtbase/src/corelib/global/qglobal.h	2022-01-02 01:58:50.048896654 +0000
+@@ -45,6 +45,7 @@
+ #  include <type_traits>
+ #  include <cstddef>
+ #  include <utility>
++#  include <limits>
+ #endif
+ #ifndef __ASSEMBLER__
+ #  include <assert.h>

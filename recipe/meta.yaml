@@ -137,7 +137,7 @@ requirements:
     # If they do, merge_build_host will fail.
     - readline                           # [linux]
     - git
-    - patch
+    - patch                              # [unix]
   host:
     # For pkg-config gl, fontconfig + freetype
     - pthread-stubs                      # [linux]

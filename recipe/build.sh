@@ -1,4 +1,13 @@
 # Clean config for dirty builds
+# Get an updated config.sub and config.guess
+cp $BUILD_PREFIX/share/gnuconfig/config.* ./qtwebengine/src/3rdparty/chromium/third_party/yasm/source/patched-yasm/config
+cp $BUILD_PREFIX/share/gnuconfig/config.* ./qtwebengine/src/3rdparty/chromium/third_party/swiftshader/third_party/LLVM/projects/sample/autoconf
+cp $BUILD_PREFIX/share/gnuconfig/config.* ./qtwebengine/src/3rdparty/chromium/third_party/sqlite/src
+cp $BUILD_PREFIX/share/gnuconfig/config.* ./qtwebengine/src/3rdparty/chromium/third_party/icu/source
+cp $BUILD_PREFIX/share/gnuconfig/config.* ./qtwebengine/src/3rdparty/chromium/third_party/swiftshader/third_party/LLVM/autoconf
+cp $BUILD_PREFIX/share/gnuconfig/config.* ./qtwebengine/src/3rdparty/chromium/third_party/tcmalloc/gperftools-2.0/vendor
+cp $BUILD_PREFIX/share/gnuconfig/config.* ./qtwebengine/src/3rdparty/chromium/third_party/breakpad/breakpad/autotools
+cp $BUILD_PREFIX/share/gnuconfig/config.* ./qtwebengine/src/3rdparty/chromium/third_party/sqlite/patched
 # -----------------------------
 rm -f .qmake.stash .qmake.cache || true
 

@@ -1,10 +1,12 @@
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
   - '10.12'                # [osx]
-# 2021/12/31 hmaarrfk
-# bugs with gcc 9.4 stopped us from
-# using the latest version of gcc 9 available
-# at the time in conda-forge
-c_compiler_version:        # [linux and aarch64]
-  - 11                     # [linux and aarch64]
-cxx_compiler_version:      # [linux and aarch64]
-  - 11                     # [linux and aarch64]
+  
+# 2022/03/20: hmaarrfk
+# It seems that some things have been moved around
+# the std in gcc 10. Therefore we will use gcc 9 to
+# build version 5.12 of qt. This likely isn't
+# an issue with newer versions
+c_compiler_version:        # [linux and linux64]
+  - 9                      # [linux and linux64]
+cxx_compiler_version:      # [linux and linux64]
+  - 9                      # [linux and linux64]

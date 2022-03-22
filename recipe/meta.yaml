@@ -3,7 +3,7 @@
 #   error: unknown type name 'SecKeyAlgorithm'
 # .. these 10.11 support patches should be removed anyway as they could break some things.
 # .. such as pop-up Window mouse-events.
-{% set version = "5.12.9" %}
+{% set version = "6.2.1" %}
 
 package:
   name: qt
@@ -11,7 +11,7 @@ package:
 
 source:
   - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    md5: fa2646280cf38180689c29c393cddd05
+    md5: 9c9adc6cb60cbd7792b9d0226b7467fa
     patches:
 
       # qtbase
@@ -52,34 +52,34 @@ source:
       # qtscript
       - patches/0001-qtscript-mark-cti_vm_throw-as-REFERENCED_FROM_ASM.patch
 
-  - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz            # [qtwebkit == 'true']
-    sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04                                      # [qtwebkit == 'true']
-    folder: qtwebkit                                                                                              # [qtwebkit == 'true']
-    patches:                                                                                                      # [qtwebkit == 'true']
+  - url: http://download.qt.io/community_releases/5.9/5.9.0-final/qtwebkit-opensource-src-5.9.0.tar.xz  # [qtwebkit == 'true']
+    sha256: 8dad193b740055a998312e04a040f2e32a923c0823b2d239b24eab08276a4e04  # [qtwebkit == 'true']
+    folder: qtwebkit  # [qtwebkit == 'true']
+    patches:   # [qtwebkit == 'true']
       - patches/0001-qtwebkit-old-ld-compat.patch                                                                         # [qtwebkit == 'true']
       - patches/0002-qtwebkit-ruby-1.8.patch                                                                              # [qtwebkit == 'true']
       - patches/0004-qtwebkit-CentOS5-Fix-fucomip-compat-with-gas-2.17.50.patch                                           # [qtwebkit == 'true']
       - patches/0006-qtwebkit-WTF--StringImpl--copyChars-segfaults-when-built-with-GCC-7.patch                            # [qtwebkit == 'true']
 
-  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-32-mesa_12_0_rc2.7z      # [win32]
-    sha256: 656015ab03a6686854b920a0a0bf77b4e46525ee8d5396bf04a49ef80a53427d                                      # [win32]
-    folder: opengl32sw                                                                                            # [win32]
+  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-32-mesa_12_0_rc2.7z  # [win32]
+    sha256: 656015ab03a6686854b920a0a0bf77b4e46525ee8d5396bf04a49ef80a53427d  # [win32]
+    folder: opengl32sw  # [win32]
 
-  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-64-mesa_12_0_rc2.7z      # [win64]
-    sha256: 2a0d2f92c60e0962ef5f6039d3793424c6f39e49ba27ac04a5b21ca4ae012e15                                      # [win64]
-    folder: opengl32sw                                                                                            # [win64]
+  - url: http://download.qt.io/development_releases/prebuilt/llvmpipe/windows/opengl32sw-64-mesa_12_0_rc2.7z  # [win64]
+    sha256: 2a0d2f92c60e0962ef5f6039d3793424c6f39e49ba27ac04a5b21ca4ae012e15  # [win64]
+    folder: opengl32sw  # [win64]
 
 build:
-  number: 6
+  number: 0
   detect_binary_files_with_prefix: true
   run_exports:
     - {{ pin_subpackage('qt', max_pin='x.x') }}
-  missing_dso_whitelist:  # [osx]
+  missing_dso_whitelist:   # [osx]
     - /usr/lib/libbsm.0.dylib  # [osx]
     - /usr/lib/libcups.2.dylib  # [osx]
     - /usr/lib/libresolv.9.dylib  # [osx]
     - /usr/lib/libsandbox.1.dylib  # [osx]
-    - '/System/Library/Frameworks/CoreLocation.framework/**'  # [osx]
+    - /System/Library/Frameworks/CoreLocation.framework/**    # [osx]
 
 requirements:
   build:
@@ -189,7 +189,7 @@ requirements:
     - {{ pin_compatible("nspr") }}       # [unix]
     - libxcb                             # [linux]
     - {{ pin_compatible("libclang") }}
-  run_constrained:                                            # [osx]
+  run_constrained:   # [osx]
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx]
 
 test:
@@ -246,7 +246,7 @@ about:
   home: http://qt-project.org
   license: LGPL-3.0-only
   license_file: LICENSE.LGPLv3
-  summary: 'Qt is a cross-platform application and UI framework.'
+  summary: Qt is a cross-platform application and UI framework.
   description: |
     Qt helps you create connected devices, UIs & applications that run
     anywhere on any device, on any operating system at any time.

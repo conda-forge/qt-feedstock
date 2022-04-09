@@ -27,7 +27,7 @@ gst_plugins_base:
 gstreamer:
 - '1.20'
 icu:
-- '69'
+- '70'
 jpeg:
 - '9'
 libevent:

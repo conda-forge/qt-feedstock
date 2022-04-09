@@ -70,7 +70,7 @@ source:
     folder: opengl32sw                                                                                            # [win64]
 
 build:
-  number: 6
+  number: 7
   detect_binary_files_with_prefix: true
   run_exports:
     - {{ pin_subpackage('qt', max_pin='x.x') }}

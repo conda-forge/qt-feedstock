@@ -12,7 +12,7 @@ build:
 
 requirements:
   run:
-    - qt-base  {{ version }}
+    - qt-main  {{ version }}
     - qt-webengine {{ version }}
 
 test:

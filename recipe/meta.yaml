@@ -1,14 +1,9 @@
 # This has become a metapacakge for qt-base and other related packages
-{% set version = "5.15.2" %}
+{% set version = "5.15" %}
 
 package:
   name: qt
   version: {{ version }}
-
-source:
-  # Leave a url to get the bot's help in updating things
-  - url: http://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/single/qt-everywhere-src-{{ version }}.tar.xz
-    md5: fa2646280cf38180689c29c393cddd05
 
 build:
   number: 0

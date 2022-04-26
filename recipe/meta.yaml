@@ -1,5 +1,5 @@
 # This has become a metapacakge for qt-base and other related packages
-{% set version = "5.15" %}
+{% set version = "5.15.3" %}
 
 package:
   name: qt
@@ -12,8 +12,13 @@ build:
 
 requirements:
   run:
-    - qt-main  {{ version }}
-    - qt-webengine {{ version }}
+    - qt-main      {{ version }}
+    # 2022/04/26 hmaarrfk
+    # qt-webengine was bumpbed before qt-main was
+    # hopefully they come back in sync in the future. The following pinning is
+    # optimistic.
+    # - qt-webengine {{ version }}  # [version != "5.15.3"]
+    # - qt-webengine 5.15.4         # [version == "5.15.3"]
 
 test:
   requires:

@@ -1,5 +1,5 @@
 # This has become a metapacakge for qt-base and other related packages
-{% set version = "5.15.3" %}
+{% set version = "5.15.2" %}
 
 package:
   name: qt

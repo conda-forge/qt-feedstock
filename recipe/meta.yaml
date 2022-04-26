@@ -17,8 +17,8 @@ requirements:
     # qt-webengine was bumpbed before qt-main was
     # hopefully they come back in sync in the future. The following pinning is
     # optimistic.
-    # - qt-webengine {{ version }}  # [version != "5.15.3"]
-    # - qt-webengine 5.15.4         # [version == "5.15.3"]
+    - qt-webengine {{ version }}  # [version != "5.15.3"]
+    - qt-webengine 5.15.4         # [version == "5.15.3"]
 
 test:
   requires:

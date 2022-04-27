@@ -12,13 +12,13 @@ build:
 
 requirements:
   run:
-    - qt-main      {{ version }}
+    - qt-main      {{ version }}.*
     # 2022/04/26 hmaarrfk
     # qt-webengine was bumpbed before qt-main was
     # hopefully they come back in sync in the future. The following pinning is
     # optimistic.
-    # - qt-webengine {{ version }}  # [version != "5.15.3"]
-    - qt-webengine 5.15.4
+    # - qt-webengine {{ version }}
+    - qt-webengine 5.15.4.*
 
 test:
   requires:

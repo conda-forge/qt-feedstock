@@ -1,9 +1,14 @@
 # This has become a metapacakge for qt-base and other related packages
-{% set version = "5.15.4" %}
+{% set version = "5.15.6" %}
 
 package:
   name: qt
   version: {{ version }}
+
+# Add a dummy source so that the bot helps us keep this up to date
+source:
+  url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtbase-everywhere-opensource-src-{{ version }}.tar.xz
+  sha256: 396bc6b0d773ac6a7c691a4c3d901999f571e3e7033d7fd6f65e4ef2b6eb7340
 
 build:
   number: 0
@@ -13,7 +18,9 @@ build:
 requirements:
   run:
     - qt-main      {{ version }}.*
-    - qt-webengine {{ version }}.*
+    # qt-webengine sometimes goes more out of sync due to
+    # the fact that they release open source releases more frequently
+    - qt-webengine 5.15
 
 test:
   requires:
@@ -79,11 +86,3 @@ about:
 extra:
   recipe-maintainers:
     - conda-forge/qt-main
-    - ccordoba12
-    - duncanmmacleod
-    - gillins
-    - mingwandroid
-    - msarahan
-    - ocefpaf
-    - stuarteberg
-    - Tobias-Fischer

@@ -18,7 +18,9 @@ build:
 requirements:
   run:
     - qt-main      {{ version }}.*
-    - qt-webengine {{ version }}.*
+    # qt-webengine sometimes goes more out of sync due to
+    # the fact that they release open source releases more frequently
+    - qt-webengine 5.15
 
 test:
   requires:

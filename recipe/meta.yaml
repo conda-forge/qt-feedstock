@@ -20,7 +20,9 @@ requirements:
     - qt-main      {{ version }}.*
     # qt-webengine sometimes goes more out of sync due to
     # the fact that they release open source releases more frequently
-    - qt-webengine 5.15
+    # qt-webengine does not support ppc64le
+    # (https://github.com/conda-forge/qt-webengine-feedstock/pull/21)
+    - qt-webengine 5.15  # [not ppc64le]
 
 test:
   requires:
@@ -67,7 +69,8 @@ test:
     - xcrun
   commands:
     - if not exist %LIBRARY_BIN%\\Qt5WebEngine.dll exit 1                  # [win]
-    - test -f $PREFIX/lib/libQt5WebEngine${SHLIB_EXT}                      # [unix]
+    - test -f $PREFIX/lib/libQt5WebEngine${SHLIB_EXT}                      # [unix and not ppc64le]
+    - test -f $PREFIX/lib/libQt5${SHLIB_EXT}                               # [unix]
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]

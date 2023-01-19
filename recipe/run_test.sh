@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 cd test
 ln -s ${GXX} g++
@@ -12,5 +12,8 @@ make
 ./hello
 # Only test that this builds
 make clean
-qmake qtwebengine.pro
-make
+
+if [[ $target_platform != "linux-ppc64le" ]]; then
+    qmake qtwebengine.pro
+    make
+fi

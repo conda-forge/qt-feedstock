@@ -1,5 +1,5 @@
 # This has become a metapacakge for qt-base and other related packages
-{% set version = "5.15.6" %}
+{% set version = "5.15.8" %}
 
 package:
   name: qt
@@ -8,7 +8,7 @@ package:
 # Add a dummy source so that the bot helps us keep this up to date
 source:
   url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtbase-everywhere-opensource-src-{{ version }}.tar.xz
-  sha256: 396bc6b0d773ac6a7c691a4c3d901999f571e3e7033d7fd6f65e4ef2b6eb7340
+  sha256: bfb11126c7f3abc3fdf86425ce912988b864a7e79a606d77325cffdbacb4be9c
 
 build:
   number: 0
@@ -22,7 +22,7 @@ requirements:
     # the fact that they release open source releases more frequently
     # qt-webengine does not support ppc64le
     # (https://github.com/conda-forge/qt-webengine-feedstock/pull/21)
-    - qt-webengine 5.15  # [not ppc64le]
+    - qt-webengine {{ version }}.*  # [not ppc64le]
 
 test:
   requires:

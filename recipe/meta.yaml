@@ -68,9 +68,12 @@ test:
     - xcodebuild
     - xcrun
   commands:
-    - if not exist %LIBRARY_BIN%\\Qt5WebEngine.dll exit 1                  # [win]
+    - if not exist %LIBRARY_BIN%\\Qt5WebEngine_conda.dll exit 1                  # [win]
+    - if not exist %LIBRARY_BIN%\\Qt5Core_conda.dll exit 1                  # [win]
+    - if not exist %LIBRARY_BIN%\\Qt5Gui_conda.dll exit 1                  # [win]
     - test -f $PREFIX/lib/libQt5WebEngine${SHLIB_EXT}                      # [unix and not ppc64le]
-    - test -f $PREFIX/lib/libQt5${SHLIB_EXT}                               # [unix]
+    - test -f $PREFIX/lib/libQt5Core${SHLIB_EXT}                               # [unix]
+    - test -f $PREFIX/lib/libQt5Gui${SHLIB_EXT}                               # [unix]
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]

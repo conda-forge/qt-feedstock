@@ -1,12 +1,2 @@
-MACOSX_DEPLOYMENT_TARGET:  # [osx]
-  - '10.12'                # [osx]
-  
-# 2022/03/20: hmaarrfk
-# It seems that some things have been moved around
-# the std in gcc 10. Therefore we will use gcc 9 to
-# build version 5.12 of qt. This likely isn't
-# an issue with newer versions
-c_compiler_version:        # [linux and linux64]
-  - 9                      # [linux and linux64]
-cxx_compiler_version:      # [linux and linux64]
-  - 9                      # [linux and linux64]
+c_stdlib_version:          # [osx]
+  - '10.14'                # [osx]

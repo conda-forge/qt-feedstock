@@ -1,5 +1,5 @@
 # This has become a metapacakge for qt-base and other related packages
-{% set version = "5.15.8" %}
+{% set version = "5.15.15" %}
 
 package:
   name: qt
@@ -8,7 +8,7 @@ package:
 # Add a dummy source so that the bot helps us keep this up to date
 source:
   url: https://download.qt.io/official_releases/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtbase-everywhere-opensource-src-{{ version }}.tar.xz
-  sha256: bfb11126c7f3abc3fdf86425ce912988b864a7e79a606d77325cffdbacb4be9c
+  sha256: e5f941fecf694ecba97c550b45b0634e552166cc6c815bcfdc481edd62796ba1
 
 build:
   number: 0
@@ -68,9 +68,12 @@ test:
     - xcodebuild
     - xcrun
   commands:
-    - if not exist %LIBRARY_BIN%\\Qt5WebEngine.dll exit 1                  # [win]
+    - if not exist %LIBRARY_BIN%\\Qt5WebEngine_conda.dll exit 1                  # [win]
+    - if not exist %LIBRARY_BIN%\\Qt5Core_conda.dll exit 1                  # [win]
+    - if not exist %LIBRARY_BIN%\\Qt5Gui_conda.dll exit 1                  # [win]
     - test -f $PREFIX/lib/libQt5WebEngine${SHLIB_EXT}                      # [unix and not ppc64le]
-    - test -f $PREFIX/lib/libQt5${SHLIB_EXT}                               # [unix]
+    - test -f $PREFIX/lib/libQt5Core${SHLIB_EXT}                               # [unix]
+    - test -f $PREFIX/lib/libQt5Gui${SHLIB_EXT}                               # [unix]
     # sql plugin
     - test -f $PREFIX/plugins/sqldrivers/libqsqlite${SHLIB_EXT}            # [unix]
     - if not exist %LIBRARY_PREFIX%\plugins\sqldrivers\qsqlite.dll exit 1  # [win]

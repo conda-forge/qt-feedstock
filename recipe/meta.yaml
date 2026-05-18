@@ -1,5 +1,5 @@
 # This has become a metapacakge for qt-base and other related packages
-{% set version = "5.15.15" %}
+{% set version = "5.15.19" %}
 
 package:
   name: qt
@@ -8,10 +8,10 @@ package:
 # Add a dummy source so that the bot helps us keep this up to date
 source:
   url: https://download.qt.io/archive/qt/{{ version.rpartition('.')[0] }}/{{ version }}/submodules/qtbase-everywhere-opensource-src-{{ version }}.tar.xz
-  sha256: e5f941fecf694ecba97c550b45b0634e552166cc6c815bcfdc481edd62796ba1
+  sha256: 51e91c73abacab81e64efd01bf95794e79c0e605ad80947a024769f0dd620a32
 
 build:
-  number: 1
+  number: 0
   run_exports:
     - {{ pin_subpackage('qt', max_pin='x.x') }}
 
